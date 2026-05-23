@@ -1,0 +1,18 @@
+# Godot 4 cache and imports — regenerated on project open
+.godot/
+
+# Godot exports
+/builds/
+/exports/
+
+# Imported translations (generated from CSV)
+*.translation
+
+# macOS
+.DS_Store
+
+# Editor / OS
+*~
+*.swp
+.idea/
+.vscode/
