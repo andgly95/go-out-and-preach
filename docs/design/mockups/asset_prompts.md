@@ -1,5 +1,32 @@
 # Territory Map — AI Asset Generation Prompts
 
+> ## ⚠ SUPERSEDED — 2026-05-23
+>
+> This file planned a 14-asset AI generation pass. Andrew shipped
+> **3 assets** instead, in this same directory:
+>
+> - `territory_background.png` — the top-down 4×3 grid (used as
+>   the map area background; per-slot house art is NOT generated)
+> - `house_painting.png` — single craftsman bungalow (shared
+>   across all 12 detail-panel views in v1)
+> - `parked_car.png` — vintage sedan (bottom-left decoration)
+>
+> The implications for M4-LF1:
+> - Per-slot grid overlays are **Godot-drawn** (numbered medallions
+>   + color-coded outcome badges via `StyleBoxFlat` and `Label`).
+>   The map grid is baked into the background asset.
+> - Detail-panel polaroid is shared across all 12 houses in v1.
+>   Per-house painting variants are out of scope.
+> - Decorative banners, ornaments, and badge shapes remain
+>   Godot-drawn per the "What we are NOT generating" section below.
+>
+> The "Shared style descriptor" and the "What we are NOT generating"
+> sections below are still useful reference. The 12-house prompt
+> list is historical only — read it for context, do not generate
+> from it.
+
+---
+
 Reference mockup: `territory_map_v1.png` (this directory).
 
 Generation target session: **Territory Map Visual Polish (M4-LF1)**.
