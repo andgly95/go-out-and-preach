@@ -16,7 +16,8 @@ func _ready() -> void:
 
 
 func _on_new_game_pressed() -> void:
-	print("[main_menu] New Game pressed")
+	print("[main_menu] New Game pressed — loading week_view")
+	get_tree().change_scene_to_file("res://scenes/week_view.tscn")
 
 
 func _on_continue_pressed() -> void:

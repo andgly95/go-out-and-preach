@@ -16,3 +16,6 @@
 *.swp
 .idea/
 .vscode/
+
+# Claude Code — local per-developer overrides (skills/ stays tracked)
+.claude/settings.local.json

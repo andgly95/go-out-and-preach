@@ -1,0 +1,562 @@
+# Cast — Go Out and Preach
+
+> Voice profiles, narrative weight, and behavioral specifics for every named NPC and householder archetype in the game. The sibling document to `dialogue-context.md`. Read both before writing any dialogue.
+
+This document does not contain dialogue. It contains the source material a dialogue subagent uses to write dialogue. Each entry follows the same shape: profile, voice, common behaviors, what they won't do, what lands wrong.
+
+---
+
+## 1. How to Use This Document
+
+When a dialogue subagent writes lines for a character:
+1. Read the character's full entry in this document
+2. Read the relevant section of `dialogue-context.md` for vocabulary, cadence, and tone
+3. Draft lines that fit both the character-specific entry and the general voice bible
+4. Flag any line where the character profile and the general voice bible seem to conflict — flagged conflicts surface design decisions worth making consciously
+
+Profiles are deliberately incomplete. They establish voice and behavioral red lines, not every detail. Specific dialogue moments will reveal characters more than this document can.
+
+---
+
+## 2. The Player Character
+
+Already touched in `dialogue-context.md` § 7. Expanded:
+
+**Profile.** 22 years old, born-in, just baptized at the start of the game. Has been a publisher for years (unbaptized publishers participate in ministry before formal baptism). Lives at home or in shared housing with another publisher. Holds a secular job (briefly referenced, never the focus). Their entire social world is the congregation.
+
+**Voice.**
+- Trained, slightly rehearsed at the door — the magazine offer and stock responses have been said hundreds of times
+- Genuine belief, even when stumbling — they are not pretending
+- Variable confidence: smoother in familiar territory, awkward in unfamiliar moments
+- Off-script moments (the "Why is that for you?" type choices) have a different texture — less polished, more present
+- Internal voice in journaling and reflection scenes is softer, more searching, less of the Witness vocabulary
+
+**What they won't do (without doubt threshold gating):**
+- Speak ill of the organization out loud
+- Engage with apostate arguments
+- Question elder decisions in conversation
+- Express doubt to congregation members
+
+**What lands wrong.**
+- Making the player a secret cynic from line one. They believe.
+- Making the player oblivious to social pressure. They feel it constantly.
+- Making the player's internal voice match their external voice. The gap is the game.
+
+---
+
+## 3. Family
+
+### 3.1 The Parent in the Truth
+
+**Profile.** 50s. Mother or father (player selects at start). Second-generation Witness, born into the Truth themselves. Lives by the Truth wholly and without question — it is air, not a position. Loves the player fiercely and conditionally: love expressed as performance of the Truth. Watches for signs of weakness. Questions are danger signs.
+
+**Voice.**
+- Warm, controlling, scripture-laden
+- Quotes Watchtower talking points without identifying them as quotes — the talking points are just how they think
+- Uses "we" frequently when referring to the family or the organization
+- "We love you" is their phrase. It precedes bad news, correction-framed-as-encouragement, and "have you been keeping up with your meetings?"
+- Soft tone, sometimes plaintive
+- Sentences often end with a question that isn't really a question: "Don't you think?", "Right?", "You see?"
+
+**Common beats.**
+- Morning conversations over coffee about how the meeting went
+- "I was talking to Brother Phillips and he mentioned..." (subtle elder-coordination tell)
+- Tearful moments when the player misses a meeting or "seems distant"
+- Quotes the Daniel 2 statue prophecy or 2 Timothy 3 (last days behavior) when the news is on
+
+**What they won't do.**
+- Tolerate direct theological disagreement from the player
+- Accept "I'm just figuring things out" as a permanent state — they will check in repeatedly
+- Refuse to report concerns to elders if pressed by the elders
+- Initiate disfellowshipping conversation themselves — that's the elders' role
+
+**What lands wrong.**
+- Making them a villain. They are sincere and they love.
+- Making them stupid. They are within a worldview that is internally coherent.
+- Making them not love the player. The love is the trap.
+- Making them obviously aware that they're controlling. They aren't.
+
+---
+
+### 3.2 The Sibling Drifting
+
+**Profile.** Younger or older sibling (designer choice during M5/M6 implementation). Started missing meetings about a year ago. No announcement, no incident, no scene — they just started not being there as often. Still talks to family but conversations are surface. Has a life the player doesn't know: secret friendships, secret media, possibly a partner. Has not formally disassociated.
+
+**Voice.**
+- Short sentences
+- Deflects with humor — usually self-deprecating
+- Eye contact drops when meetings come up
+- Texts more than calls
+- Uses "yeah" and "I dunno" frequently
+- Occasionally drops a line that suggests they know more than they say: "It's complicated"
+
+**Common beats.**
+- Family dinners where they're physically present but checked out
+- Late-night text conversations with the player about nothing — and underneath, everything
+- A moment where they almost say something real, then deflect
+- The brief mention of a friend the player has never heard of
+
+**What they won't do.**
+- Have a clean exit conversation with the player
+- Be a martyr or a hero of leaving
+- Reveal everything at once
+- Try to convince the player to leave — they know that's not how it works
+
+**What lands wrong.**
+- Making them a guide or oracle. They're a person navigating their own thing.
+- Making them angry at the Truth. They might be, but it doesn't surface as anger.
+- Making them the player's mirror in a tidy way. They are similar to the player, not parallel.
+
+---
+
+### 3.3 The Grandparent
+
+**Profile.** 70s or 80s. In declining health — manageable now, more serious later. Born into the Truth and lived their whole life in it. But the love feels different than the Parent's love — it's about people, not doctrine. Holds the family together socially. Visits are gentle. The player calls them more than is expected.
+
+**Voice.**
+- Soft, slow, occasionally funny in a dry old-person way
+- Drops lines that suggest they see more than they say — usually one sentence per visit
+- Asks about the player's life in a way that isn't surveilling
+- Hums hymns from *Songs of the Truth* without thinking about it
+- Sometimes says the wrong word and corrects themselves with a laugh
+
+**Common beats.**
+- The player visits with groceries or a magazine — they sit and talk for an hour
+- A photo album scene where the grandparent talks about people who have died
+- A moment where the grandparent asks the player something direct that nobody else would ask
+- Mid-game: a hospital scene tied to the blood doctrine. The grandparent needs a blood transfusion. The family's decision — and the grandparent's own stated wishes — become the central beat. This is a major doubt-triggering event.
+
+**What they won't do.**
+- Tell the player what to do
+- Abandon the family even when it would be easier
+- Speak ill of the organization
+- Use the conversation to deliver theology
+
+**What lands wrong.**
+- The "secret apostate grandparent" trope. They aren't secretly anything.
+- Making them oblivious to what's happening with the player. They notice.
+- Making them die in a way that's about the player's growth. Their decline is its own thing.
+
+---
+
+## 4. Congregation
+
+### 4.1 The Coordinator of Elders
+
+**Profile.** 50s-60s, male. Established in the community for decades. Genuinely believes the role he holds. Kind, patriarchal, deeply convinced. Treats the player like a son or daughter — warmth and expectation in equal measure. The most dangerous NPC because he is genuinely good-hearted within a system that asks him to enforce things.
+
+**Voice.**
+- Calm, measured pace
+- Speaks in second-person constructions: "you'll find that...", "you might consider...", "have you thought about..."
+- Quotes scripture without citing the quote as quote — it's woven into his sentences
+- Pauses before saying difficult things — the pause is deliberate
+- Uses "brother/sister" + first name almost always
+- Says "we" when he means "the elder body"
+- Smiles when delivering hard news. The smile is real and is also a feature of his role.
+
+**Common beats.**
+- "Encouragement" sessions — he calls the player in to "talk." The conversations are kind and corrective.
+- Phone calls that begin "I was thinking about you the other day."
+- A scene at the Hall where he singles out the player for a small public affirmation — and where the affirmation is also a tightening of expectations.
+- Hospital visits, funerals, weddings — he is everywhere these things happen, and he is good at them.
+
+**What he won't do.**
+- Raise his voice
+- Threaten directly
+- Lose composure
+- Acknowledge a contradiction in the doctrine, even when one is pointed out — he reframes, gently
+
+**What lands wrong.**
+- Making him obviously sinister
+- Making him a hypocrite the player can catch out
+- Making the kindness performative — it isn't, that's why it works
+
+---
+
+### 4.2 The Strict Elder
+
+**Profile.** 40s-50s, male. Recently appointed. Sees every infraction. Asks hard questions. Has decided that the player needs more discipline than they are currently receiving. Operates as a constant low-grade pressure.
+
+**Voice.**
+- Clipped sentences
+- Scripture-heavy, with citations: "as it says at Hebrews 13:17..."
+- Fond of "do you really think..." and "consider the principle at..."
+- No small talk
+- Eye contact direct and uncomfortable
+- Slight emphasis on words like "submission," "discipline," "spiritual cleanliness"
+
+**Common beats.**
+- Brief, charged exchanges in the Hall lobby
+- Questions about field service hours that have the feel of an audit
+- One on-page scene where he challenges the player on something small in a way that signals he is keeping count
+- Sits in on "encouragement" sessions called by the Coordinator. He is the bad cop.
+
+**What he won't do.**
+- Be openly cruel
+- Undermine the Coordinator
+- Show weakness or admit doubt
+- Joke (he can sound warm, but he is never joking)
+
+**What lands wrong.**
+- Making him a cartoon villain
+- Making him stupid — he is doctrinally sharp
+- Making him the only source of pressure on the player — the system is the pressure; he just personifies it
+
+---
+
+### 4.3 The Sister Pioneer
+
+**Profile.** Early 20s, same age range as the player. Regular pioneer. Model publisher, model believer, model everything. Beautiful in a wholesome way. Same-sex if the player's preferences align (romantic possibility) — her sexuality is fixed at character creation and the player either matches or doesn't.
+
+**Voice.**
+- Bright, encouraging, sincere
+- Uses the word "upbuilding" frequently
+- Says "the friends" instead of "people"
+- Compliments easily and without irony
+- When excited, speaks faster — the slip is humanizing
+- Quotes scripture earnestly and at length
+- Laughs at small jokes; her laugh is warm
+
+**Common beats.**
+- Service partner pairings — when she is partnered with the player, the days are different
+- Brief conversations at the Hall lobby that feel weighted with possibility
+- A scene where she invites the player to a "group game night" at her parents' house
+- The first romantic beat is small: a hand brushed, a look held a moment too long, both retreated from immediately
+- Long romantic arc: notice → conversation → service partner pairing → family meetings → marriage proposal scene, gated by the player's standing with elders and her family
+
+**What she won't do.**
+- Break the rules, even small ones
+- Speak negatively of anyone in the congregation
+- Engage in physical contact beyond what is permitted
+- Question the elder body's decisions
+- Express doubt
+
+**What lands wrong.**
+- Making her a "secret unbeliever" — she isn't
+- Making her the love interest as reward for player's piety — she is a person
+- Making her a strawman for naïveté
+- Making the romance the player's primary motivation in the game
+
+---
+
+### 4.4 The Service Partner (recurring)
+
+**Profile.** The service partners rotate week to week, but two or three recurring core partners exist. One specific recurring partner — designated by player choice or early game beat — becomes a real friendship. Call them Brother/Sister [Name]. This NPC is the player's most honest mirror for what "doing okay" looks like inside the Truth.
+
+**Voice.**
+- Companionable, peer-level
+- The only NPC where the player can be slightly informal
+- Tells small stories on the walks between houses
+- Will admit when something was hard ("Today was rough, huh?")
+- Doesn't use the heaviest Witness vocabulary in casual moments
+- Laughs easily
+
+**Common beats.**
+- Walks between houses on field service Saturdays
+- Coffee breaks during long service days
+- A scene in a parked car before going out — five minutes of real talk
+- An after-meeting conversation in the parking lot
+- Texts that aren't about ministry
+- May fade with the player or stay solid depending on the player's arc — their trajectory is responsive to the player's, not independent
+
+**What they won't do.**
+- Speak negatively of elders directly
+- Encourage the player to question
+- Be the wise one who sees it all
+
+**What lands wrong.**
+- Making them too wise — they are working through their own thing
+- Making them too oblivious to the player's struggles
+- Making them the savior the player needs
+
+---
+
+### 4.5 The Sister Who Talks
+
+**Profile.** 40s-50s, female. Social hub of the congregation. Knows everyone. Talks about everyone, kindly. Information vector — useful early game, dangerous later. She does not consider herself a gossip and would be hurt if accused of it. She thinks of herself as a connector.
+
+**Voice.**
+- Warm, slightly breathless
+- "Did you hear about Brother..."
+- "I just want to say..."
+- "She's such a sweet sister, but..."
+- Drops one piece of information per conversation, never the lead with it
+- Touches the player's arm when she talks
+- Laughs at her own observations
+
+**Common beats.**
+- After-meeting lobby conversations
+- Phone calls that begin "I was just thinking..."
+- A scene where she shares something about another publisher that the player wasn't supposed to know
+- A scene late game where she has noticed the player's behavior change and is concerned — concern that will land at the elders
+
+**What she won't do.**
+- Think of herself as a gossip
+- Consider her sharing harmful
+- Be malicious
+
+**What lands wrong.**
+- Making her cruel
+- Making her the only source of social information
+- Making her into a comic figure — she is a person who genuinely cares and does damage anyway
+
+---
+
+## 5. Outside
+
+### 5.1 The Worldly Coworker
+
+**Profile.** Same age as the player or slightly older. Knows the player as the slightly-odd coworker who doesn't do Christmas. Genuinely friendly. Has invited the player to things before and learned to stop. Surfaces only via phone/text scenes — never in-person on-screen — to keep the JW/world boundary tactile.
+
+**Voice.**
+- Casual, modern
+- Uses occasional profanity (the player processes this; the game does not flag it)
+- Texts in lowercase and with emoji
+- Asks open questions
+- Doesn't moralize when the player declines invitations
+- Sometimes shares small things from their life — a hobby, a relationship, a frustration at work
+
+**Common beats.**
+- Texts inviting the player to coworker drinks, a colleague's birthday, a wedding
+- A phone call when the coworker is having a hard time and just needs to talk
+- A late-game scene where the coworker asks the player a question about their beliefs — sincere curiosity, not antagonism
+- The player's response in that scene is a real choice point
+
+**What they won't do.**
+- Be malicious about the player's beliefs
+- Be a missionary in reverse trying to "save" the player
+- Become a savior figure
+- Express attraction as a way to pull the player out
+
+**What lands wrong.**
+- Making them generic-secular-good positioned against the religious system
+- Making them attracted to the player as a plot mechanism
+- Making them too virtuous — they should have their own problems
+
+---
+
+### 5.2 The Householder of Note
+
+**Profile.** The deepest single character in the cast. Long-form arc across many in-game weeks. Cannot be archetyped in advance — written individually. The player chooses them implicitly by which house they keep returning to.
+
+Three example Householders of Note (pick one or rotate by territory):
+
+**"Margaret"**
+- Widowed, late 60s. Husband died two years ago. Lives alone.
+- Lonely in a way that the player can fix, briefly
+- The player's first long-term Bible study
+- Conforms easily — she'll agree with most things, attend a meeting if invited, accept the magazines weekly
+- Risk: the player starts to feel guilty about offering her a system the player is starting to doubt
+- Her conversion is gentle and inevitable; the player's relationship to it is the actual drama
+
+**"Daniel"**
+- Early 30s, intellectual, asks the questions that hit the player's doubt the hardest
+- Polite, never aggressive, but precise
+- Reads the magazines the player leaves and comes back with informed pushback
+- Becomes the Apostate-equivalent in the player's life — except he was never a member, he just thinks well
+- Risk: every conversation increments doubt slightly; cumulative effect is significant
+
+**"Sarah & Tom"**
+- Couple, mid-40s, want what the Truth offers: community, certainty, a framework for raising their kids
+- Their child has a medical condition that requires blood products
+- The blood doctrine becomes real for them
+- Their crisis becomes the player's crisis
+- Either ending of their arc carries massive narrative weight
+
+**Voice.** Varies by individual.
+
+**What they won't do.**
+- Be archetypal — they must feel specific
+- Resolve cleanly
+- Serve as a thesis statement for the game's position
+
+**What lands wrong.**
+- Making them a vehicle for the game's argument
+- Letting them dominate the game's emotional weight in a way that crowds out the player's interiority
+
+---
+
+## 6. Remaining Householder Archetypes
+
+The Polite Refuser is documented in `dialogue-context.md` § 6. The remaining six follow the same shape.
+
+### 6.1 Hostile Slammer
+
+**Profile.** Opens door, sees publishers, closes door. 5-15 seconds total. The interaction is over before it began.
+
+**Voice.** Curt. May or may not make eye contact. Common utterances:
+- "No."
+- "Not interested."
+- "Please don't come back."
+- Occasional profanity: "Fuck off," "Jesus Christ, leave me alone"
+- Sometimes silence; the door just closes
+
+**Common beats.** Door cracks open; recognition flashes; door closes. The publisher records NOT_HOME or REFUSED depending on whether words were exchanged.
+
+**What they won't do.** Engage, smile, take a tract.
+
+**What lands wrong.** Making them violent. Making them stupid. They are just done with this conversation before it starts.
+
+---
+
+### 6.2 Curious Seeker
+
+**Profile.** Actually wants to talk. Asks a question. Tone is interested, not testing. The danger for the publisher: this is a real opening, and they will be tempted to oversell.
+
+**Voice.** Open, sometimes vulnerable. Sample openings:
+- "Sure, I have a minute. What's your group about?"
+- "I've been wondering what happens after we die."
+- "Can I ask you something? My friend's husband just passed and I don't know what to say to her."
+- "Do you guys believe in Jesus?"
+
+**Common beats.** Stands in the doorway with the door fully open. Invites the publishers to sit on the porch. Asks follow-up questions. Accepts the magazine, sometimes accepts a study, sometimes asks to be visited again.
+
+**What they won't do.** Argue. Test. Reject without engagement.
+
+**What lands wrong.** Making them naïve. Making them a setup for an easy conversion. Making them a foil for the publisher's pitch — they should have their own actual reason for being curious.
+
+---
+
+### 6.3 Lonely Elderly
+
+**Profile.** 70s+. Lives alone. Will talk about anything to anyone. The interaction will run 20+ minutes if allowed.
+
+**Voice.** Meanders. Repeats stories. Asks the publishers about themselves more than the other way around. Topics drift: adult children, the weather, a TV show, the cost of groceries, a doctor's appointment, the weather again.
+
+**Common beats.**
+- Invites the publishers to come in. Offers tea, coffee, water, leftover cake.
+- Shows photos. Apologizes for the mess.
+- Asks the publishers' first names, then forgets, then asks again with affection.
+- Sometimes cries quietly while talking.
+- When the publishers try to leave, finds one more thing to say.
+- Welcomes them back the next week, having forgotten what they discussed.
+
+**What they won't do.** Refuse company. Convert. End the conversation themselves.
+
+**What lands wrong.** Making them a comic figure. Making them tragic when they are just lonely. Making the publishers cruel for ending the visit — they have to end it.
+
+---
+
+### 6.4 Disillusioned Catholic
+
+**Profile.** 40s-60s. Catholic background, often lapsed but not formally disaffiliated. Has unresolved questions about church teaching: the priest sex abuse crisis, contraception, the role of women, the existence of hell. Genuinely searching.
+
+**Voice.** Slower than other archetypes. Carries real spiritual weight. Common openings:
+- "I was raised Catholic but..."
+- "I have some issues with what the church teaches about..."
+- "My mother would kill me for saying this, but..."
+- "I went to Catholic school for twelve years. I have questions."
+
+**Common beats.**
+- Conversation moves past the doorway quickly
+- Invites the publishers in for coffee
+- Asks specific theological questions, often well-formed
+- Accepts a study with serious intent
+- Most likely archetype to begin a study and continue it
+- Most likely archetype to convert in the game's timeline
+
+**What they won't do.** Dismiss the publishers without consideration. Be aggressive.
+
+**What lands wrong.** Making them just "Catholic" — their personhood is in the specifics of what they are searching for. The Catholic background is shorthand; the searching is the character.
+
+---
+
+### 6.5 Hostile Christian
+
+**Profile.** Knows enough theology to argue. Often Evangelical, sometimes Trinitarian Protestant, occasionally Eastern Orthodox. Wants to debate. Sometimes aggressively.
+
+**Voice.** Confident, sometimes patronizing. Common openings:
+- "Actually, the Bible says..."
+- "You guys aren't even Christians."
+- "I know exactly who you people are."
+- "Do you really think Jesus isn't God? Let me show you something."
+
+**Common beats.**
+- Door opens fully; the householder is leaned in, ready to engage
+- Quotes scripture with chapter and verse, sometimes correctly
+- Will not take a tract
+- Tries to flip the conversation: now they are the missionary
+- Sometimes follows the publishers down the walk with one more point
+
+**What they won't do.** Take a tract. Concede points. End the conversation with politeness.
+
+**What lands wrong.** Making them stupid. Making the publisher's responses obviously win the debate. Making them violent (rare in reality and would change the game's tone).
+
+---
+
+### 6.6 The Apostate
+
+**Profile.** Former member. Recognizes the publishers immediately. Says something the publishers register as inside knowledge — a phrase, a critique, a name, a piece of organizational vocabulary used correctly. The publishers know within ten seconds.
+
+**The only archetype where the doubt meter increments even on a positive (REFUSED) outcome.** Walking away from an Apostate without engaging still costs.
+
+**Three flavors of Apostate by encounter:**
+
+**The Hostile One**
+- Voice: confrontational, prepared for this conversation
+- Common openings: "You don't have to do this," "I used to be one of you. Don't waste your time on me," "I'll save you the speech: I know what you're going to say"
+- Behavior: blocks the doorway, refuses the tract, sometimes follows the publishers down the walk
+- Doubt increment: moderate
+
+**The Wounded One**
+- Voice: tired, grief in the throat
+- Common openings: "I lost everything when I left. They still won't talk to me," "My mother won't speak to me. Did you know that's what they do?", "I'm not — I'm not okay"
+- Behavior: still in the doorway, voice cracks, may cry
+- Doubt increment: high (this is the kind that lingers)
+
+**The Gentle One**
+- Voice: warm, careful, the voice of someone who has been where the player is and is choosing not to weaponize it
+- Common openings: "Are you doing okay? You can talk to me, you know. I won't tell anyone," "It's a hard life, isn't it? The work, the meetings, the reports," "I'm not going to argue with you. I just wanted to say I see you"
+- Behavior: stands in the doorway calmly, sometimes offers water, lets the publishers leave when they want to
+- Doubt increment: highest. This is the most dangerous archetype to the player's doubt meter.
+
+**What they won't do.**
+- Try to convert the player back
+- Be casual about the encounter
+- Pretend not to recognize the publishers
+
+**What lands wrong.**
+- Making them a strawman for the Witnesses' "apostate" framing
+- Making them the wise teacher of the player
+- Making them happy and free in a way that flattens the cost of leaving
+
+---
+
+## 7. Voice Reference Quick Table
+
+| Character | Register | Signature phrase | Pace |
+|---|---|---|---|
+| Parent in the Truth | Warm-controlling | "We love you" | Measured |
+| Sibling Drifting | Deflective | "It's complicated" | Short |
+| Grandparent | Soft-warm | "Come sit with me" | Slow |
+| Coordinator of Elders | Calm-patriarchal | "I was thinking about you" | Deliberate |
+| Strict Elder | Clipped-doctrinal | "Consider the principle" | Direct |
+| Sister Pioneer | Bright-upbuilding | "That's so upbuilding" | Energetic |
+| Service Partner | Companionable | "Today was rough, huh?" | Conversational |
+| Sister Who Talks | Warm-breathless | "I just want to say..." | Quick |
+| Worldly Coworker | Casual-modern | "no worries" | Informal |
+| Householder of Note | Varies | Varies | Varies |
+| Hostile Slammer | Curt | "Not interested." | Final |
+| Curious Seeker | Open | "Can I ask you something?" | Considered |
+| Lonely Elderly | Meandering | "Now what was I saying?" | Slow |
+| Disillusioned Catholic | Searching | "I have some issues with..." | Thoughtful |
+| Hostile Christian | Confident-confrontational | "Actually, the Bible says..." | Assertive |
+| The Apostate (Gentle) | Warm-careful | "Are you doing okay?" | Patient |
+
+---
+
+## 8. Open Questions for Cast Bible v2
+
+To resolve as content milestones land:
+
+1. Player character gender selection: at character creation, or determined by parent's gender choice?
+2. Sister Pioneer's fixed sexuality: how is this surfaced to the player without making it feel like a binary romance gate?
+3. Which Householder of Note ships in v0.1? (Margaret is simplest, Daniel is most narratively rich, Sarah & Tom has the biggest single beat)
+4. The Service Partner specifically: is there a roster of three recurring partners with distinct voices, or one designated partner who sticks throughout?
+5. The Strict Elder's name: charged enough that getting it right matters. Defer.
+6. Does the Apostate appear at a fixed house in the territory, or randomly?
+7. How is the Disfellowshipping announcement scene structured? (The two-sentence elder-at-the-podium moment is canonical but writing it is delicate.)
+
+---
+
+*End of cast v1. This document is canonical for all cast-related dialogue generation. Refresh after each character's first content milestone — add specifics that emerged, prune what didn't land.*

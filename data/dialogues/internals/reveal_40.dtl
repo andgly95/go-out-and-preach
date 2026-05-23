@@ -1,0 +1,20 @@
+# Threshold-40 reveal (M4). Single internal-voice beat fired once,
+# the next time the player enters a door-knock conversation after
+# doubt first crosses the ambiguous threshold (40).
+#
+# door_knock.gd::_start_dialogue_for_pending_house consumes
+# DoubtMeter.consume_reveal_40() before starting the householder
+# timeline; if true, this plays first, then chains into the
+# householder timeline via Dialogic.timeline_ended.
+#
+# Per GDD § 5.2: "a faint, ambiguous indicator appears (a recurring
+# dream, a phrase that catches on rereading, a flicker in dialogue)."
+# Per CLAUDE.md § Common Pitfalls: hidden until 40, single beat.
+# No character joined — the line appears with no name label, no
+# portrait. Default Dialogic text-box fade-in/out.
+#
+# AUTHENTICITY CHECK PENDING — content review at post-M4 playtest.
+# Tunable alongside N=25 calibration once Andrew has played the
+# actual ramp once or twice.
+
+A second on the porch you don't remember being there before.

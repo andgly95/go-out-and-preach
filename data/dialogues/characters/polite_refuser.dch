@@ -1,0 +1,45 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.78, 0.74, 0.66, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "neutral",
+&"description": "Polite Refuser archetype. M3 placeholder — every door in the default territory uses this character until per-house variants ship.",
+&"display_name": "Householder",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"awkward_pause": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/polite_refuser/placeholder_portrait.tscn"
+},
+"firm_refusal": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/polite_refuser/placeholder_portrait.tscn"
+},
+"neutral": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/polite_refuser/placeholder_portrait.tscn"
+},
+"polite_smile": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/polite_refuser/placeholder_portrait.tscn"
+},
+"relief": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/polite_refuser/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}
