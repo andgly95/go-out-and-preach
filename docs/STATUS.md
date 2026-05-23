@@ -2,6 +2,34 @@
 
 Last updated: 2026-05-23
 
+## Next session (queued)
+
+**M4-LF1 — Territory Map Visual Polish.** Andrew pivoted the next-
+session priority from M4.3 Apostate to a look-and-feel pass on the
+territory map. Reference mockup (ChatGPT-generated, 2026-05-23):
+`docs/design/mockups/territory_map_v1.png`. AI asset generation
+prompts staged at `docs/design/mockups/asset_prompts.md` for Andrew
+to run between now and next session. Decisions locked at end of
+M4.1+M4.2 session: (1) AI-gen art to match the mockup; (2) full
+mockup in one session assuming assets are ready; (3) M4.3 Apostate
+becomes the session after this one.
+
+Scope for M4-LF1 (next session will Phase-0/Phase-1 it properly):
+- Three-column layout: info card / map / house detail panel
+- Top banner with branding + 6-resource HUD (Conviction, Elders,
+  Congregation, Family, Energy, Hours This Month)
+- Painted territory background + 12 painted house tiles + parked-
+  car decoration (assets from AI gen pre-session)
+- Color-coded outcome badges, numbered medallions, decorative
+  ornament dividers, scripture quote in info card, "End Field
+  Service" button bottom-right
+- New systems exposed by the design:
+  - Hover/selection state for houses (preview detail before click)
+  - Pre-visit detail panel content ("No prior contact." default)
+  - "Today's progress" aggregator (counts of TRACT_LEFT /
+    RETURN_VISIT / BIBLE_STUDY for current territory)
+  - End Field Service button → TimeManager day advance to SUN
+
 ## Current milestone
 
 **M4.2 — Curious Seeker dialogue subagent pass: complete (same
@@ -323,8 +351,11 @@ session reveals an issue.
 
 ## Roadmap after M4.2
 
-- **M4.3 — The Apostate.** Dedicated session per the skill's
-  special-case clause. New +doubt-on-REFUSED code path is the
+- **M4-LF1 — Territory Map Visual Polish (NEXT).** See "Next
+  session (queued)" section above. Reference: `docs/design/mockups/
+  territory_map_v1.png` + `docs/design/mockups/asset_prompts.md`.
+- **M4.3 — The Apostate** (session after M4-LF1). Dedicated session
+  per the skill's special-case clause. New +doubt-on-REFUSED code path is the
   next mechanic addition. With M4.1's `doubt_delta_overrides`
   field already in place, Apostate-specific deltas live in
   `data/householders/apostate.tres` (or three variants:
@@ -349,10 +380,19 @@ session reveals an issue.
 
 ## Open / deferred for next session
 
-- **M4.3 — The Apostate.** Highest priority next session. Dedicated
-  session per the goop-character skill's special-case clause. Three
-  variants per cast.md § 6.6 (Hostile / Wounded / Gentle). Doubt
-  deltas calibration-sensitive — surface in Phase 1.
+- **M4-LF1 — Territory Map Visual Polish.** Highest priority next
+  session. Reference mockup at `docs/design/mockups/territory_map_v1.png`,
+  asset gen prompts at `docs/design/mockups/asset_prompts.md`. Andrew
+  runs AI image generation between sessions; the polish session drops
+  the assets into `assets/sprites/territory/` and wires the new
+  layout + systems into `territory_map.tscn`. Phase-0 audit at the
+  start of next session should cover: silent decisions in the current
+  `territory_map.tscn`, the M4 HUD's hidden assumptions, and whether
+  the new "Today's progress" aggregator wants per-territory or per-
+  session scope.
+- **M4.3 — The Apostate (session after M4-LF1).** Three variants per
+  cast.md § 6.6 (Hostile / Wounded / Gentle). Doubt deltas
+  calibration-sensitive — surface in Phase 1.
 - **Three `# UNSURE` flags from M4.2** in `curious_seeker_v1.dtl`
   (see "Post-M4.2 playtest priorities" above) — Andrew verifies
   during the gate playtest.
