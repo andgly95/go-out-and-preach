@@ -17,3 +17,9 @@ class_name Householder
 # Householder resource to the Dialogic plugin at load time — if the plugin
 # is uninstalled, the .tres still loads.
 @export var dialogic_character: Resource = null
+
+# Per-archetype doubt-delta overrides keyed by outcome string. Empty dict
+# uses the global table in door_knock.gd. Hostile Slammer uses this to
+# zero out REFUSED — the slam is too brief to land emotionally per
+# dialogue-context.md § 6.
+@export var doubt_delta_overrides: Dictionary = {}

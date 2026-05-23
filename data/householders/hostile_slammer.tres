@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Householder" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dhmo7p4ekosky" path="res://scripts/entities/householder.gd" id="1_householder"]
+
+[resource]
+script = ExtResource("1_householder")
+id = &"hostile_slammer"
+display_name = ""
+archetype = &"hostile_slammer"
+dialogue_timeline = ""
+dialogic_character = null
+doubt_delta_overrides = {
+"REFUSED": 0
+}

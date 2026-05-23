@@ -9,6 +9,7 @@ enum State {
 	REFUSED,
 	TRACT_LEFT,
 	RETURN_VISIT_SCHEDULED,
+	BIBLE_STUDY_STARTED,
 }
 
 @export var id: StringName

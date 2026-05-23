@@ -1,0 +1,163 @@
+# Curious Seeker — door-knock conversation, v1 (M4.2 dialogue subagent pass).
+#
+# INTERPRETATION (subagent, M4.2):
+#   This Curious Seeker is a woman somewhere in her 30s-40s who answered
+#   the door already half-distracted by a thing she's been carrying for
+#   a few days — a friend's husband just died and she doesn't know what
+#   to say. She isn't religious; she isn't anti-religious. When she sees
+#   two people with magazines on her porch she registers, in the same
+#   instant, "oh, this isn't a good time" AND "wait — these people talk
+#   about death for a living." The question comes out before she's
+#   decided to ask it. She is not testing the publisher. She does not
+#   want a study, a magazine, or a return visit — those are the wrong
+#   shape for what she came to the door with. She wants one specific
+#   sentence she can carry to her friend.
+#
+#   On the publisher side: the first three E3 choices are the trained
+#   moves (cast.md § 6.2's warning: "the publisher will be tempted to
+#   oversell"). They all redirect her question into the standard
+#   ministry pipeline — magazine, study, return visit. Only Choice 4
+#   actually answers what she asked. That is the gap dialogue-context.md
+#   § 7 calls out: the on-script choices have the rehearsed quality of
+#   stock door-presentation; the off-script choice is less polished and
+#   more present.
+#
+#   Canonical opening picked from cast.md § 6.2's four options: the
+#   grieving-friend question. It is the highest-yield for the M4 doubt
+#   mechanic because the on-script choices all land as small evasions
+#   of a real human ask — exactly the texture dialogue-context.md § 8
+#   "trust the player to notice" was built for. Reference: dialogue-
+#   context.md § 5 (door-to-door cadence), § 7 (publisher voice / off-
+#   script), § 8 (red lines), cast.md § 6.2 (Curious Seeker profile).
+#
+# BRANCH TOPOLOGY (structurally locked, unchanged from M4.1)
+#   E1  Publisher pitch (anonymous, no character)
+#   E2  Curious Seeker opens fully and asks a real question
+#   E3  Publisher chooses one of 4 responses:
+#         Choice 1 — magazine offer        → TRACT_LEFT
+#         Choice 2 — invite to study       → BIBLE_STUDY_STARTED
+#         Choice 3 — schedule return visit → RETURN_VISIT_SCHEDULED
+#         Choice 4 — off-script (gated)    → REFUSED
+#   E4  Each branch: 1–2 householder lines, portrait beat,
+#       [signal arg="OUTCOME"], [end_timeline]
+#
+# OUTCOMES emitted via [signal arg="..."]:
+#   TRACT_LEFT, BIBLE_STUDY_STARTED, RETURN_VISIT_SCHEDULED, REFUSED
+# door_knock.gd::_on_dialogic_signal maps these to House.State.
+#
+# CHOICE 4 is doubt-gated identically to polite_refuser_v1.dtl E3d:
+#   | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+#
+# COORDINATION NOTE FOR ORCHESTRATOR (M4.2):
+#   The off-script choice text has been reworded from the M4.1
+#   placeholder "Answer the question genuinely" to:
+#     "I don't know. Honestly."
+#   This needs to be added to door_knock.gd::OFFSCRIPT_CHOICE_TEXTS so
+#   T1 (+3 doubt) fires correctly. STATUS's M4 tightening target
+#   ("T1 brittleness — still text-keyed") is the underlying issue;
+#   this change exercises that brittleness exactly as predicted.
+#
+# Mid-conversation exit (ESC / Walk-away button) is handled in
+# door_knock.gd, not here — it terminates the timeline and resolves
+# REFUSED (with T2 +2 doubt).
+#
+# Publisher lines intentionally anonymous: scene is householder POV,
+# matching polite_refuser_v1.dtl. Camera stays on the seeker.
+
+join curious_seeker (neutral) at center
+
+# E1 — Publisher pitch. Householder is half-distracted when she opens
+# the door; the pitch lands in the middle of the thing she's been
+# turning over for days, and the door stays open.
+Good morning. We're sharing a brief encouraging message from the Bible today — about the hope we have for the people we've lost.
+update curious_seeker (interested_lean_in)
+curious_seeker (interested_lean_in): Oh — hi. Sorry, I was — yeah, come up. I can hear you.
+# RESOLVED: opened the publisher line with the "people we've lost" framing rather than the generic "suffering in the world" version used in the polite_refuser pitch. Gives the householder a natural hook to ask the question that's already on her mind; otherwise the E2 ask requires a small narrative leap.
+# UNSURE: "come up" assumes a porch with a couple steps. Reads suburban-house-with-stoop to me but may want "come in closer" or just "I can hear you" in a flatter setting. Andrew to verify against the house background art when it lands.
+
+# E2 — Householder asks the canonical grieving-friend question from
+# cast.md § 6.2. The question comes out before she's quite decided to
+# ask it. Per cast.md: "open, sometimes vulnerable."
+update curious_seeker (genuine_question)
+curious_seeker (genuine_question): Actually — can I ask you something? This is going to sound out of nowhere. My friend's husband just died. Like, last week. And I — I don't know what to say to her. I don't know what people like you say. About — where he is now, or whatever. Is that — is that a weird thing to ask?
+
+# E3 — Publisher chooses one of 4 responses. The first three are
+# trained moves (dialogue-context.md § 5: "under thirty seconds to the
+# magazine offer or scripture introduction"). Choice 4 is off-script
+# (dialogue-context.md § 7) and only available once doubt ≥ 25.
+- We actually have something on exactly that — can I show you?
+	# E4-a — Publisher reaches for the magazine. The trained move is to
+	# redirect the personal question into printed material. CS takes
+	# the magazine because she came to the door for a sentence and a
+	# magazine is something — but the relief isn't full.
+	# Routes to TRACT_LEFT.
+	update curious_seeker (considering)
+	curious_seeker (considering): Oh — okay. Yeah. Yeah, sure, I'll — I'll take a look at it.
+	update curious_seeker (warm_thank_you)
+	curious_seeker (warm_thank_you): Thanks. I'll — I'll read it. Maybe I can find something in there for her.
+	# RESOLVED: kept the CS warm in the close even though the trained pitch was a small evasion of her real question. Per cast.md § 6.2 she "won't reject without engagement"; the disappointment should be felt as texture, not stated.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We actually study the Bible with people in their homes — would you want to do that together?
+	# E4-b — Publisher escalates to a study. For a Curious Seeker
+	# this is the gold-star outcome (GDD § 6, doubt -3) but the
+	# choice itself is the riskiest oversell move at this exchange —
+	# she asked one sentence about her friend and got offered a
+	# recurring weekly meeting. She accepts anyway, because she is
+	# the kind of person who accepts an offered hand.
+	# Routes to BIBLE_STUDY_STARTED.
+	update curious_seeker (interested_lean_in)
+	curious_seeker (interested_lean_in): Oh — that's — wow, okay. You'd really do that? I mean — yeah. Yeah, I think I'd like that.
+	update curious_seeker (warm_thank_you)
+	curious_seeker (warm_thank_you): Okay. Yeah. Let me grab my number for you. And — thank you. Really. I wasn't expecting that today.
+	# UNSURE: "let me grab my number for you" assumes the publisher writes down a phone number rather than scheduling a fixed time on the spot. Real practice (per dialogue-context.md § 5) is usually "would Tuesday or Thursday work?" with a specific time. I went with the number because she's the one breaking out of routine here — she'd want to think about timing. Andrew to verify which scheduling shape lands more authentically.
+	[signal arg="BIBLE_STUDY_STARTED"]
+	[end_timeline]
+- Could I come back another time? I'd like to talk about it properly.
+	# E4-c — Publisher defers. This is the trained "soft" move per
+	# dialogue-context.md § 5 ("Would Tuesday or Thursday work?") —
+	# kindest of the on-script three because it acknowledges the
+	# question deserves more than a porch answer, but it still
+	# defers presence to a later slot. CS agrees easily; her
+	# friend's grief, of course, will not wait for Tuesday.
+	# Routes to RETURN_VISIT_SCHEDULED.
+	update curious_seeker (considering)
+	curious_seeker (considering): Oh — sure. Yeah, that'd be — that's nice of you. I'm usually around evenings, after — after six is good.
+	update curious_seeker (warm_thank_you)
+	curious_seeker (warm_thank_you): Okay. Yeah, come by. I'll — I'll be here. Thank you.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E4-d — OFF-SCRIPT. The publisher drops the pitch and tells the
+	# truth: I do not know what to tell your friend. Per dialogue-
+	# context.md § 7, off-script lines should sound less polished and
+	# more present. The line is short because the publisher knows it
+	# is wrong (in the trained sense) the moment they say it.
+	#
+	# CS receives the answer warmly. The conversation reaches a
+	# natural close — no magazine, no study, no return visit — but
+	# the moment was complete in a way the on-script branches aren't.
+	# Routes to REFUSED.
+	#
+	# RESOLVED: choice text reworded from M4.1 placeholder "Answer the
+	# question genuinely" → "I don't know. Honestly." Reasons:
+	#   (1) "Answer the question genuinely" reads as menu-prose
+	#       summary, not a line a 22-year-old publisher would say;
+	#   (2) the new text IS the line, said aloud — which matches the
+	#       polite_refuser pattern ("Why is that for you?") where the
+	#       choice text and the spoken line are one and the same;
+	#   (3) it lands as a small failure of training. The publisher
+	#       has been taught that they have answers. They don't, here.
+	# COORDINATION: door_knock.gd::OFFSCRIPT_CHOICE_TEXTS must add
+	# "I don't know. Honestly." for T1 (+3 doubt) to fire.
+	#
+	# DOUBT FIRING — T1 hook: door_knock.gd matches against
+	# OFFSCRIPT_CHOICE_TEXTS (Dictionary-as-set per M4.1 STATUS).
+	update curious_seeker (genuine_question)
+	curious_seeker (genuine_question): Oh. Oh — okay. Yeah, I — I don't either. I guess nobody really does, huh.
+	update curious_seeker (warm_thank_you)
+	curious_seeker (warm_thank_you): Thank you, though. For — for not just giving me a pamphlet. I'll figure something out for her. You guys take care, okay?
+	# RESOLVED: closing line explicitly contrasts the off-script answer with the magazine offer ("not just giving me a pamphlet"). This is the one moment where the householder names the texture difference between branches. Risk: edges toward dialogue-context.md § 8's "the game pointing things out" red line. Kept because (a) she is naming her own gratitude, not narrating the game's thesis, and (b) the contrast is in *her* mouth, not the publisher's. Andrew may want to soften if it reads as too on-the-nose during playtest.
+	# UNSURE: "pamphlet" rather than "magazine" — householders outside the org often blur the two; pamphlet is the more common civilian word for what a JW hands out. Reads right to me but flagging in case Andrew wants the precise "magazine."
+	[signal arg="REFUSED"]
+	[end_timeline]

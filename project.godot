@@ -32,9 +32,11 @@ PlayerState="*res://scripts/entities/player_state.gd"
 [dialogic]
 
 directories/dch_directory={
+"curious_seeker": "res://data/dialogues/characters/curious_seeker.dch",
 "polite_refuser": "res://data/dialogues/characters/polite_refuser.dch"
 }
 directories/dtl_directory={
+"curious_seeker_v1": "res://data/dialogues/curious_seeker_v1.dtl",
 "polite_refuser_v1": "res://data/dialogues/polite_refuser_v1.dtl",
 "reveal_40": "res://data/dialogues/internals/reveal_40.dtl"
 }
