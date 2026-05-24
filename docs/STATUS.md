@@ -4,33 +4,188 @@ Last updated: 2026-05-23
 
 ## Next session (queued)
 
-**M4-LF1 — Territory Map Visual Polish.** Andrew pivoted the next-
-session priority from M4.3 Apostate to a look-and-feel pass on the
-territory map. Reference mockup (ChatGPT-generated, 2026-05-23):
-`docs/design/mockups/territory_map_v1.png`. AI asset generation
-prompts staged at `docs/design/mockups/asset_prompts.md` for Andrew
-to run between now and next session. Decisions locked at end of
-M4.1+M4.2 session: (1) AI-gen art to match the mockup; (2) full
-mockup in one session assuming assets are ready; (3) M4.3 Apostate
-becomes the session after this one.
+**M4.3 — The Apostate.** Three variants per cast.md § 6.6 (Hostile /
+Wounded / Gentle). Doubt deltas calibration-sensitive — surface in
+Phase 1. With M4.1's `doubt_delta_overrides` field already in place,
+Apostate-specific deltas live in `data/householders/apostate.tres` (or
+three variants: `apostate_hostile.tres`, `apostate_wounded.tres`,
+`apostate_gentle.tres`). The +doubt-on-positive-outcome semantic does
+need a small mechanism beyond the overlay — likely a per-archetype
+"positive outcomes also cost N" flag, or full custom deltas including
+positive ones (`{"REFUSED": 4, "TRACT_LEFT": 3, ...}`). Surface in
+M4.3 Phase 1.
 
-Scope for M4-LF1 (next session will Phase-0/Phase-1 it properly):
-- Three-column layout: info card / map / house detail panel
-- Top banner with branding + 6-resource HUD (Conviction, Elders,
-  Congregation, Family, Energy, Hours This Month)
-- Painted territory background + 12 painted house tiles + parked-
-  car decoration (assets from AI gen pre-session)
-- Color-coded outcome badges, numbered medallions, decorative
-  ornament dividers, scripture quote in info card, "End Field
-  Service" button bottom-right
-- New systems exposed by the design:
-  - Hover/selection state for houses (preview detail before click)
-  - Pre-visit detail panel content ("No prior contact." default)
-  - "Today's progress" aggregator (counts of TRACT_LEFT /
-    RETURN_VISIT / BIBLE_STUDY for current territory)
-  - End Field Service button → TimeManager day advance to SUN
+House #7 is the reserved slot (currently rendering Polite Refuser as
+placeholder per `territory_manager.gd::DISTRIBUTION`).
 
 ## Current milestone
+
+**M4-LF2 — Day Screen Visual Polish: complete (headless boot clean;
+gate playtest pending Andrew).** The `week_view` (day) screen now
+mirrors the new day-screen mockup (ChatGPT-generated, 2026-05-23, in
+chat — not committed): top banner shared with the territory map,
+center "day card" with per-day title + flavor sentence + iconed
+activity rows + primary "GO OUT IN SERVICE" gold button + secondary
+"ADVANCE TO NEXT PHASE" button, right-hand "TODAY'S SCHEDULE" card
+with Morning/Midday/Evening rows + Matthew 5:16 scripture, "← BACK
+TO MENU" bottom-left, ESC bound to back.
+
+Same session also **extracted the top banner into a reusable
+component**: `scenes/top_banner.tscn` + `scripts/ui/top_banner.gd`.
+Both `territory_map.tscn` and `week_view.tscn` now instance it.
+`territory_map.gd` lost its inline HUD-wiring (6 @onready vars,
+`_refresh_hud`, `_on_resource_changed`) since the banner now owns
+those signals. Legacy `scenes/hud.tscn` still wired into
+`door_knock.tscn`; replacement is a future polish session.
+
+## Previous milestone
+
+**M4-LF1 — Territory Map Visual Polish: complete (headless boot
+clean; gate playtest pending Andrew).** The Saturday field-service
+screen matches `docs/design/mockups/territory_map_v1.png`: top
+banner with "GO OUT AND PREACH" branding + tagline + 6-resource HUD,
+three-column layout (info card / painted map / detail panel), 12
+Godot-drawn house slots overlaying `territory_background.png` with
+numbered medallions and color-coded outcome badges, single shared
+detail-panel painting with per-state copy, "Today's Progress" counters
+driven by `SignalBus.territory_house_visited`, parked-car decoration
+under the info card, "END FIELD SERVICE" button bottom-right, ESC/Back
+bottom-left. As of M4-LF2 the inline top banner has been refactored
+out into the shared `top_banner.tscn` (same visuals).
+
+## Implicit decisions this session (M4-LF2)
+
+- **Painted desk-scene background deferred.** The mockup shows a
+  painted desk scene (window view, sacred writings book, Lighthouse
+  magazine, framed Galatians 6:9, mug). No painted asset was shipped
+  for the day screen; v1 uses flat deep sepia like the territory map.
+  Queued as polish add — see "Post-M4-LF2 playtest priorities" below.
+- **Top banner extraction.** Worth the small refactor: two scenes
+  share the banner today, more will tomorrow (meeting_hall, home).
+  Single source of truth in `scenes/top_banner.tscn` +
+  `scripts/ui/top_banner.gd`. `territory_map.gd` lost ~30 lines of
+  duplicated HUD-wiring code.
+- **Per-day content written for all 7 phases.** Authentic Society-of-
+  the-Truth vocabulary (Hall of Witness, Lighthouse, magazine case,
+  service group, midweek meeting). One flavor sentence, 1-2 activity
+  rows, and 3 morning/midday/evening schedule rows per day. Lives
+  inline in `week_view.gd::DAY_CONTENT` — moving to .tres resources is
+  a future content-pass decision.
+- **Iconography = Godot-drawn square panels with unicode glyphs.** ✦
+  for ornamental, ☀ for morning, ☾ for evening, 📖 for study, ✎ for
+  prep/notes. Matches the mockup's square icon framing without
+  requiring new image assets.
+- **Scripture quote unchanged from territory map.** Matthew 5:16 stays
+  as the static brand verse on both screens. Rotation per-day deferred.
+
+## Completed this session (M4-LF2)
+
+- **`scenes/top_banner.tscn`** + **`scripts/ui/top_banner.gd`** —
+  shared component. PanelContainer root sized 88px tall by default,
+  anchors top-stretch when instanced. Owns the 6 stat readouts and
+  the `SignalBus.resource_changed` listener; auto-refreshes on any
+  resource mutation.
+- **`scenes/territory_map.tscn`** — replaced the inline TopBanner
+  subtree (~140 lines of node definitions + a StyleBoxFlat sub-
+  resource) with `[node name="TopBanner" parent="." instance=ExtResource("5_banner")]`.
+  Net visual change: zero. Net code change: -135 lines from the .tscn,
+  +1 ext_resource line.
+- **`scripts/ui/territory_map.gd`** — removed `_conviction_value`,
+  `_elders_value`, `_cong_value`, `_family_value`, `_energy_value`,
+  `_hours_value` @onready vars; removed `_refresh_hud()` and
+  `_on_resource_changed()` functions; removed the
+  `SignalBus.resource_changed.connect` line and the
+  `_refresh_hud()` call in `_ready`. The banner handles its own state
+  now.
+- **`scenes/week_view.tscn`** — full rebuild. Discarded the
+  M1-era stacked-VBox with grey buttons + corner HUD. New tree:
+  flat deep-sepia root, top banner instance, ~720×620 dark center
+  card (ornament divider + title + flavor + activity rows + GO OUT
+  IN SERVICE primary button + ADVANCE secondary button), 300px-wide
+  right-side schedule card (header + period rows + scripture), back
+  button bottom-left.
+- **`scripts/ui/week_view.gd`** — full rewrite around the `DAY_CONTENT`
+  dictionary. `_refresh()` re-renders title, flavor, activity rows,
+  schedule rows on `_ready` and on every `SignalBus.phase_changed`.
+  Helpers: `_make_activity_row()`, `_make_schedule_row()`,
+  `_make_icon_square()`. Service button hides/shows based on
+  `SERVICE_DAY_PHASES = [THURSDAY, SATURDAY]`. ESC routes through the
+  back button handler.
+
+## Files unchanged by intent (M4-LF2)
+
+- `scenes/hud.tscn`, `scripts/ui/hud.gd` — still instanced by
+  `door_knock.tscn` (a future polish target).
+- `scenes/door_knock.tscn` — out of scope. Still uses legacy HUD.
+- `scripts/systems/*` — no schema or behavior changes. The new screen
+  is purely presentation over existing state.
+
+## Gate verification — Andrew's checklist (M4-LF2)
+
+**Headless boot: clean.** `godot --headless --quit-after 4
+res://scenes/week_view.tscn` and `... res://scenes/territory_map.tscn`
+both return 0 errors; only the standard `--quit-after` cleanup
+warnings appear.
+
+**Visual gate (Andrew runs editor playtest):**
+
+- [ ] **Banner identical across screens.** Boot to week_view (default).
+      Banner shows "GO OUT AND PREACH" + tagline + 6 stats. Click GO
+      OUT IN SERVICE (on Thu/Sat) → territory_map shows the same
+      banner identically. Walk back via "← Back" → banner still
+      identical. (Confirms the extraction didn't drift.)
+- [ ] **Day card content on Sunday.** Fresh game opens on Week 1 —
+      Sunday. Title "Week 1 — Sunday", flavor "The Lord's day at the
+      Hall of Witness…", two activity rows ("Public Talk" + "Lighthouse
+      Study") with descriptions, GO OUT IN SERVICE hidden (Sunday is
+      not a service day), ADVANCE TO NEXT PHASE visible.
+- [ ] **Click ADVANCE 4×.** Walk Sun → Mon → Tue → Wed → Thu. At
+      Thursday, title reads "Week 1 — Thursday", flavor matches the
+      mockup exactly ("A thoughtful day of preparation strengthens the
+      work ahead."), activities are Service prep + Return visit prep,
+      GO OUT IN SERVICE button appears.
+- [ ] **Today's Schedule updates per day.** On Thursday, schedule reads:
+      Morning "Personal study and prayer", Midday "Service and return
+      visit preparation", Evening "Review the day and plan tomorrow"
+      — matches the mockup wording.
+- [ ] **Saturday → GO OUT IN SERVICE.** Advance to Saturday. Title
+      "Week 1 — Saturday", flavor "Field service day. Go out and
+      preach.", single Field Service activity row, GO OUT IN SERVICE
+      visible. Click it → territory_map. End Field Service → returns
+      to week_view as Sunday Week 2 with new schedule.
+- [ ] **Top banner stat live wiring.** During a Saturday: visit a
+      house, return to territory_map → Hours This Month updates to
+      0.3 in the banner. End Field Service → week_view shows the same
+      0.3 still in the banner (state preserved across scene change).
+- [ ] **ESC + back button.** Press ESC anywhere on week_view → returns
+      to main menu. Clicking "← BACK TO MENU" does the same.
+- [ ] **Layout sanity at 1920×1080.** Center card sits roughly mid-
+      screen, schedule card pinned to the right with ~24px margin,
+      back button bottom-left ~16px in.
+- [ ] **No regression.** territory_map still renders correctly with
+      hover/select/click. door_knock still loads with the legacy HUD
+      (intentional).
+
+## Post-M4-LF2 playtest priorities
+
+- **Painted desk-scene background.** Closest L&F gap. If the flat
+  deep-sepia fill reads as too thin compared to the mockup, queue a
+  3-asset add (window-view background, sacred writings book stack,
+  Lighthouse magazine) and overlay them like the territory map's
+  parked car.
+- **Icon glyph rendering.** ☀ ☾ ✎ ✦ 📖 may render inconsistently
+  depending on Godot's bundled fallback font coverage. If any glyph
+  squares or boxes (tofu), swap to plain letters M/D/E for periods
+  or to ✦ for everything.
+- **Schedule content is generic on personal-time days.** Mon/Wed/Fri
+  schedule strings (working day / lunch / personal study) are honest
+  but flat — playtest may show they need more texture. Easy to enrich
+  in `week_view.gd::DAY_CONTENT`.
+- **Title font size = 44.** Lifts off the mockup's serif weight. If
+  the default sans reads thin at 44pt, a serif TTF (EB Garamond per
+  M4-LF1 follow-up) lands the diegetic feel better.
+
+## Previous milestone
 
 **M4.2 — Curious Seeker dialogue subagent pass: complete (same
 session as M4.1).** The dialogue subagent picked the grieving-
@@ -43,6 +198,226 @@ to **"I don't know. Honestly."** — `door_knock.gd::OFFSCRIPT_CHOICE_TEXTS`
 updated in the same session to match. Three `# UNSURE` flags
 embedded for Andrew's playtest review (see "Post-M4.2 playtest
 priorities" below).
+
+## Locked design decisions this session (M4-LF1)
+
+Seven Phase 1 decisions, all resolved on recommendations.
+
+- **Q1: HUD scope = all 6 resources from the mockup.** Conviction,
+  Elders, Congregation, Family, Energy, Hours This Month. All fields
+  already existed on `ResourceManager` with sensible defaults — wire-
+  only, no schema changes. Top banner labels live inline in
+  `territory_map.tscn`; values bound to `ResourceManager` and refreshed
+  via the existing `SignalBus.resource_changed` signal.
+- **Q2: End Field Service = silent SAT → SUN advance.** Preserved the
+  M2-era behavior: `TimeManager.advance_phase()` then
+  `change_scene_to_file("res://scenes/week_view.tscn")`. Plus a new
+  bottom-left "ESC ← Back" button that returns to week_view *without*
+  advancing time, bound to `ui_cancel` for keyboard parity.
+- **Q3: Scripture quote = hardcoded for v1.** "Let your light shine
+  before others..." — MATTHEW 5:16. Const on the scene script
+  (`SCRIPTURE_QUOTE` / `SCRIPTURE_REF`). Per-territory variation
+  deferred to M5+ multi-territory work.
+- **Q4: Banner tagline = permanent branding.** "Remember the good
+  news. — MARK 13:10". Static label in the scene file; identical on
+  every load.
+- **Q5: Single shared detail-panel painting confirmed.** All 12 slots
+  share `assets/sprites/territory/house_painting.png`. Per-state copy
+  (caption + body) varies via the script's `_caption_for_state` /
+  `_body_for_state` matches. Per-house art deferred to M4.4+.
+- **Q6: Today's Progress aggregator = SignalBus listener with cached
+  counters on the scene.** `_tract_left_count`, `_return_visit_count`,
+  `_studies_started_count` rebuild from `current_territory.houses` on
+  `_ready` (survives re-entry) and recompute on
+  `territory_house_visited`. No per-frame work.
+- **Q7: Slot interaction = hover-selects, click-commits.** Mouseover
+  populates the right detail panel + paints a 3px gold border on the
+  selected slot. Click commits unchanged: `set_pending_house` →
+  `change_scene_to_file` for door_knock. ESC (ui_cancel) routes
+  through the back button handler.
+
+## Locked implicit decisions
+
+- **Typography = Godot default font.** No serif TTF added in M4-LF1.
+  Visual differentiation between diegetic and system text comes from
+  size + casing (uppercase eyebrows for system, large mixed-case for
+  diegetic place names). EB Garamond pass deferred to a later L&F
+  follow-up if playtest demands.
+- **Asset placement.** Three painted files copied (originals kept) from
+  `docs/design/mockups/` to `assets/sprites/territory/`. Runtime
+  references live under `assets/`.
+- **Shared `hud.tscn` untouched.** Bespoke top banner inline in
+  `territory_map.tscn` only; `week_view` and `door_knock` continue to
+  instance the original vertical HUD.
+
+## Completed this session (M4-LF1)
+
+- **`assets/sprites/territory/{background,house_painting,car}.png`** —
+  three painted assets copied from `docs/design/mockups/`. Triggered
+  `godot --headless --import` to materialize the `.import` resources
+  so the Texture2D ext_resource refs in the scene resolve.
+- **`scenes/territory_map.tscn`** — full rebuild. Discarded the
+  M2-era `CenterPanel + GridContainer` of grey buttons and removed the
+  HUD instance for this scene. New tree: dark-sepia root background,
+  top banner (`TopBanner` PanelContainer with brand column + 6-stat
+  HBox), main row (`LeftInfoCard` / `CenterMap` / `RightDetailPanel`),
+  bottom-left parked-car decoration, bottom-left ESC back button,
+  bottom-right styled "END FIELD SERVICE" button. All non-painted UI
+  elements (panels, dividers, badge swatches, ornament glyphs) drawn
+  via `StyleBoxFlat` + Label.
+- **`scripts/ui/territory_map.gd`** — substantial rewrite.
+  - `SLOT_FRACTIONS` const: 12 `Vector4(x, y, w, h)` fractional offsets
+    of the `CenterMap` rect. `_layout_slots()` re-resolves to pixel
+    positions on `_ready` (one frame later, so the container has its
+    final size) and on `_map_area.resized`. Tuned by eye against the
+    background art's 4×3 yard grid.
+  - `_make_slot()` builds each slot as: a `Hit` PanelContainer (empty
+    style box; gold border when selected), a `Medallion` Panel
+    (38×38 navy disc with gold border, numeral 1-12 inside), and a
+    bottom-anchored `Badge` PanelContainer with state-dependent color
+    and label.
+  - Badge color + text resolution in `_badge_info_for_state(state)`:
+    green for TRACT_LEFT and BIBLE_STUDY_STARTED, amber for
+    RETURN_VISIT_SCHEDULED, deep red for REFUSED, grey for NOT_HOME,
+    cream for NOT_VISITED. `TerritoryManager.outcome_label()` is left
+    untouched — the new NOT_VISITED string lives view-side.
+  - Hover wiring on the slot's root Control: `mouse_entered` →
+    `_select(house_id)` which repaints the previously-selected slot,
+    paints the new gold outline, and populates the detail panel.
+  - Click via `gui_input` on the slot root → `_commit_visit(house_id)`
+    which preserves the existing
+    `TerritoryManager.set_pending_house` → `change_scene_to_file`
+    contract used by M2/M3/M4 code paths.
+  - `_caption_for_state` + `_body_for_state` provide the right-panel
+    copy table per the plan (NOT_VISITED: "No prior contact." / "This
+    household has not been visited yet. A good opportunity to introduce
+    the message.", plus one line each for visited states).
+  - `_refresh_progress()` scans `current_territory.houses` and writes
+    the three Today's Progress values. Called once on `_ready` and on
+    every `territory_house_visited` emission. 12 houses; per-frame is
+    not needed.
+  - `_refresh_hud()` reads all six fields off `ResourceManager` and
+    writes them into the top banner's value labels. Wired to
+    `SignalBus.resource_changed` for live updates (e.g. when
+    `add_hours(0.25)` fires on door resolve).
+  - `_build_legend()` constructs the right-panel legend at runtime so
+    the swatch colors stay in lock-step with the badge `Color`
+    constants (no chance of the scene file drifting from the script).
+  - ESC and the back button both call `_on_back_pressed()` → return
+    to `week_view` without advancing the clock.
+
+## Files unchanged by intent (M4-LF1)
+
+- `scenes/hud.tscn`, `scripts/ui/hud.gd` — still used by `week_view`
+  and `door_knock`. Confirmed via grep.
+- `scripts/systems/resource_manager.gd` — all 6 HUD resources already
+  present with mockup-matching defaults (Conviction 50, Elders 0,
+  Cong 0, Family 0, Energy 10/10, Hours 0.0).
+- `scripts/systems/territory_manager.gd::outcome_label()` — unchanged;
+  the NOT_VISITED label lives in the scene script's badge dict so the
+  manager's pure outcome→label resolution stays minimal.
+- `scripts/systems/time_manager.gd::advance_phase()` — already advances
+  SAT → SUN and fires `week_advanced` on wrap. Drives End Field Service
+  with zero changes.
+- `scripts/systems/signal_bus.gd::territory_house_visited` — already
+  fired inside `TerritoryManager.resolve_pending_house`. Drives
+  Today's Progress + per-slot badge refresh without per-frame work.
+- `scripts/entities/house.gd`, `territory.gd`, `householder.gd` — no
+  schema changes; reused as-is.
+
+## Gate verification — Andrew's checklist (M4-LF1)
+
+**Headless boot: clean.** `godot --headless --quit-after 4
+res://scenes/territory_map.tscn` returns 0 errors; the only warnings
+are the standard "ObjectDB instances leaked at exit" and "26 resources
+still in use at exit" which are normal `--quit-after` cleanup.
+
+**Visual gate (Andrew runs editor playtest):**
+
+- [ ] **Layout at 1920×1080.** Three columns visible: ~320px info card
+      left, painted map centered, ~320px detail panel right. Top
+      banner spans full width at 88px. END FIELD SERVICE styled button
+      anchored bottom-right; ESC ← Back text button bottom-left.
+- [ ] **Banner branding.** "GO OUT AND PREACH" + tagline left-aligned;
+      6 stat readouts (CONVICTION 50, ELDERS 0, CONGREGATION 0, FAMILY
+      0, ENERGY 10 / 10, HOURS THIS MONTH 0.0) right-aligned.
+- [ ] **Info card content.** "✦ SATURDAY · FIELD SERVICE ✦" eyebrow,
+      "Maple Street" large title, flavor sentence, TODAY'S PROGRESS
+      header with Tract Left / Return Visits / Studies Started rows
+      (all 0 at fresh load), scripture quote + "— MATTHEW 5:16" at
+      bottom of the card.
+- [ ] **Map slots.** 12 numbered medallions (1-12) sit roughly over
+      the 4×3 yard grid in the painted background. Each slot has a
+      cream "NOT VISITED" badge below the medallion at fresh load.
+- [ ] **Hover/select.** Mouseover slot #1 → gold 3px outline appears
+      on slot, detail panel updates to "✦ HOUSE #1 ✦" + "No prior
+      contact." caption + body sentence. Move to slot #11 → outline
+      follows; detail panel switches. Move to slot #7 → same (it's
+      still PR-placeholder for M4.3).
+- [ ] **Click commit.** Click slot #1 → routes to door_knock as before
+      with PR archetype. Resolve TRACT_LEFT and return. Slot #1's
+      badge is now green "TRACT LEFT". Detail panel still shows slot
+      #1 selected with the TRACT_LEFT caption/body. Today's Progress
+      shows Tract Left = 1. Banner Hours = 0.3 (or 0.2 — the format
+      truncates).
+- [ ] **All five outcome badge colors render.** Visit one of each
+      outcome (PR #1 → TRACT_LEFT/green; HS #2 → REFUSED/red; CS #4 →
+      RETURN_VISIT/amber; CS #9 → STUDY_STARTED/green). Confirm color
+      mapping. (NOT_HOME has no producer yet — see note below.)
+- [ ] **Today's Progress accuracy.** After the four visits above:
+      Tract Left = 1, Return Visits = 1, Studies Started = 1. Hours
+      banner = 1.0.
+- [ ] **End Field Service.** Click button → `TimeManager` advances
+      SAT → SUN, scene swaps to week_view, week_view shows "Sunday"
+      with Public Talk / Lighthouse Study activities. Hours This
+      Month preserved.
+- [ ] **Back button + ESC.** Press ESC or click back button → returns
+      to week_view *without* advancing the clock. current_phase still
+      SATURDAY.
+- [ ] **No regression.** `door_knock.tscn` still loads with the
+      original vertical HUD top-right (shared `hud.tscn` unchanged).
+      `week_view.tscn` likewise.
+- [ ] **Visual sanity against mockup.** Side-by-side compare with
+      `docs/design/mockups/territory_map_v1.png`. Banner branding,
+      info card cadence, badge colors, gold selection outline, parked
+      car position, end-button styling should all read as the same
+      artifact.
+
+## Post-M4-LF1 playtest priorities
+
+Carried forward and added during M4-LF1. Touch only if a session
+reveals an issue.
+
+- **Slot fraction tuning.** `SLOT_FRACTIONS` in `territory_map.gd` was
+  set by eye from the background art's 4×3 grid. If a row or column
+  of medallions visually drifts off the yards in the painted image,
+  nudge the affected entries. The eye-by-eye tuning is the cheapest
+  iteration here.
+- **NOT_HOME has no producer.** No archetype currently yields the
+  NOT_HOME outcome (cf. STATUS "Known gaps / deferred" — NOT_HOME
+  stays a territory-level mechanic). The badge color/text is wired
+  in case it lands later; legend entry left for now.
+- **Single shared detail-panel painting.** May read as obvious reuse
+  to a tester. M4.4 carries per-house art variants if playtest flags
+  it. The state copy strings are deliberately neutral — they describe
+  the player's last interaction, not the house, which softens the
+  reuse tell.
+- **Typography is plain default font.** Diegetic accents (scripture
+  quote, "Maple Street" header) lack the serif treatment GDD § 9 calls
+  for. Acceptable for v1; queue an EB Garamond TTF drop if playtest
+  finds the look "thin."
+- **No confirm modal on End Field Service.** If a playtester misclicks
+  and burns their Saturday accidentally, surface this as a feedback
+  point — the confirm-with-summary modal alternative from Phase 1 is
+  cheap to add later.
+- **Carried from M4.2/M4.1**: three `# UNSURE` flags in
+  `curious_seeker_v1.dtl`, `UNSURE:` on line 39 of
+  `polite_refuser_v1.dtl`, N=25 calibration, reveal-40 text,
+  T1 brittleness, dialogic_character dead-code cleanup, HS pool
+  weighting, T4 study-counts question — see prior sessions for
+  detail.
+
+## Previous milestones (M4.1)
 
 **M4.1 — Territory Variety: complete (headless boot clean; gate
 playtest pending Andrew).** Maple Street's 12 houses now hold three
@@ -349,12 +724,10 @@ session reveals an issue.
   in `doubt_meter.gd::_territory_had_return_visit_this_week`.
   Held for playtest decision (Andrew may want stricter T4).
 
-## Roadmap after M4.2
+## Roadmap after M4-LF1
 
-- **M4-LF1 — Territory Map Visual Polish (NEXT).** See "Next
-  session (queued)" section above. Reference: `docs/design/mockups/
-  territory_map_v1.png` + `docs/design/mockups/asset_prompts.md`.
-- **M4.3 — The Apostate** (session after M4-LF1). Dedicated session
+- **M4.3 — The Apostate (NEXT).** See "Next session (queued)" above.
+  Dedicated session
   per the skill's special-case clause. New +doubt-on-REFUSED code path is the
   next mechanic addition. With M4.1's `doubt_delta_overrides`
   field already in place, Apostate-specific deltas live in
@@ -380,19 +753,13 @@ session reveals an issue.
 
 ## Open / deferred for next session
 
-- **M4-LF1 — Territory Map Visual Polish.** Highest priority next
-  session. Reference mockup at `docs/design/mockups/territory_map_v1.png`,
-  asset gen prompts at `docs/design/mockups/asset_prompts.md`. Andrew
-  runs AI image generation between sessions; the polish session drops
-  the assets into `assets/sprites/territory/` and wires the new
-  layout + systems into `territory_map.tscn`. Phase-0 audit at the
-  start of next session should cover: silent decisions in the current
-  `territory_map.tscn`, the M4 HUD's hidden assumptions, and whether
-  the new "Today's progress" aggregator wants per-territory or per-
-  session scope.
-- **M4.3 — The Apostate (session after M4-LF1).** Three variants per
-  cast.md § 6.6 (Hostile / Wounded / Gentle). Doubt deltas
-  calibration-sensitive — surface in Phase 1.
+- **M4.3 — The Apostate.** Highest priority next session. Three
+  variants per cast.md § 6.6 (Hostile / Wounded / Gentle). Doubt deltas
+  calibration-sensitive — surface in Phase 1. House #7 in Maple Street
+  is the reserved slot; it currently renders Polite Refuser as
+  placeholder per `territory_manager.gd::DISTRIBUTION`.
+- **M4-LF1 visual gate playtest** — see "Gate verification" above.
+  Andrew opens the editor, plays a Saturday, walks the checklist.
 - **Three `# UNSURE` flags from M4.2** in `curious_seeker_v1.dtl`
   (see "Post-M4.2 playtest priorities" above) — Andrew verifies
   during the gate playtest.
@@ -417,8 +784,11 @@ session reveals an issue.
 - **Threshold-70 full visibility** — later milestone.
 - **Save/load** — M7.
 - **Settings menu** — M7.
-- **Real portraits and backgrounds** — placeholder ColorRects through
-  M4.1. Art pass post-gate.
+- **Real portraits and door_knock backgrounds** — placeholder
+  ColorRects still through M4-LF1. The territory map has its painted
+  background, house painting, and parked car after M4-LF1; portraits
+  and porch scenes for door_knock remain placeholder until a later
+  art pass.
 - **Apostate** — M4.3 dedicated session.
 - **Lonely Elderly, Disillusioned Catholic, Hostile Christian** —
   M4.4+ (optional for v0.1; GDD § 12 only requires three archetypes

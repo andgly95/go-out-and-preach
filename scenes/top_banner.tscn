@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://b2ww3p240d1ge"]
+
+[ext_resource type="Script" path="res://scripts/ui/top_banner.gd" id="1_banner"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
+bg_color = Color(0.09, 0.11, 0.16, 1)
+border_width_bottom = 2
+border_color = Color(0.62, 0.5, 0.27, 0.6)
+
+[node name="TopBanner" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 88)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 88.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+script = ExtResource("1_banner")
+
+[node name="BannerMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 8
+
+[node name="BannerRow" type="HBoxContainer" parent="BannerMargin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="BrandColumn" type="VBoxContainer" parent="BannerMargin/BannerRow"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 2
+
+[node name="BrandTitle" type="Label" parent="BannerMargin/BannerRow/BrandColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 24
+text = "GO OUT AND PREACH"
+
+[node name="BrandTagline" type="Label" parent="BannerMargin/BannerRow/BrandColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "Remember the good news. — MARK 13:10"
+
+[node name="BrandSpacer" type="Control" parent="BannerMargin/BannerRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatRow" type="HBoxContainer" parent="BannerMargin/BannerRow"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_constants/separation = 28
+
+[node name="ConvictionStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "CONVICTION"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "50"
+horizontal_alignment = 1
+
+[node name="EldersStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "ELDERS"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+
+[node name="CongregationStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "CONGREGATION"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+
+[node name="FamilyStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "FAMILY"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+
+[node name="EnergyStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "ENERGY"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "10 / 10"
+horizontal_alignment = 1
+
+[node name="HoursStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+text = "HOURS THIS MONTH"
+horizontal_alignment = 1
+
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "0.0"
+horizontal_alignment = 1

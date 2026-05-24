@@ -1,8 +1,56 @@
 [gd_scene format=3 uid="uid://bgp0m0menu0aa"]
 
 [ext_resource type="Script" uid="uid://dwwnnywgd2878" path="res://scripts/ui/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Texture2D" uid="uid://dswtqb40w8gec" path="res://assets/sprites/menu/desk_background.png" id="2_deskbg"]
 
-[node name="MainMenu" type="Control" unique_id=1210466786]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
+bg_color = Color(0.18, 0.16, 0.13, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.09, 0.11, 0.16, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.62, 0.5, 0.27, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menubtn"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+bg_color = Color(0.13, 0.16, 0.22, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.5, 0.27, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menubtn_hover"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+bg_color = Color(0.18, 0.22, 0.3, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.86, 0.7, 0.34, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="MainMenu" type="Control" unique_id=233137644]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,39 +59,159 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_menu")
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1988655800]
+[node name="RootBackground" type="PanelContainer" parent="." unique_id=696154645]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_root")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1416093408]
-layout_mode = 2
-theme_override_constants/separation = 16
+[node name="DeskBackground" type="TextureRect" parent="." unique_id=986597501]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_deskbg")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1905125660]
+[node name="MenuCard" type="PanelContainer" parent="." unique_id=979993950]
+custom_minimum_size = Vector2(520, 720)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 120.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = 360.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="CardMargin" type="MarginContainer" parent="MenuCard" unique_id=1233649634]
 layout_mode = 2
-text = "Go Out and Preach"
+theme_override_constants/margin_left = 56
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 56
+theme_override_constants/margin_bottom = 40
+
+[node name="CardVBox" type="VBoxContainer" parent="MenuCard/CardMargin" unique_id=539133944]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TopOrnament" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=182193467]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.62, 0.28, 1)
+theme_override_font_sizes/font_size = 28
+text = "✦  📖  ✦"
 horizontal_alignment = 1
 
-[node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=482854934]
-custom_minimum_size = Vector2(240, 48)
+[node name="TitleSpacerTop" type="Control" parent="MenuCard/CardMargin/CardVBox" unique_id=1794175172]
+custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
-text = "New Game"
 
-[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1913901760]
-custom_minimum_size = Vector2(240, 48)
+[node name="TitleLine1" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=1412492445]
 layout_mode = 2
-text = "Continue"
+theme_override_colors/font_color = Color(0.86, 0.7, 0.34, 1)
+theme_override_font_sizes/font_size = 56
+text = "GO OUT"
+horizontal_alignment = 1
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1578998514]
-custom_minimum_size = Vector2(240, 48)
+[node name="TitleLine2" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=1197311271]
 layout_mode = 2
-text = "Settings"
+theme_override_colors/font_color = Color(0.86, 0.7, 0.34, 1)
+theme_override_font_sizes/font_size = 56
+text = "AND PREACH"
+horizontal_alignment = 1
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=542615589]
-custom_minimum_size = Vector2(240, 48)
+[node name="TitleDivider" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=709868360]
 layout_mode = 2
-text = "Quit"
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.9)
+theme_override_font_sizes/font_size = 16
+text = "──────  ◇  ──────"
+horizontal_alignment = 1
+
+[node name="Tagline" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=1162114664]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 0.95)
+theme_override_font_sizes/font_size = 16
+text = "\"Remember the good news.\"   — MARK 13:10"
+horizontal_alignment = 1
+
+[node name="ButtonSpacer" type="Control" parent="MenuCard/CardMargin/CardVBox" unique_id=1427351314]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="NewGameButton" type="Button" parent="MenuCard/CardMargin/CardVBox" unique_id=1864582061]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_colors/font_hover_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menubtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menubtn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menubtn_hover")
+text = "✦       NEW GAME       ✦"
+
+[node name="ContinueButton" type="Button" parent="MenuCard/CardMargin/CardVBox" unique_id=1559544068]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 0.8)
+theme_override_colors/font_hover_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menubtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menubtn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menubtn_hover")
+text = "✦       CONTINUE       ✦"
+
+[node name="SettingsButton" type="Button" parent="MenuCard/CardMargin/CardVBox" unique_id=1468258094]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_colors/font_hover_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menubtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menubtn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menubtn_hover")
+text = "✦       SETTINGS       ✦"
+
+[node name="QuitButton" type="Button" parent="MenuCard/CardMargin/CardVBox" unique_id=1475106806]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_colors/font_hover_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menubtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menubtn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menubtn_hover")
+text = "✦       QUIT       ✦"
+
+[node name="BottomSpacer" type="Control" parent="MenuCard/CardMargin/CardVBox" unique_id=46283353]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomOrnament" type="Label" parent="MenuCard/CardMargin/CardVBox" unique_id=729555952]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.9)
+theme_override_font_sizes/font_size = 16
+text = "✦  ◇  ✦"
+horizontal_alignment = 1
+
+[node name="VersionLabel" type="Label" parent="." unique_id=827575344]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -44.0
+offset_right = 160.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "✦  Version 1.0.0"

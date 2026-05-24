@@ -2,10 +2,10 @@ extends Control
 ## Main menu controller. Buttons are placeholders for M0 — real wiring lands in
 ## later milestones (New Game → M1 week view, Continue → M7 save/load, Settings → M7).
 
-@onready var new_game_button: Button = $CenterContainer/VBoxContainer/NewGameButton
-@onready var continue_button: Button = $CenterContainer/VBoxContainer/ContinueButton
-@onready var settings_button: Button = $CenterContainer/VBoxContainer/SettingsButton
-@onready var quit_button: Button = $CenterContainer/VBoxContainer/QuitButton
+@onready var new_game_button: Button = $MenuCard/CardMargin/CardVBox/NewGameButton
+@onready var continue_button: Button = $MenuCard/CardMargin/CardVBox/ContinueButton
+@onready var settings_button: Button = $MenuCard/CardMargin/CardVBox/SettingsButton
+@onready var quit_button: Button = $MenuCard/CardMargin/CardVBox/QuitButton
 
 
 func _ready() -> void:

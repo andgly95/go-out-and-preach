@@ -1,7 +1,71 @@
-[gd_scene load_steps=3 format=3 uid="uid://bgp0m0week001"]
+[gd_scene load_steps=8 format=3 uid="uid://bgp0m0week001"]
 
 [ext_resource type="Script" path="res://scripts/ui/week_view.gd" id="1_week_view"]
-[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://scenes/top_banner.tscn" id="2_banner"]
+[ext_resource type="Texture2D" path="res://assets/sprites/week_view/desk_background.png" id="3_deskbg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
+bg_color = Color(0.18, 0.16, 0.13, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.11, 0.13, 0.19, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.5, 0.27, 0.55)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary"]
+bg_color = Color(0.78, 0.62, 0.28, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.88, 0.76, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_hover"]
+bg_color = Color(0.86, 0.7, 0.34, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.85, 0.55, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_secondary"]
+bg_color = Color(0.13, 0.16, 0.22, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.5, 0.27, 0.7)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 
 [node name="WeekView" type="Control"]
 layout_mode = 3
@@ -12,57 +76,186 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_week_view")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="RootBackground" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_root")
+
+[node name="DeskBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_deskbg")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="TopBanner" parent="." instance=ExtResource("2_banner")]
+
+[node name="CenterCard" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(720, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -220.0
-offset_right = 400.0
-offset_bottom = 220.0
+offset_left = -360.0
+offset_top = -300.0
+offset_right = 360.0
+offset_bottom = 320.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 24
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
-[node name="HeaderLabel" type="Label" parent="VBoxContainer"]
+[node name="CardMargin" type="MarginContainer" parent="CenterCard"]
 layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
+
+[node name="CardVBox" type="VBoxContainer" parent="CenterCard/CardMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TopOrnament" type="Label" parent="CenterCard/CardMargin/CardVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
+theme_override_font_sizes/font_size = 16
+text = "──────  ✦  ──────"
+horizontal_alignment = 1
+
+[node name="DayTitle" type="Label" parent="CenterCard/CardMargin/CardVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 44
 text = "Week 1 — Sunday"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 36
 
-[node name="ActivitiesLabel" type="RichTextLabel" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 200)
+[node name="DayFlavor" type="Label" parent="CenterCard/CardMargin/CardVBox"]
 layout_mode = 2
-bbcode_enabled = false
-text = "• Public Talk
-• Lighthouse Study"
-fit_content = true
+theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 1)
+theme_override_font_sizes/font_size = 16
+text = "..."
+horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="ServiceButton" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(280, 56)
+[node name="MiddleDivider" type="Label" parent="CenterCard/CardMargin/CardVBox"]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Go out in service"
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.7)
+theme_override_font_sizes/font_size = 14
+text = "──────  ◇  ──────"
+horizontal_alignment = 1
 
-[node name="AdvanceButton" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(280, 56)
+[node name="Activities" type="VBoxContainer" parent="CenterCard/CardMargin/CardVBox"]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Advance to next phase"
+theme_override_constants/separation = 14
+
+[node name="Spacer" type="Control" parent="CenterCard/CardMargin/CardVBox"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="ServiceButton" type="Button" parent="CenterCard/CardMargin/CardVBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_primary_hover")
+theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
+theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
+text = "GO OUT IN SERVICE"
+
+[node name="AdvanceButton" type="Button" parent="CenterCard/CardMargin/CardVBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_secondary")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_secondary")
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+text = "ADVANCE TO NEXT PHASE"
+
+[node name="ScheduleCard" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -324.0
+offset_top = 120.0
+offset_right = -24.0
+offset_bottom = 600.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="ScheduleMargin" type="MarginContainer" parent="ScheduleCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 18
+
+[node name="ScheduleVBox" type="VBoxContainer" parent="ScheduleCard/ScheduleMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ScheduleHeader" type="Label" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
+theme_override_font_sizes/font_size = 12
+text = "✦ TODAY'S SCHEDULE ✦"
+horizontal_alignment = 1
+
+[node name="ScheduleDividerTop" type="HSeparator" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
+
+[node name="ScheduleRows" type="VBoxContainer" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ScheduleSpacer" type="Control" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScheduleDividerBottom" type="HSeparator" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
+
+[node name="ScriptureQuote" type="Label" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "\"Let your light shine before others, so that they may see your good works.\""
+autowrap_mode = 2
+horizontal_alignment = 1
+
+[node name="ScriptureRef" type="Label" parent="ScheduleCard/ScheduleMargin/ScheduleVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
+theme_override_font_sizes/font_size = 11
+text = "— MATTHEW 5:16"
+horizontal_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -72.0
-offset_right = 184.0
-offset_bottom = -24.0
+offset_left = 16.0
+offset_top = -52.0
+offset_right = 168.0
+offset_bottom = -16.0
 grow_vertical = 0
-text = "Back to menu"
-
-[node name="HUD" parent="." instance=ExtResource("2_hud")]
+theme_override_font_sizes/font_size = 12
+text = "←  BACK TO MENU"
+flat = true
