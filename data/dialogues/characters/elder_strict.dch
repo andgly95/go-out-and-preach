@@ -1,0 +1,25 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.5, 0.55, 0.62, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "neutral",
+&"description": "M5 — Strict Elder. Delivers Lighthouse Study per Phase 1.5 Q5. Voice profile: cast.md § 4.2. Cool slate-grey color for placeholder portrait tint vs Coordinator's warm gold.",
+&"display_name": "Brother Whitcomb",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"neutral": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}

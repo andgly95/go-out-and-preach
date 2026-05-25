@@ -1,0 +1,27 @@
+# Lighthouse Study — placeholder v1 (M5.0).
+#
+# 3-page click-through monologue scaffold. All page text is [DRAFT PENDING]
+# pending the M5.3 dialogue subagent pass; per-talk effects fire on
+# [signal arg="TALK_COMPLETED"] via meeting_hall.gd → MeetingManager
+# .resolve_talk_completed(&"lighthouse_study", &"placeholder_ls_v1").
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. v1 ships one italic line at a
+# hand-authored beat between paragraph callouts.
+#
+# Speaker: elder_strict (cast.md § 4.2, Strict Elder). Voice is paragraph-
+# by-paragraph rigorous, scripture-with-citations, no small talk.
+
+join elder_strict (neutral) at center
+
+elder_strict (neutral): [DRAFT PENDING — M5.3 Lighthouse Study page 1. Paragraph 1 question + answer in the Strict Elder's clipped register.]
+
+elder_strict (neutral): [DRAFT PENDING — M5.3 Lighthouse Study page 2. Paragraph 2-3 callout with scripture citation.]
+
+if DoubtMeter.value >= 40:
+	[i][DRAFT PENDING — M5.3 inner-voice line at the paragraph-2 beat. The Strict Elder's register tends to provoke sharper inner monologue than the Coordinator's warmth — author with that contrast in mind.][/i]
+
+elder_strict (neutral): [DRAFT PENDING — M5.3 Lighthouse Study page 3. Final paragraph application + a "consider the principle" closer.]
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

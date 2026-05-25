@@ -1,0 +1,27 @@
+# Midweek Training — placeholder v1 (M5.0).
+#
+# 3-page click-through monologue scaffold. All page text is [DRAFT PENDING]
+# pending the M5.3 dialogue subagent pass; per-talk effects fire on
+# [signal arg="TALK_COMPLETED"] via meeting_hall.gd → MeetingManager
+# .resolve_talk_completed(&"midweek_training", &"placeholder_mw_v1").
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional.
+#
+# Speaker: elder_coordinator (cast.md § 4.1). Midweek register is
+# instructional/ministry-training rather than warm-gathering — same voice
+# but tuned for practical application.
+
+join elder_coordinator (neutral) at center
+
+elder_coordinator (neutral): [DRAFT PENDING — M5.3 Midweek page 1. Ministry training framing — what the brothers and sisters will encounter at doors this week.]
+
+elder_coordinator (neutral): [DRAFT PENDING — M5.3 Midweek page 2. Practical example or demonstration setup.]
+
+if DoubtMeter.value >= 40:
+	[i][DRAFT PENDING — M5.3 inner-voice line at the page-2 beat. Midweek training cadence makes the inner voice land differently than Sunday's worship register — author with the practical-application contrast in mind.][/i]
+
+elder_coordinator (neutral): [DRAFT PENDING — M5.3 Midweek page 3. Closing encouragement for Saturday's field service.]
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

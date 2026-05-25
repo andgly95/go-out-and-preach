@@ -1,0 +1,25 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.84, 0.7, 0.42, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "neutral",
+&"description": "M5 — Coordinator of Elders. Delivers Public Talk + Midweek per Phase 1.5 Q5. Voice profile: cast.md § 4.1. Warm-gold color for placeholder portrait tint vs Strict Elder's cool slate-grey.",
+&"display_name": "Brother Phillips",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"neutral": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}

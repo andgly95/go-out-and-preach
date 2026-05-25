@@ -26,6 +26,7 @@ TimeManager="*res://scripts/systems/time_manager.gd"
 ResourceManager="*res://scripts/systems/resource_manager.gd"
 DoubtMeter="*res://scripts/systems/doubt_meter.gd"
 TerritoryManager="*res://scripts/systems/territory_manager.gd"
+MeetingManager="*res://scripts/systems/meeting_manager.gd"
 Dialogic="*uid://ds2q0uclmolvu"
 PlayerState="*res://scripts/entities/player_state.gd"
 
@@ -35,6 +36,8 @@ directories/dch_directory={
 "apostate_wounded": "res://data/dialogues/characters/apostate_wounded.dch",
 "curious_seeker_house04_grief": "res://data/dialogues/characters/curious_seeker_house04_grief.dch",
 "curious_seeker_house09_inquisitive": "res://data/dialogues/characters/curious_seeker_house09_inquisitive.dch",
+"elder_coordinator": "res://data/dialogues/characters/elder_coordinator.dch",
+"elder_strict": "res://data/dialogues/characters/elder_strict.dch",
 "polite_refuser_house01_atheist": "res://data/dialogues/characters/polite_refuser_house01_atheist.dch",
 "polite_refuser_house03_jewish": "res://data/dialogues/characters/polite_refuser_house03_jewish.dch",
 "polite_refuser_house05_catholic": "res://data/dialogues/characters/polite_refuser_house05_catholic.dch",
@@ -46,6 +49,9 @@ directories/dtl_directory={
 "apostate_wounded_v1": "res://data/dialogues/apostate_wounded_v1.dtl",
 "curious_seeker_house04_grief_v1": "res://data/dialogues/curious_seeker_house04_grief_v1.dtl",
 "curious_seeker_house09_inquisitive_v1": "res://data/dialogues/curious_seeker_house09_inquisitive_v1.dtl",
+"placeholder_ls_v1": "res://data/dialogues/meetings/placeholder_ls_v1.dtl",
+"placeholder_mw_v1": "res://data/dialogues/meetings/placeholder_mw_v1.dtl",
+"placeholder_pt_v1": "res://data/dialogues/meetings/placeholder_pt_v1.dtl",
 "polite_refuser_house01_atheist_v1": "res://data/dialogues/polite_refuser_house01_atheist_v1.dtl",
 "polite_refuser_house03_jewish_v1": "res://data/dialogues/polite_refuser_house03_jewish_v1.dtl",
 "polite_refuser_house05_catholic_v1": "res://data/dialogues/polite_refuser_house05_catholic_v1.dtl",

@@ -1,18 +1,269 @@
 # STATUS
 
-Last updated: 2026-05-24 (M4.6 Phases 0–4 ship; M5 queued)
+Last updated: 2026-05-24 (M5.0–M5.2 ship; M5.3 dialogue queue scoped)
 
 ## Next session (queued)
 
-**M5 — Hall of Witness meeting scenes.** Canonical milestone per GDD
-§ 13. Sunday = Public Talk + Lighthouse Study (two back-to-back talks
-by different elders); Tuesday = Midweek Meeting (ministry training).
-Player choice to attend or skip each meeting; if attending, a brief
-social-positioning beat then a 3-page dialogue cutscene per talk.
-Authentic-voice elder speeches drawn from a canned-speech repository
-so consecutive Sundays don't repeat verbatim. Effects on Conviction,
-Standing: Elders, Energy, and a possible doubt nudge for skipping
-that loops back to the M4 doubt system.
+**M5.3 — 9-speech dialogue subagent pool.** Replace the three
+`[DRAFT PENDING]` placeholder .dtl files with the full v1 speech
+pool: 3 Public Talk speeches (Coordinator), 3 Lighthouse Study
+speeches (Strict Elder), 3 Midweek Training speeches (Coordinator).
+Plus the 9 hand-authored inner-voice lines that fire on
+`DoubtMeter.value >= 40` (one per .dtl). Per the goop-character
+one-voice-per-session rule, this is ~6–9 subagent sessions
+(Coordinator gets 6 speeches across 2 talk types; one session per
+speech keeps voice fresh, or batch by talk type for tighter
+coherence). Voice-ground in cast.md § 4.1 (Coordinator) and § 4.2
+(Strict Elder); CLAUDE.md legal guardrails (no lifted real-
+publication text, Society-of-the-Truth vocabulary throughout).
+
+After M5.3 lands, three .dtl pools become 3-entry each, and
+`MeetingManager.pick_speech_for()` last-played exclusion starts
+producing observable variety — confirm consecutive Sundays don't
+repeat verbatim. Also rewrite the 6 placeholder social-moment
+prompt strings in `MeetingManager.SOCIAL_MOMENT_OPTIONS` per the
+neighbor identities (Service Partner, Sister Who Talks, Strict
+Elder's wife, Lonely Elderly, Parent in the Truth, sit-alone) —
+v1 ships authored-by-Claude placeholder copy that should be
+sharpened in M5.3 alongside the elder speeches.
+
+**M4.4 — Hostile + Gentle Apostate variants.** Still deferred
+below M5.3 per user direction (carry forward).
+
+## M5 — Hall of Witness meeting scenes: M5.0–M5.2 complete (headless boot clean; gate playtest pending Andrew)
+
+GDD § 13 canonical milestone shipped through scaffold + wiring.
+Sunday and Tuesday now route through the new meeting flow when the
+player clicks ATTEND THE MEETING on the week_view day card; SKIP
+THE MEETING fires inline penalties and phase-advances without
+entering the meeting scene. Per-talk effects (Conviction, Standing-
+Elders) fire on each talk's completion; meeting-level Energy fires
+once at meeting close. Inner-voice gating is scaffolded in the .dtl
+files at the M4 reveal-40 threshold; placeholder text in italics
+sits inside `if DoubtMeter.value >= 40:` blocks awaiting M5.3
+content authoring.
+
+**Phase 1 + Phase 1.5 decisions** locked across two prior
+conversations (see prior STATUS sections) plus seven material
+decisions resolved this session (Phase 1 design block):
+- **D** — Speaker is a new Resource subclass, separate from
+  Householder (talk-pool fields differ from door-knock fields).
+- **A** — Two-talk Sunday sequencing uses per-talk resolve in the
+  same scene: PT plays → effects fire → 0.5s beat → LS plays →
+  effects fire → meeting Energy fires → exit.
+- **B** — Inner-voice gate uses direct-read
+  `if DoubtMeter.value >= 40:` inline in .dtl (matches off-script
+  E3d gating pattern at threshold 25, not the one-shot
+  consume_reveal_40 flag).
+- **C** — Conviction + Standing-Elders fire per-talk on resolve;
+  Energy fires once on meeting complete-or-skip (per-meeting
+  semantics for "being at the Hall").
+- **E** — Skip-meeting penalty fires inline on click in
+  `week_view.gd::_on_skip_pressed`, not on day rollover.
+- **F** — Last-played state is `MeetingManager._last_played_per_type:
+  Dictionary[StringName, StringName]`. Session-only; M7 save/load
+  will pick up serialization later.
+- **G** — `MeetingManager` autoload owns pending-meeting + last-
+  played state; `PlayerState` stays empty (autoload reserved for
+  future player identity work).
+
+**Files created (10):**
+- `scripts/entities/speaker.gd` — `Resource` subclass with id,
+  display_name, character_name, voice_profile_ref, dialogic_character.
+- `scripts/systems/meeting_manager.gd` — new autoload. Owns the
+  pending-meeting state, the speech-pool picker (with last-played
+  exclusion), per-talk + per-meeting effect firing, skip resolution,
+  6-seat layout + per-neighbor social-moment options.
+- `scenes/meeting_hall.tscn` + `scripts/ui/meeting_hall.gd` — phase
+  state machine (SEAT_PICKER → SOCIAL_MOMENT → TALK → RESOLVE).
+  Dialogic integration mirrors `door_knock.gd` (force-rescan .dch/
+  .dtl on `_ready`, debug panel via `_maybe_instantiate_debug_panel`,
+  per-talk signal_event + timeline_ended handlers). No back/walk-
+  away button — player commits at the week_view Attend click.
+- `data/speakers/elder_coordinator.tres` and `elder_strict.tres` —
+  Speaker resources for the two M5 elders.
+- `data/dialogues/characters/elder_coordinator.dch` and `elder_strict.dch`
+  — Dialogic Characters with distinct color fields (Coordinator
+  warm gold `Color(0.84, 0.7, 0.42, 1)`; Strict Elder cool slate-
+  grey `Color(0.5, 0.55, 0.62, 1)`) driving the shared
+  placeholder portrait tint per the M4.6 mechanism.
+- `data/dialogues/meetings/placeholder_pt_v1.dtl`,
+  `placeholder_ls_v1.dtl`, `placeholder_mw_v1.dtl` — 3-page click-
+  through monologue scaffolds with `[DRAFT PENDING]` line text and
+  one `if DoubtMeter.value >= 40:` inner-voice italic block each.
+  Each terminates with `[signal arg="TALK_COMPLETED"]` +
+  `[end_timeline]`.
+
+**Files modified (4):**
+- `scripts/systems/signal_bus.gd` — 3 new signals: `meeting_attended`,
+  `meeting_skipped`, `talk_completed(meeting_type, speech_slug)`.
+- `scripts/ui/week_view.gd` — `MEETING_DAY_PHASES` const,
+  `_meeting_button` + `_skip_button` `@onready` vars, two new
+  `_on_meeting_pressed` / `_on_skip_pressed` handlers, visibility
+  toggling in `_refresh()`.
+- `scenes/week_view.tscn` — added MeetingButton (primary gold) and
+  SkipButton (secondary muted) between ServiceButton and
+  AdvanceButton, reusing the existing StyleBoxFlat sub-resources.
+- `project.godot` — `MeetingManager` autoload (after TerritoryManager,
+  before Dialogic to preserve load order); `dch_directory` gains
+  `elder_coordinator` + `elder_strict`; `dtl_directory` gains the
+  3 placeholder meeting speech entries.
+
+**Files unchanged by intent (asserted):**
+- `scripts/systems/doubt_meter.gd` — skip doubt firing goes through
+  `DoubtMeter.apply(SKIP_DOUBT_DELTA, &"meeting_skipped")` reusing
+  the existing apply pattern. No schema or trigger changes.
+- `scripts/systems/time_manager.gd` — meeting completion advances
+  via `TimeManager.advance_phase()` (existing API). No schema
+  changes.
+- `scripts/systems/resource_manager.gd` — meeting effects fire via
+  existing `add_conviction` / `add_standing_elders` / `add_energy`
+  with their clamping + signal emission. No schema changes.
+- `scripts/systems/territory_manager.gd` — orthogonal to meetings;
+  no edits.
+- `assets/sprites/portraits/_shared_placeholder/placeholder_portrait.gd`
+  — `EXPRESSION_BRIGHTNESS` covers `neutral` (the only expression
+  the M5.0 .dtl files use). If M5.3 subagents add new expressions
+  to elder .dch files, extend EXPRESSION_BRIGHTNESS at that point.
+- `scenes/door_knock.tscn`, `scripts/ui/door_knock.gd` — no
+  changes; M4.6 PR/CS/HS/Apostate flow unchanged.
+
+**Architectural pattern reuse (deliberate parallels):**
+- `MeetingManager` shape mirrors `TerritoryManager`: pending-state
+  setter/getter, `_load_speaker_cache` defensive load with fallback
+  to a minimal in-code Speaker if .tres missing, slug-keyed
+  dictionaries for distribution + effects.
+- `meeting_hall.gd::_ready` Dialogic wiring mirrors `door_knock.gd:
+  83-91`: force-rescan .dch/.dtl directories, connect signal_event
+  + timeline_ended, instantiate debug panel via the same
+  `_maybe_instantiate_debug_panel` helper.
+- `meeting_hall.gd::_on_dialogic_signal` mirrors `door_knock.gd::
+  _on_dialogic_signal` outcome-string dispatch.
+- `week_view.gd` Attend/Skip wiring mirrors the existing Service
+  button pattern (`SERVICE_DAY_PHASES` + visibility toggle in
+  `_refresh()`).
+- Shared top banner instanced per `territory_map.tscn` / `week_view.tscn`
+  precedent (M4-LF2).
+
+**Headless boot: clean.** All four scenes boot at exit 0 with only
+the standard `--quit-after` cleanup warnings (ObjectDB leaked / 26
+resources in use). Required a one-time `godot --headless --import`
+to register the new `Speaker` class_name in the global script class
+cache; future cold launches inherit the registration.
+
+**Bugfix during M5.2:** `meeting_hall.gd::_ready` early-exit paths
+(no-pending-meeting, no-talks-for-meeting) initially called
+`_return_to_week_view()` synchronously, triggering "Parent node is
+busy adding/removing children" because `change_scene_to_file` is
+illegal inside `_ready`. Fixed by `call_deferred("_return_to_week_view")`
+in both early-exit branches. The normal flow (`_resolve_meeting →
+_return_to_week_view`) is unaffected — that path runs well after
+`_ready` from a Dialogic signal handler.
+
+**Phase 3 gate playtest (Andrew) — 11-item checklist:**
+- [ ] **Sunday — Attend.** Fresh game opens on Week 1 Sunday.
+      ATTEND THE MEETING button visible (primary gold). SKIP THE
+      MEETING button visible (secondary muted). Click ATTEND →
+      meeting_hall scene loads with top banner + deep-sepia
+      background + center phase card "Choose your seat".
+- [ ] **Seat picker.** 6 seat buttons render in a 2×3 grid (Front
+      Left, Front Right, Middle Left, Middle Right, Back Left,
+      Back Right). Click Front Left → phase card transitions to "A
+      moment before the talk" with Service Partner-themed prompt.
+- [ ] **Social moment.** Two choice buttons render. Pick "Smile back,
+      say hello." → Standing-Congregation in top banner ticks +1.
+      Phase advances to Public Talk.
+- [ ] **Public Talk.** Phase card hides; Dialogic text pane appears.
+      Speaker name shows "Brother Phillips" (Coordinator). 3 pages
+      of `[DRAFT PENDING — M5.3 Public Talk page N]` placeholder
+      text click through. On final page → [signal] fires:
+      Conviction +2, Standing-Elders +1 (visible in banner). Phase
+      card returns with "A short pause" copy for ~0.5s.
+- [ ] **Lighthouse Study.** Phase card hides; Dialogic restarts with
+      `elder_strict` speaker. Speaker name "Brother Whitcomb"
+      (Strict Elder), cool slate-grey portrait tint. 3 pages
+      placeholder text. Final page fires: Conviction +1, Standing-
+      Elders +1. Banner reflects updated totals.
+- [ ] **Meeting completes.** Energy -1 fires (banner shows 9/10
+      energy). TimeManager phase-advances SUN → MON. Scene swaps
+      to week_view showing Monday content. No errors in console.
+- [ ] **Tuesday — Attend.** Advance to Tuesday. ATTEND visible.
+      Click ATTEND → meeting_hall loads. Seat → social moment →
+      Midweek talk (Coordinator). Effects: Conviction +2, Standing-
+      Elders +2, then Energy -1. Phase advances TUE → WED.
+- [ ] **Skip — Sunday.** Reset / new game. Sunday → click SKIP THE
+      MEETING. Standing-Elders ticks -2 in banner. Doubt event log
+      (debug panel via F9) shows `+1 meeting_skipped`. Phase
+      advances SUN → MON. No scene change to meeting_hall.
+- [ ] **Inner-voice gate.** Use debug panel (F9 → Shift+↑ ×4 to push
+      doubt to 40). Attend Sunday meeting again. The italic
+      `[DRAFT PENDING]` inner-voice placeholder line appears
+      between the PT pages at the hand-authored beat. Without doubt
+      ≥40 (start a fresh run, attend immediately), the line does
+      not render. Note: v1 ships placeholder italic text gated by
+      direct-read in .dtl; M5.3 authors the real content. The non-
+      advancing + auto-fade behavior from Phase 1.5 Q8 lock is
+      deferred — v1 ships click-through italic via Dialogic's
+      normal text-event flow. See "Known v1 limitations" below.
+- [ ] **Last-played exclusion (structural only in v1).** With single-
+      entry pools, observable variety can't be tested. Confirm
+      structurally: after one PT play, `MeetingManager
+      ._last_played_per_type` contains `{public_talk:
+      placeholder_pt_v1}` — verify via debug print or by attending
+      a second Sunday and confirming no parse error. M5.3 with
+      3-speech pools validates this end-to-end.
+- [ ] **No regression.** Saturday field service still works end-to-
+      end. territory_map renders, door_knock plays through all 12
+      houses (PR / HS / CS / Apostate). M4.6 PR house arc_state
+      still transitions to "returning" on second knock. Top banner
+      stays in sync across territory_map, week_view, meeting_hall.
+
+**Known v1 limitations (explicitly out of scope; flagged for M5.3 / M5.4):**
+- **Speech pool size = 1 per type.** Last-played exclusion is wired
+  but unobservable until M5.3 expands the pool to 3 entries each.
+- **Inner-voice rendering: click-through Dialogic, not auto-fade.**
+  Phase 1.5 Q8 locked "italic, non-advancing, fades after ~2s"; v1
+  renders the gated line as a regular Dialogic text event with `[i]`
+  italic tags (advances on click). Implementing the overlay-with-
+  fade approach requires a custom signal handler + overlay Label
+  with tween that this v1 scaffold doesn't ship. Acceptable per the
+  plan; M5.4+ candidate for fidelity.
+- **Energy per-day refill.** `ResourceManager._on_day_advanced`
+  refills energy to max on every phase change. The meeting -1 only
+  persists during the meeting-day phase. Acceptable per existing
+  energy semantics; playtest may surface that the cost should
+  somehow carry forward.
+- **Speaker portraits = placeholder tints.** Distinct colors via the
+  shared placeholder script; real art deferred.
+- **6-seat layout fixed.** Per Phase 1 default. Visiting-speaker
+  pattern (GDD canon for PT variety) and additional elder profiles
+  (cast.md § 1.x expansion) are M5.4+ candidates.
+- **Sunday two-meeting framing.** `&"sunday_meeting"` slug bundles
+  PT + LS for the week_view button; meeting_hall.gd dispatches
+  internally. If playtest wants separate Sunday buttons (skip just
+  PT, attend just LS), revisit the slug taxonomy.
+- **No back-out from meeting_hall.** Once the player clicks ATTEND
+  they must complete the meeting. By design (mirrors Phase 1.5 Q7's
+  "skip is a decision at week_view, not a mid-flow exit"); flag if
+  playtest needs an emergency-exit.
+- **Social-moment placeholder copy.** v1 ships authored-by-Claude
+  placeholder strings in `MeetingManager.SOCIAL_MOMENT_OPTIONS`.
+  Rewrite alongside M5.3 elder speeches for cadence consistency.
+
+**Open unknowns surfaced for future milestones:**
+- **No coordination between meeting Energy cost and meeting-day
+  schedule entries in `week_view.gd::DAY_CONTENT`.** Sunday's
+  schedule still lists Morning/Midday/Evening Hall activities as
+  flat text; the M5 ATTEND button is the only mechanic-bearing
+  surface. Reconciling the two (e.g., grey out the schedule rows
+  if the player skipped) is a polish add.
+- **No save/load (M7 carry).** Pending-meeting + last-played state
+  reset on every fresh boot. The `_last_played_per_type` dict needs
+  serialization when M7 lands.
+- **MeetingManager has no `pending_arc_state()`-equivalent for the
+  player's standing thresholds.** If M5.4+ adds "Coordinator pulls
+  you aside in the lobby" mechanic gated on Standing-Elders ≥ N or
+  doubt ≥ N, that needs a new accessor + .dtl integration.
 
 **Phase 1 architecture decisions locked (2026-05-24 conversation):**
 - **Q1.scope** — Structural first (M5.0–M5.2: scaffold + 1 placeholder
@@ -124,17 +375,14 @@ of the named loss — Wounded names the mother; seed Hostile and/or
 Gentle with sibling or whole-congregation framing — see UNSURE in
 `apostate_wounded_v1.dtl` E3.
 
-**Uncommitted carry-over from M4.3 + M4.6.** The Phase 4 dialogue-
-content commit (`da4441d`) only landed the *renamed* canonical
-files (curious_seeker_house04_grief + polite_refuser_house05_catholic
-.dtl). Still uncommitted on disk: M4.6 Phase 0–2 system code
+**M4.6 + M4.3 carry-over committed (`78db20f`).** Single bundled
+follow-on commit landed the M4.6 Phase 0–2 system code
 (territory_manager.gd, door_knock.gd, house.gd, householder.gd,
-territory_map.gd, project.godot), 6 new-character .tres + .dch
+territory_map.gd, project.godot), the 6 new-character .tres + .dch
 triplets (5 PR + 1 CS), the M4.3 Apostate triplet + portrait pair,
-the M4.6 shared placeholder portrait scaffold, cast.md voice
-profile additions, and four `.png.import` files. A single bundled
-M4.6 follow-on commit lands these — recommend doing it before M5
-Phase 0 to avoid mixing milestones.
+the M4.6 shared placeholder portrait scaffold, cast.md voice profile
+additions, and four `.png.import` files. Working tree is clean
+heading into M5 Phase 0.
 
 ## M4.6 — Per-house PR character identity + dialogue arc continuation: complete (Phases 0–4 shipped; gate playtest pending)
 
@@ -151,11 +399,12 @@ review. Phase 3 gate playtest still pending Andrew (9-item checklist
 below). Headless boot clean on both `territory_map.tscn` and
 `main_menu.tscn` (only standard `--quit-after` cleanup warnings).
 
-**Commit state caveat.** Only the rename + dialogue content for
-the two pre-existing canonical files committed in `da4441d`. The
-M4.6 Phase 0–2 system code and the 6 new-character triplets (and
-the M4.3 Apostate triplet from prior session) remain uncommitted —
-see "Uncommitted carry-over" in the queued section above.
+**Commit state.** Two commits: `da4441d` landed the rename +
+dialogue content for the two pre-existing canonical files
+(House #4 grief, House #5 Catholic); `78db20f` followed with the
+M4.6 Phase 0–2 system code, the 6 new-character triplets, the M4.3
+Apostate triplet (carried over from the prior session), and the
+shared placeholder portrait scaffold.
 
 **Architecture pivot from the original M4.6 framing.** The session's
 plan-mode design surfaced (via user direction) that the M4.5 Apostate

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Speaker" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/speaker.gd" id="1_speaker"]
+
+[resource]
+script = ExtResource("1_speaker")
+id = &"elder_coordinator"
+display_name = "Brother Phillips"
+character_name = "Coordinator of Elders"
+voice_profile_ref = "cast.md § 4.1"
+dialogic_character = null

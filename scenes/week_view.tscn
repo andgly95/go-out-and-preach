@@ -174,6 +174,27 @@ theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
 theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
 text = "GO OUT IN SERVICE"
 
+[node name="MeetingButton" type="Button" parent="CenterCard/CardMargin/CardVBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_primary_hover")
+theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
+theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
+text = "ATTEND THE MEETING"
+
+[node name="SkipButton" type="Button" parent="CenterCard/CardMargin/CardVBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_secondary")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_secondary")
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+text = "SKIP THE MEETING"
+
 [node name="AdvanceButton" type="Button" parent="CenterCard/CardMargin/CardVBox"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2

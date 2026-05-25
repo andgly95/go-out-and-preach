@@ -6,6 +6,7 @@ extends Control
 ## screen is purely a presentation + entry point.
 
 const SERVICE_DAY_PHASES: Array = [TimeManager.Phase.THURSDAY, TimeManager.Phase.SATURDAY]
+const MEETING_DAY_PHASES: Array = [TimeManager.Phase.SUNDAY, TimeManager.Phase.TUESDAY]
 
 const SCRIPTURE_QUOTE: String = "\"Let your light shine before others, so that they may see your good works.\""
 const SCRIPTURE_REF:   String = "— MATTHEW 5:16"
@@ -109,6 +110,8 @@ const FAINT_TEXT: Color   = Color(0.78, 0.7, 0.52, 0.9)
 @onready var _day_flavor:       Label = $CenterCard/CardMargin/CardVBox/DayFlavor
 @onready var _activities_box:   VBoxContainer = $CenterCard/CardMargin/CardVBox/Activities
 @onready var _service_button:   Button = $CenterCard/CardMargin/CardVBox/ServiceButton
+@onready var _meeting_button:   Button = $CenterCard/CardMargin/CardVBox/MeetingButton
+@onready var _skip_button:      Button = $CenterCard/CardMargin/CardVBox/SkipButton
 @onready var _advance_button:   Button = $CenterCard/CardMargin/CardVBox/AdvanceButton
 @onready var _schedule_box:     VBoxContainer = $ScheduleCard/ScheduleMargin/ScheduleVBox/ScheduleRows
 @onready var _scripture_quote:  Label = $ScheduleCard/ScheduleMargin/ScheduleVBox/ScriptureQuote
@@ -120,6 +123,8 @@ func _ready() -> void:
 	_scripture_quote.text = tr(SCRIPTURE_QUOTE)
 	_scripture_ref.text = tr(SCRIPTURE_REF)
 	_service_button.pressed.connect(_on_service_pressed)
+	_meeting_button.pressed.connect(_on_meeting_pressed)
+	_skip_button.pressed.connect(_on_skip_pressed)
 	_advance_button.pressed.connect(_on_advance_pressed)
 	_back_button.pressed.connect(_on_back_pressed)
 	SignalBus.phase_changed.connect(_on_phase_changed)
@@ -141,6 +146,8 @@ func _refresh() -> void:
 	_rebuild_activities(content.get("activities", []))
 	_rebuild_schedule(content.get("schedule", []))
 	_service_button.visible = phase in SERVICE_DAY_PHASES
+	_meeting_button.visible = phase in MEETING_DAY_PHASES
+	_skip_button.visible = phase in MEETING_DAY_PHASES
 
 
 func _rebuild_activities(activities: Array) -> void:
@@ -248,6 +255,22 @@ func _make_icon_square(glyph: String, square_size: int, glyph_size: int) -> Pane
 
 func _on_service_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/territory_map.tscn")
+
+
+func _on_meeting_pressed() -> void:
+	var meeting_type: StringName = MeetingManager.meeting_type_for_phase(TimeManager.current_phase)
+	if meeting_type == &"":
+		return
+	MeetingManager.set_pending_meeting(meeting_type)
+	get_tree().change_scene_to_file("res://scenes/meeting_hall.tscn")
+
+
+func _on_skip_pressed() -> void:
+	var meeting_type: StringName = MeetingManager.meeting_type_for_phase(TimeManager.current_phase)
+	if meeting_type == &"":
+		return
+	MeetingManager.resolve_meeting_skipped(meeting_type)
+	TimeManager.advance_phase()
 
 
 func _on_advance_pressed() -> void:
