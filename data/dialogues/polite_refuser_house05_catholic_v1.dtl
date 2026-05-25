@@ -1,0 +1,185 @@
+# Polite Refuser — House #5 Catholic, v1.
+#
+# M3 dialogue subagent pass content preserved verbatim for the "first_visit"
+# arc branch + M4.6 Phase 4 dialogue subagent content pass for the "returning"
+# branch (arc-continuation-only — first_visit content is M3 canonical).
+# Voice profile: cast.md § 6.0.2 Catholic, "we go to St. Mark's".
+#
+# Outcomes emitted via [signal arg="..."]:
+#   REFUSED, TRACT_LEFT, RETURN_VISIT_SCHEDULED
+# door_knock.gd listens on Dialogic.signal_event and maps to House.State.
+# Mid-conversation exit (ESC / Walk-away) is handled in door_knock.gd, not
+# here — it terminates the timeline and resolves REFUSED.
+#
+# arc_state branching: top-level if/else picks via jump+label so M3 content
+# stays at column 0 (no re-indenting). arc_state read via
+# TerritoryManager.pending_arc_state(); transitions to "returning" inside
+# door_knock.gd::_resolve_with_outcome on terminal signal.
+#
+# Character slug `polite_refuser_house05_catholic` matches dch_directory entry.
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Suburban American woman, early 40s, married, working professional ("I work
+# most days" per M3 canonical E3c line). Lapsed-but-parish-identified Catholic
+# — St. Mark's is community, not theology. The "we" in her lines is the
+# household. Voice DNA is verbal-rich stutter ("Oh — uh…", doubled words);
+# returning branch compresses one beat but the filler stays — the stutter is
+# Catholic-PR identity vs the Episcopalian's clean register and the atheist's
+# flatness.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session):
+# - Q1a: woman, early 40s, married, working professional
+# - Q1b: St. Mark's referenced once (light re-iteration at E2 only)
+# - Q1c: E3b softened — "I think we have one of these around somewhere already"
+# - Q1d: defensible across all 4 prior outcomes (arc_state binary; STATUS L351-354)
+#
+# Phase 0 silent-decision resolutions:
+# - Returning E1 stutter → SINGLE-STUMBLE PRESERVED. One "uh" survives;
+#   first_visit's double-stumble compresses to one beat. Differentiates from
+#   Episcopalian's clean "Oh — hello again." and from atheist's flat "Oh — yeah. Hi."
+# - Returning E3c-pin RV-pin → VISIBLY-TIRED W/ STUTTER RETAINED. Three beats
+#   but tighter than first_visit's resignation curve.
+# - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
+#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Catholic returning firmness lands
+#   in the HOUSEHOLDER response (E3d), not the publisher choice.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house05_catholic (neutral) at center
+
+# E1 — Publisher pitch. Householder shifts to polite_smile.
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house05_catholic (polite_smile)
+polite_refuser_house05_catholic (polite_smile): Oh — hi. Uh… can I help you?
+
+# E2 — Householder deploys first defense. Branch on Publisher response.
+polite_refuser_house05_catholic (polite_smile): Oh — yeah, thank you, but I'm — I'm okay. Oh — uh, we go to St. Mark's, actually.
+
+- Of course, we respect that.
+	# E3a — accept refusal cleanly → REFUSED
+	update polite_refuser_house05_catholic (relief)
+	polite_refuser_house05_catholic (relief): Oh — okay. Thank you. You too — have a good day.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	# E3b — push for tract; householder hesitates, then accepts to end interaction.
+	update polite_refuser_house05_catholic (awkward_pause)
+	polite_refuser_house05_catholic (awkward_pause): Oh — uh… sure. Yeah, that's — that's fine.
+	update polite_refuser_house05_catholic (relief)
+	polite_refuser_house05_catholic (relief): Okay. Thanks. You have a good one.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	# E3c — push for return visit; householder hedges.
+	update polite_refuser_house05_catholic (awkward_pause)
+	polite_refuser_house05_catholic (awkward_pause): Oh, uh — I mean, I'm pretty busy. I work most days, you know, so — I don't really know.
+	- I'll come back Tuesday.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Oh — okay. Sure, that works. Yeah, that's fine.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Yeah — thanks. Thanks for stopping by.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E3d — OFF-SCRIPT choice. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	update polite_refuser_house05_catholic (firm_refusal)
+	polite_refuser_house05_catholic (firm_refusal): Oh — I'd rather not get into all that. Sorry. It's, you know — kind of personal.
+	update polite_refuser_house05_catholic (polite_smile)
+	polite_refuser_house05_catholic (polite_smile): But — anyway. Was that, uh — was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Oh — no, it's — it's fine. You take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house05_catholic (awkward_pause)
+		polite_refuser_house05_catholic (awkward_pause): Oh — um. I mean, sure. Yeah, that's fine.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Okay. Thanks. Have a good day.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house05_catholic (neutral) at center
+
+# E1-return — Publisher returns. Householder recognizes them.
+Good morning. We were in the neighborhood again — wanted to say hello.
+update polite_refuser_house05_catholic (polite_smile)
+polite_refuser_house05_catholic (polite_smile): Oh — uh, hi again.
+
+# E2-return — Catholic anchor restated, lightly.
+# UNSURE: "like I said" callback assumes the player remembers first_visit;
+# arc_state is binary so return interval is at minimum 1 week (STATUS L355-356).
+# Reads cleanly on long-interval re-knocks; on close-interval returns could
+# read mildly scolding. If close-interval playtest reads as scold, swap to
+# "we're — we're still at St. Mark's, sorry." (drops the metafictional callback).
+polite_refuser_house05_catholic (polite_smile): Oh — uh, we — we still go to St. Mark's, like I said. Sorry.
+
+- Of course, we won't keep you.
+	update polite_refuser_house05_catholic (relief)
+	# UNSURE: "you take care" + dropped "have a good day" stock phrase is the
+	# only carrier of the subtle "please don't keep coming back" undertone per
+	# skeleton intent at this line. If playtest reads as purely warm with no
+	# undertone, swap to "Yeah — thanks. Yeah, take care." — the doubled "yeah"
+	# carries the small tell of being-done.
+	polite_refuser_house05_catholic (relief): Oh — okay. Thanks. You take care.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house05_catholic (awkward_pause)
+	polite_refuser_house05_catholic (awkward_pause): Oh — uh, sure. I think we have one of these around somewhere already, but — yeah, that's fine.
+	update polite_refuser_house05_catholic (relief)
+	polite_refuser_house05_catholic (relief): Okay. Thanks. You too.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house05_catholic (awkward_pause)
+	polite_refuser_house05_catholic (awkward_pause): Oh — uh, I mean, like I said — I work most days, you know. It's, uh — it's really hard for me.
+	- Tuesday works for me.
+		update polite_refuser_house05_catholic (relief)
+		# UNSURE: "Tuesday, then" affirms the publisher's schedule — a Catholic-
+		# stuttery character might not stitch that confidently. If it reads off-
+		# archetype in playtest, swap to "Oh — alright. Yeah, that — that's fine."
+		# (drops "Tuesday, then" entirely; relies on the publisher's prior line
+		# to anchor the day).
+		polite_refuser_house05_catholic (relief): Oh — alright. Tuesday, then. Yeah, okay.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Yeah — alright. Thank you. Have a good one.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT — same text-key as first_visit branch so OFFSCRIPT_CHOICE_TEXTS in door_knock.gd resolves identically.
+	update polite_refuser_house05_catholic (firm_refusal)
+	# UNSURE: first_visit E3d carried "Sorry" as the politeness anchor; returning
+	# drops it to land the firmness escalation per skeleton intent ("she's tired
+	# of being asked"). Risk: dropped "Sorry" reads cold or out-of-character for
+	# the Catholic-polite voice. If playtest reads cold, add "Sorry" back inline:
+	# "...I really don't want to get into all that. I'm sorry. It's, you know —
+	# it's personal."
+	polite_refuser_house05_catholic (firm_refusal): Oh — I really — I really don't want to get into all that. It's, you know — it's personal.
+	update polite_refuser_house05_catholic (polite_smile)
+	polite_refuser_house05_catholic (polite_smile): But — anyway. Did you, uh — was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): It's fine, really. You take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house05_catholic (awkward_pause)
+		polite_refuser_house05_catholic (awkward_pause): Oh — um. Yeah, I mean — sure. That's fine.
+		update polite_refuser_house05_catholic (relief)
+		polite_refuser_house05_catholic (relief): Okay. Thanks. Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]

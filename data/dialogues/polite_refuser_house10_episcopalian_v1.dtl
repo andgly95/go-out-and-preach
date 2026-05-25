@@ -1,0 +1,176 @@
+# Polite Refuser — House #10 Episcopalian, v1.
+#
+# M4.6 structural skeleton + M4.6 Phase 4 dialogue subagent content pass.
+# Voice profile: cast.md § 6.0.5 — lifelong mainline Protestant; already
+# a member of an Episcopal parish; polite-distance voice, closest to the
+# "polite Christian neighbor" cadence; quiet confidence, inherited
+# tradition, faith integrated into a Tuesday afternoon.
+#
+# Topology mirrors polite_refuser_house05_catholic_v1.dtl. Outcome signals
+# identical. Mid-conversation exit (ESC / Walk-away) → REFUSED (door-side).
+# arc_state branching via top-level if/else + jump/label.
+# Character slug: polite_refuser_house10_episcopalian.
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Suburban American man, 60s, married (wife at home, kids grown), member
+# at an Episcopal parish for fifteen years. The "we" in his lines is the
+# household. He's seen publishers at the door before and recognizes the
+# pitch — opens cleaner than the Catholic (no stutter), without the
+# atheist's flatness; his register is gracious-practiced. Pigeonhole
+# differentiation: Catholic (§ 6.0.2) = parish-as-community + stuttery
+# cadence + "St. Mark's"; Episcopalian = parish-as-tradition + named
+# clergy (Father Reynolds) + tenure (fifteen years) + quiet confidence.
+# Both reference a real church; the Episcopalian's reach is more
+# practiced and inherited.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session):
+# - Q1a: man, 60s, married, kids grown
+# - Q1b: name the priest — "Father Reynolds" (cast.md § 6.0.5 canonical)
+# - Q1c: "fifteen years" verbatim (cast.md § 6.0.5 canonical)
+# - Q1d: returning branch defensible across all 4 prior outcomes
+#   (arc_state binary; STATUS L351-354)
+#
+# Phase 0 silent-decision resolutions:
+# - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
+#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Episcopalian voice texture
+#   lands in the HOUSEHOLDER response line at E3d, per cast.md § 6.0.5
+#   canonical sample.
+# - RV-pin (E3c-pin first_visit) → graceful-with-soft-block: schedule-
+#   anchor doubles as polite cooperation + boundary.
+# - Returning E1 → warm recognition with a beat of pattern-noticing,
+#   subtly tighter than first_visit but still gracious. No scolding.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house10_episcopalian (neutral) at center
+
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house10_episcopalian (polite_smile)
+polite_refuser_house10_episcopalian (polite_smile): Oh — good morning.
+
+polite_refuser_house10_episcopalian (polite_smile): Thank you, but we're already members of an Episcopal church. Father Reynolds is wonderful — we've been there fifteen years.
+
+- Of course, we respect that.
+	update polite_refuser_house10_episcopalian (relief)
+	polite_refuser_house10_episcopalian (relief): Thank you so much. You have a wonderful day.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	update polite_refuser_house10_episcopalian (awkward_pause)
+	polite_refuser_house10_episcopalian (awkward_pause): Of course. Thank you.
+	update polite_refuser_house10_episcopalian (relief)
+	polite_refuser_house10_episcopalian (relief): You take care now.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house10_episcopalian (awkward_pause)
+	polite_refuser_house10_episcopalian (awkward_pause): I don't think there'd be much point, but thank you for asking.
+	- I'll come back Tuesday.
+		update polite_refuser_house10_episcopalian (relief)
+		# UNSURE: RV-pin "graceful-with-soft-block" framing — the schedule-anchor
+		# ("we have services Wednesday evening") reads as polite cooperation that
+		# doubles as a boundary. Phase 0 audit item 2. If it reads as TOO inviting
+		# in playtest (publisher hears the schedule as an opening), swap to the
+		# plainer "Of course. Tuesday afternoon should be fine."
+		polite_refuser_house10_episcopalian (relief): Alright. Tuesday afternoon, then — we have services Wednesday evening, otherwise we're usually around.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): Thank you. You have a good morning.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6 PR
+	# characters (registry text-key shared). The Episcopalian's voice texture
+	# lands in the response line below, per cast.md § 6.0.5 canonical sample.
+	update polite_refuser_house10_episcopalian (firm_refusal)
+	polite_refuser_house10_episcopalian (firm_refusal): It's where we worship. That's really all there is to it.
+	update polite_refuser_house10_episcopalian (polite_smile)
+	polite_refuser_house10_episcopalian (polite_smile): Was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): It's quite alright. Thank you for stopping by.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house10_episcopalian (awkward_pause)
+		polite_refuser_house10_episcopalian (awkward_pause): Of course.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): Thank you. Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house10_episcopalian (neutral) at center
+
+Good morning. We were in the neighborhood again.
+update polite_refuser_house10_episcopalian (polite_smile)
+polite_refuser_house10_episcopalian (polite_smile): Oh — hello again.
+
+# UNSURE: returning E2 recognition phrasing. arc_state is binary, so the
+# return interval could be next Saturday or several weeks out (STATUS
+# L355-356). "A little while back" is the middle phrasing that reads
+# across both ranges. If playtest shows short-interval returns make this
+# read oddly delayed, the close-interval swap would be "Weren't you just
+# here? Yes — I remember." The current phrasing favors the long-interval
+# case since that's the typical real-world re-knock cadence in service.
+polite_refuser_house10_episcopalian (polite_smile): You were here a little while back, weren't you? Yes — I remember. We really are settled at our parish.
+
+- Of course, we won't keep you.
+	update polite_refuser_house10_episcopalian (relief)
+	polite_refuser_house10_episcopalian (relief): Thank you for stopping by. You take care now.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house10_episcopalian (awkward_pause)
+	polite_refuser_house10_episcopalian (awkward_pause): Of course.
+	update polite_refuser_house10_episcopalian (relief)
+	polite_refuser_house10_episcopalian (relief): Take care now.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house10_episcopalian (awkward_pause)
+	polite_refuser_house10_episcopalian (awkward_pause): I appreciate the thought, but truly — we're settled in our parish.
+	- Tuesday works for me.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): Alright then. Tuesday afternoon.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): You as well.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so OFFSCRIPT_CHOICE_TEXTS
+	# resolves identically (+3). Householder response is firmer than first_visit
+	# per skeleton intent (still friendly, still firm).
+	update polite_refuser_house10_episcopalian (firm_refusal)
+	# UNSURE: returning E3d firmness — "It's where we belong." is slightly more
+	# declarative than first-visit canonical ("It's where we worship."). The
+	# escalation reads as firmer-on-second-ask without becoming preachy. If
+	# playtest reads it as preachy or as gotcha, soften to "Truly — it's just
+	# where we worship. There isn't more to it."
+	polite_refuser_house10_episcopalian (firm_refusal): It's where we belong. There really isn't more to say.
+	update polite_refuser_house10_episcopalian (polite_smile)
+	polite_refuser_house10_episcopalian (polite_smile): Was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): It's quite alright. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house10_episcopalian (awkward_pause)
+		polite_refuser_house10_episcopalian (awkward_pause): Of course.
+		update polite_refuser_house10_episcopalian (relief)
+		polite_refuser_house10_episcopalian (relief): Thank you. Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]

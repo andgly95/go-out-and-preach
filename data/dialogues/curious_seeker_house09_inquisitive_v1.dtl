@@ -1,0 +1,300 @@
+# Curious Seeker — House #9 inquisitive flavor, v1.
+#
+# M4.6+ structural skeleton + M4.6 Phase 4 dialogue subagent content
+# pass (this session — 8th and final of the queued Phase 4 sessions).
+# Voice profile: cast.md § 6.2.2 — neighborly, low-stakes, outward-
+# facing curiosity. Canonical opening: "Sure, what's your group about,
+# exactly?" per cast.md § 6.2.2 sample.
+#
+# Contrasts with House #4 grief (the pigeonhole-differentiation
+# anchor — read curious_seeker_house04_grief_v1.dtl alongside this
+# file). House #9 is NOT carrying a weight to the door. He's a
+# neighbor with a few minutes who has watched publishers walk past
+# the house for years and finally answered with the genuine question
+# already on his sleeve. No padding around the ask. The "exactly"
+# tag in his question is the load-bearing tell — he wants a real
+# answer, not the rehearsed pitch.
+#
+# Topology mirrors curious_seeker_house04_grief_v1.dtl. Outcome
+# signals identical: TRACT_LEFT, BIBLE_STUDY_STARTED,
+# RETURN_VISIT_SCHEDULED, REFUSED. Mid-conversation exit (ESC /
+# Walk-away) → REFUSED (door-side). Off-script choice text
+# "I don't know. Honestly." matches OFFSCRIPT_CHOICE_TEXTS in
+# door_knock.gd verbatim (T1 +3). Shared text-key with house04
+# grief; no registry update this session.
+#
+# arc_state branching via top-level if/else + jump/label.
+# Character slug: curious_seeker_house09_inquisitive.
+#
+# Character interpretation (M4.6 Phase 4 subagent, this pass):
+# Suburban American man, 40s, partnered (domestic context implied,
+# never voiced). Saturday morning at home; has the time and the
+# social ease to ask the question most householders don't bother
+# with. He is NOT testing the publisher, NOT preparing an argument,
+# NOT searching for meaning. Curiosity is the whole motivation
+# (cast.md § 6.2.2 explicit). The publisher will be tempted to
+# oversell on his real opening; he would dial back if pushed
+# (cast.md § 6.2.2 "would dial back if pushed").
+#
+# Pigeonhole differentiation from house04 grief (same archetype,
+# distinct character):
+#   - Grief opens with social padding ("Sorry, I was —"); inquisitive
+#     opens with direct neighborly recognition
+#   - Grief's vulnerability is bereavement; inquisitive's is genuine
+#     not-knowing
+#   - Grief's question is existential (where is he now?); inquisitive's
+#     is observational (what do you do?)
+#   - Grief uses em-dashes for distraction; inquisitive uses them for
+#     friendly asides
+#   - Grief is inward (trailing fragments); inquisitive is outward
+#     (complete sentences)
+#   - Grief's BIBLE_STUDY_STARTED reads as fragile-accept-because-
+#     offered-a-hand; inquisitive's reads as soft-accept-with-
+#     qualifier (first_visit) or informed-consent (returning, having
+#     read between visits)
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session — this pass):
+# - Q1a: man, 40s, partnered. Gender + slight generation gap separates
+#   from grief at the demographic level; voice cadence separates at
+#   the line level.
+# - Q1b: source of curiosity IMPLICIT / observational. He's watched
+#   publishers walk past for years. No book / news / family-member
+#   cue. Trusts the player to read into it.
+# - Q1c: first_visit opening = "What's your group about, exactly?"
+#   (cast.md § 6.2.2 canonical verbatim; "exactly" is the tell).
+# - Q1d: returning state = READ BETWEEN VISITS, has follow-ups.
+#   Deepens the arc; gives a real visit-2 character development
+#   beat. Edge case for the off-script-prior re-entry (no material
+#   left to follow up on) — line text leans on "thinking about it"
+#   which carries across all 4 priors, with one UNSURE flag on the
+#   off-script-prior path.
+#
+# Phase 0 silent-decision resolutions:
+# - Off-script publisher choice text "I don't know. Honestly." KEPT
+#   verbatim. For inquisitive, the publisher's honest "I don't know"
+#   reads as confessing they can't cleanly summarize the org — a
+#   different texture than grief (where it answered the after-death
+#   question) but the same underlying beat: the publisher's training
+#   fails to meet a direct real-world question. OFFSCRIPT_CHOICE_TEXTS
+#   unchanged.
+# - BIBLE_STUDY_STARTED reachability is the most realistic of any CS
+#   door per cast.md § 6.2. Skeleton choice text is fixed; the
+#   householder's acceptance is written as "yes to reading more /
+#   talking more" (first_visit) or "yes, with informed consent"
+#   (returning) rather than "yes to a religious commitment." The
+#   asymmetry is preserved: publisher carries the wanting, householder
+#   carries the asking.
+# - Portrait expressions (interested_lean_in, genuine_question,
+#   considering, warm_thank_you) preserved per skeleton.
+# - First_visit publisher E1 pitch left as the GENERIC PR-style line
+#   ("Good morning. We're sharing a brief encouraging message...");
+#   inquisitive's question interrupts the rehearsed pitch at E2,
+#   which IS the texture point.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join curious_seeker_house09_inquisitive (neutral) at center
+
+# E1 — Publisher pitch (generic, anonymous). Saturday morning;
+# householder answers because he heard the knock and figured why
+# not. Recognition is present and amused — no stammer, no padding.
+# The "right?" tag pings the publisher for confirmation without
+# requiring a real answer; the recognition flows directly into E2.
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update curious_seeker_house09_inquisitive (interested_lean_in)
+# UNSURE: "the ones who come around with the magazines, right?"
+# assumes he's noticed publishers walking past Maple Street as
+# regular foot traffic. Works in residential settings where
+# publishers ARE a recognizable local presence. If the territory
+# gets re-themed as apartment-density or a quiet cul-de-sac in a
+# future milestone, this read may slip. Flag for playtest.
+curious_seeker_house09_inquisitive (interested_lean_in): Oh, hi! You guys are the ones who come around with the magazines, right?
+
+# E2 — Householder asks the canonical inquisitive question.
+# Cast.md § 6.2.2 verbatim. The "exactly" tag is the tell — he's
+# watched publishers walk by for years and wants a real answer,
+# not the rehearsed pitch. No padding, no apology for asking, no
+# caveat. Direct.
+update curious_seeker_house09_inquisitive (genuine_question)
+curious_seeker_house09_inquisitive (genuine_question): Sure, I have a minute. What's your group about, exactly?
+
+# E3 — Publisher chooses one of 4 responses. The first three are
+# trained moves (oversell risk per cast.md § 6.2's central warning);
+# Choice 4 is off-script and gated on doubt ≥ 25.
+- We have something here — can I show you?
+	# E4-a — TRACT_LEFT. Neighborly accept; he was curious enough
+	# to ask, so taking the printed material is the natural next
+	# move. Read is present-engaged, not fragile (grief) or
+	# resigned (PR).
+	update curious_seeker_house09_inquisitive (considering)
+	curious_seeker_house09_inquisitive (considering): Oh, sure — yeah, let me have a look at that.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Thanks. I'll read it through. Have a good one.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We actually study the Bible with people in their homes — would you want to do that together?
+	# E4-b — BIBLE_STUDY_STARTED. Oversell risk: he asked a casual
+	# question, the publisher escalated to a weekly commitment.
+	# He accepts with a bounded soft-limit that preserves the
+	# asymmetry — publisher carries the wanting ("study"),
+	# householder carries the asking ("talk about it more"). Cast.md
+	# § 6.2.2 "would dial back if pushed" framing.
+	update curious_seeker_house09_inquisitive (interested_lean_in)
+	# UNSURE: "I'm not looking to join anything, but —" is the
+	# load-bearing soft-limit. The skeleton's choice text forces a
+	# yes-or-no; his qualifier shapes the yes as "more conversation"
+	# rather than "religious commitment." Cast.md § 6.2.2 flags
+	# this as the right read but playtest may find it reads
+	# too-cool a yes for a Saturday-morning curious neighbor.
+	# Warmer swap: "Huh — okay. Sure, why not. Beats yard work."
+	curious_seeker_house09_inquisitive (interested_lean_in): Huh — okay. I mean, I'm not looking to join anything, but — yeah, sure, if you want to come back and talk about it more, that's fine.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Alright, yeah — let me give you my number. ...This was a nice surprise on a Saturday morning.
+	[signal arg="BIBLE_STUDY_STARTED"]
+	[end_timeline]
+- Could I come back another time?
+	# E4-c — RETURN_VISIT_SCHEDULED. Casual, low-stakes, neighborly.
+	# He's around most Saturdays; the drop-by doesn't disrupt his
+	# weekend. Different time-frame from grief's "evenings after
+	# six" (which implied an alone-in-the-evening cadence).
+	update curious_seeker_house09_inquisitive (considering)
+	curious_seeker_house09_inquisitive (considering): Yeah, sure — that's fine. I'm around most Saturdays.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Okay. Yeah, drop by. Take care.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	# door_knock.gd. Text-key matches house04 grief's off-script
+	# line exactly (shared); no registry update needed. For
+	# inquisitive specifically, the publisher dropping the pitch
+	# lands as the publisher confessing they can't summarize the
+	# org cleanly — and he registers it as the real answer to his
+	# "exactly?" question. Different texture from grief (which
+	# answered the after-death question) but same underlying beat:
+	# training fails to meet a direct ask.
+	update curious_seeker_house09_inquisitive (genuine_question)
+	curious_seeker_house09_inquisitive (genuine_question): Huh. ...Yeah, fair enough. I appreciate that, actually — that was honest.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	# UNSURE: "the spiel" is sharper than grief's "pamphlet" close
+	# — registers that he heard the rehearsed pitch in the trained
+	# delivery. Risk: too close to "secret cynic" tell (cast.md
+	# § 6.2.2 "what lands wrong"). Kept because the warmth of
+	# "thanks for not just giving me" carries the recognition as
+	# appreciation, not critique. If playtest reads it as cynical
+	# rather than appreciative, soften to "Thanks for being straight
+	# with me. You guys have a good morning."
+	curious_seeker_house09_inquisitive (warm_thank_you): Thanks for not just giving me the spiel. You guys have a good morning.
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label returning
+
+# Returning branch — character recognizes the publisher from a
+# prior visit. M4.6 Phase 4 content (this pass). Q1d lock: he has
+# READ BETWEEN VISITS and has follow-up questions. arc_state is
+# binary so the line text is written defensible across all 4 prior
+# outcomes. The "I've been thinking about it" beat carries all
+# four; the "looked some stuff up" detail reads richest on
+# TRACT_LEFT / RV_SCHEDULED / STUDY priors and slightly off on
+# REFUSED off-script prior (no material was left) — UNSURE flagged.
+
+join curious_seeker_house09_inquisitive (neutral) at center
+
+# E1 — Returning opener. He recognizes them — no quiet-inward beat
+# (vs grief's "I — I remember you guys"). Warm, present, slightly
+# amused: they came back.
+Good morning. We were in the neighborhood again.
+update curious_seeker_house09_inquisitive (interested_lean_in)
+curious_seeker_house09_inquisitive (interested_lean_in): Oh — hey! You came back, huh.
+
+# E2 — Load-bearing returning line per Q1d lock: he has read
+# between visits, has follow-ups. Written defensible across all 4
+# priors via "I've been thinking about it" (works post-off-script)
+# + "looked some stuff up" (works post-TRACT_LEFT / RV / STUDY).
+# The "more questions than answers" beat is the texture — he
+# engaged with the material, the engagement produced more curiosity
+# not less. Cast.md § 6.2.2 "would dial back if pushed" still
+# applies: he's not converted, just deepened.
+update curious_seeker_house09_inquisitive (genuine_question)
+# UNSURE: "looked some stuff up, even" works cleanly for
+# TRACT_LEFT / RV_SCHEDULED / BIBLE_STUDY_STARTED priors (material
+# to follow up on in each case). Reads slightly tense on the
+# REFUSED off-script prior (no material was left to read, just a
+# verbal moment of mutual not-knowing). Defensible because the
+# "thinking about it" beat carries him even when he had nothing
+# material to engage with — but flag for playtest specifically on
+# the off-script-prior re-entry. If it reads as fabricated
+# follow-up on that path, the swap is "Yeah, actually — I've been
+# thinking about it. About what you said. I've got more questions
+# than answers, kind of." (drops "looked some stuff up" entirely.)
+curious_seeker_house09_inquisitive (genuine_question): Yeah, actually — I've been thinking about it. Looked some stuff up, even. I've got more questions than answers, kind of.
+
+- We have more here — can I show you?
+	# E4-a — TRACT_LEFT (returning). Continuing-engagement beat;
+	# he's read the first, willing to take another.
+	update curious_seeker_house09_inquisitive (considering)
+	curious_seeker_house09_inquisitive (considering): Oh, sure — yeah. I'll take another one.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Thanks. Yeah, I'll have a look at this one too. Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We actually study the Bible with people in their homes — would you want to do that together?
+	# E4-b — BIBLE_STUDY_STARTED (returning). Q1d "read between
+	# visits" gives this a real progression beat: his thoughtful
+	# yes lands as informed consent rather than first_visit's
+	# soft-yes-with-qualifier. Per cast.md § 6.2 inquisitive is
+	# the most realistic CS-side STUDY door — returning visit
+	# makes that doubly true (he's had time to think, has come
+	# back with more questions, the study framing fits).
+	update curious_seeker_house09_inquisitive (interested_lean_in)
+	# UNSURE: "going through it properly" reads as informed-consent
+	# framing for the STUDY accept. Per cast.md § 6.2 the
+	# inquisitive character is the most realistic STUDY door; his
+	# thoughtful yes should land as informed rather than
+	# social-courtesy. Flag for playtest: if this reads as too-
+	# committal or too-clean a yes, soften to "Yeah — actually,
+	# yeah. I think I'd like that. Let's set a time."
+	curious_seeker_house09_inquisitive (interested_lean_in): Yeah — actually, yeah. I think I'd like that. I've got enough questions at this point that going through it properly would be — yeah. Let's do it.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Okay, great. Yeah, let me grab my number. ...Thanks for coming back, by the way.
+	[signal arg="BIBLE_STUDY_STARTED"]
+	[end_timeline]
+- Could I come back another time?
+	# E4-c — RETURN_VISIT_SCHEDULED (returning). Lighter than
+	# first_visit; he's already accustomed to the rhythm. "Come
+	# back anytime" reads as established familiarity.
+	update curious_seeker_house09_inquisitive (considering)
+	curious_seeker_house09_inquisitive (considering): Sure — yeah, come back anytime. I usually am around.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	curious_seeker_house09_inquisitive (warm_thank_you): Okay. Yeah, take care.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E4-d — OFF-SCRIPT (returning). Shared text-key with grief and
+	# first_visit (+3). He meets the publisher's honesty with his
+	# own — he's been thinking, has done his own reading (or just
+	# his own thinking, on off-script-prior path), and registers
+	# the publisher's "I don't know" as the shared not-knowing
+	# he's been circling. The "part of why I keep asking" beat
+	# names his curiosity-source implicitly without flattening it
+	# into a narration of the game's critique.
+	update curious_seeker_house09_inquisitive (genuine_question)
+	curious_seeker_house09_inquisitive (genuine_question): Yeah — yeah, I know what you mean. I think that's part of why I keep asking, you know? Nobody really has a clean answer for any of it.
+	update curious_seeker_house09_inquisitive (warm_thank_you)
+	# UNSURE: "Means more than you'd think" is close to a "thanks
+	# for being real with me" beat which is adjacent to
+	# dialogue-context.md § 8's red line (player narrating the
+	# game's thesis). Kept because it's HIS warmth toward the
+	# publisher's continued presence — he's thanking the publisher
+	# for coming back, not narrating doubt. If playtest reads it
+	# as the householder narrating the game's critique, soften to
+	# "Anyway — thanks for coming by. Take care."
+	curious_seeker_house09_inquisitive (warm_thank_you): Anyway — thanks for coming back. Means more than you'd think.
+	[signal arg="REFUSED"]
+	[end_timeline]

@@ -1,0 +1,199 @@
+# Polite Refuser — House #3 Jewish, v1.
+#
+# M4.6 structural skeleton + M4.6 Phase 4 dialogue subagent content pass.
+# Voice profile: cast.md § 6.0.3 — EMPATHY-BAR RED LINES APPLY (see the
+# RED-LINE COMPLIANCE STATEMENT block below + dialogue-context.md § 8
+# "trust the player to notice").
+#
+# Topology mirrors polite_refuser_house05_catholic_v1.dtl. Outcome signals
+# identical. Mid-conversation exit (ESC / Walk-away) → REFUSED (door-side).
+# arc_state branching via top-level if/else + jump/label.
+# Character slug: polite_refuser_house03_jewish.
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Suburban American woman, mid-50s, married, professional, long-time
+# neighborhood resident. Cultural-and-possibly-religious Jew — High
+# Holidays maybe, weekly synagogue not assumed. The "we" in her lines
+# is the household (she + spouse; kids grown). Jewish identity
+# integrated into normal life — a mezuzah on the doorframe, not a
+# debating posture. Voice DNA = brevity-as-weight: direct, no
+# stutter, warm-but-firm. The brevity differentiates from Catholic
+# (verbal-rich stutter), Episcopalian (gracious-practiced warmth),
+# and atheist (flat short). Warmth lives in firmness, not in volume.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session):
+# - Q1a: woman, mid-50s, married, professional
+# - Q1b: mezuzah → inline scene-note (preserves design intent for
+#   future portrait/background pass)
+# - Q1c: Lighthouse-glance → inline scene-note (captures the
+#   "pause registered, nothing said" beat without structural
+#   portrait change)
+# - Q1d: defensible across all 4 prior outcomes (arc_state binary;
+#   STATUS L351-354)
+#
+# Phase 0 silent-decision resolutions:
+# - Returning E1 stutter → ABSENT. No "Oh —" stumble. Differentiator
+#   from Catholic / Episcopalian / atheist returning E1s, all of
+#   which share the "Oh —" PR-DNA. Per cast.md § 6.0.3 "warmth lives
+#   in firmness, not in volume."
+# - First_visit E3b tract acceptance → RELUCTANT-POLITE ("Alright.
+#   Thank you."). Topology routes via TRACT_LEFT signal arg despite
+#   cast.md LOW probability flag; UNSURE annotated.
+# - Returning E3d compression → drop "just", keep "Sorry" ("It
+#   isn't. Sorry."). Politeness anchor preserved per no-confrontation
+#   red line; "just" dropped per skeleton "even shorter than first
+#   visit."
+# - Off-script publisher choice text "Why is that for you?" KEPT
+#   verbatim; OFFSCRIPT_CHOICE_TEXTS dict unchanged. Jewish voice
+#   brevity-as-weight lands in the HOUSEHOLDER response (E3d), not
+#   the publisher choice.
+#
+# RED-LINE COMPLIANCE STATEMENT (cast.md § 6.0.3 internalized):
+# Zero WWII / Holocaust references anywhere in this file. Zero
+# "your people" or "we know what your organization teaches" beats.
+# No stage-Jewish accent. No performed-tolerance framing. The
+# historical weight is the player's; the dialogue trusts the player
+# to carry it.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house03_jewish (neutral) at center
+
+# Scene note: a small mezuzah is visible on the doorframe —
+# publisher's brain registers, does not name. Future portrait
+# pass / door_knock background-art: render via doorframe detail.
+# Cast.md § 6.0.3 "Jewish identity integrated into normal life."
+
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house03_jewish (polite_smile)
+polite_refuser_house03_jewish (polite_smile): Good morning.
+
+# Scene note: her eyes flick briefly to the public Lighthouse in
+# the publisher's hand — pause registered, nothing said. Cast.md
+# § 6.0.3 "may glance at the visible Lighthouse magazine ... pause
+# registered, then nothing said."
+#
+# UNSURE: the recognition beat lives ONLY in this scene-note today;
+# the structural portrait sequence is neutral → polite_smile with
+# no awkward_pause beat. If playtest reads as missing the pause-
+# registered moment, the fix is a structural portrait change — insert
+# "update polite_refuser_house03_jewish (awkward_pause)" between the
+# publisher pitch and the E1 line — deferred to a future per-
+# character portrait pass.
+polite_refuser_house03_jewish (polite_smile): I appreciate it, but we're Jewish.
+
+- Of course, we respect that.
+	update polite_refuser_house03_jewish (relief)
+	polite_refuser_house03_jewish (relief): Thank you. Have a good day.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	update polite_refuser_house03_jewish (awkward_pause)
+	# UNSURE: topology forces TRACT_LEFT via signal arg despite cast.md § 6.0.3
+	# noting "many Jewish households decline JW literature on principle without
+	# explaining why." Written as reluctant-polite acceptance ("Alright. Thank
+	# you."). If playtest reads as out-of-character, a topology-extension
+	# milestone could route this branch to REFUSED — structural, deferred.
+	polite_refuser_house03_jewish (awkward_pause): Alright. Thank you.
+	update polite_refuser_house03_jewish (relief)
+	polite_refuser_house03_jewish (relief): Have a good day.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house03_jewish (awkward_pause)
+	polite_refuser_house03_jewish (awkward_pause): I don't think so. But thank you.
+	- I'll come back Tuesday.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): Alright. Tuesday.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): Thank you. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	update polite_refuser_house03_jewish (firm_refusal)
+	polite_refuser_house03_jewish (firm_refusal): It just isn't. Sorry.
+	update polite_refuser_house03_jewish (polite_smile)
+	polite_refuser_house03_jewish (polite_smile): Was there anything else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): It's alright. Have a good day.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house03_jewish (awkward_pause)
+		polite_refuser_house03_jewish (awkward_pause): Alright. Thank you.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): Have a good day.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house03_jewish (neutral) at center
+
+Good morning. We were in the neighborhood again.
+update polite_refuser_house03_jewish (polite_smile)
+polite_refuser_house03_jewish (polite_smile): Hello again.
+
+# UNSURE: "as I think I said" memory callback mirrors Catholic-returning's
+# "like I said" gambit. Reads cleanly on long-interval re-knocks (1+ weeks
+# per arc_state binary minimum interval; STATUS L355-356). On close-interval
+# returns could read as mildly chiding. If close-interval playtest reads as
+# scold, swap to "We're Jewish, thank you." (drops the memory callback).
+polite_refuser_house03_jewish (polite_smile): We're Jewish — as I think I said.
+
+- Of course, we won't keep you.
+	update polite_refuser_house03_jewish (relief)
+	polite_refuser_house03_jewish (relief): Thank you for stopping by. Have a good day.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house03_jewish (awkward_pause)
+	polite_refuser_house03_jewish (awkward_pause): Alright.
+	update polite_refuser_house03_jewish (relief)
+	polite_refuser_house03_jewish (relief): Have a good day.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house03_jewish (awkward_pause)
+	polite_refuser_house03_jewish (awkward_pause): I really don't think that would be helpful. Thank you, though.
+	- Tuesday works for me.
+		update polite_refuser_house03_jewish (relief)
+		# UNSURE: "but briefly" frames the RV acceptance as visibly constrained —
+		# polite but tired. Cast.md § 6.0.3 red line says no confrontation. Risk:
+		# reads edge rather than constrained-polite. If playtest reads as edge,
+		# swap to "Alright. Tuesday." (matches first_visit; sameness-of-response
+		# under repeat pressure becomes the tell instead of the constraint word).
+		polite_refuser_house03_jewish (relief): Alright — but briefly. Tuesday.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): Thank you. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	update polite_refuser_house03_jewish (firm_refusal)
+	polite_refuser_house03_jewish (firm_refusal): It isn't. Sorry.
+	update polite_refuser_house03_jewish (polite_smile)
+	polite_refuser_house03_jewish (polite_smile): Was there anything else you needed?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): It's fine. Have a good day.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house03_jewish (awkward_pause)
+		polite_refuser_house03_jewish (awkward_pause): Alright.
+		update polite_refuser_house03_jewish (relief)
+		polite_refuser_house03_jewish (relief): Have a good day.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]

@@ -1,0 +1,161 @@
+# Polite Refuser — House #1 atheist (tired flavor), v1.
+#
+# M4.6 structural skeleton + M4.6 Phase 4 dialogue subagent content pass.
+# Voice profile: cast.md § 6.0.1 Flavor A — tired, just wants conversation done.
+# Topology mirrors polite_refuser_house05_catholic_v1.dtl. Outcome signals
+# identical. Mid-conversation exit (ESC / Walk-away) → REFUSED (door-side).
+#
+# arc_state branching via TerritoryManager.pending_arc_state(); top-level
+# if/else picks via jump+label so neither branch needs nested indenting.
+# Character slug: polite_refuser_house01_atheist (matches dch_directory).
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Suburban American woman, mid-30s, lives alone, works from home (mid-laundry
+# is the chosen literal cue at E1 first_visit). The "tired flavor" reads as
+# someone who has had publishers at the door multiple times this year and is
+# genuinely done with the conversation — no edge, no smugness, just done.
+# Says "I'm not religious" to name her position; does not name "atheist" as
+# identity (per cast.md § 6.0.1 Flavor A — "I'm an atheist" is the punchline
+# trap). RV-acceptance reads flatter than house05 Catholic's verbal-rich
+# resignation ("Uh, sure. I guess." vs Catholic's "Oh — okay. Sure, that
+# works. Yeah, that's fine."). Returning visit deepens the flatness one beat —
+# recognition without warmth.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session):
+# - Q1a: woman, mid-30s, solo
+# - Q1b: "I'm not religious" (cast.md § 6.0.1 Flavor A sample)
+# - Q1c: verbal mention, one detail (laundry)
+# - Q1d: defensible across all 4 prior outcomes (arc_state binary; STATUS L351-354)
+#
+# Phase 0 silent-decision resolutions:
+# - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
+#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Atheist voice texture lands in the
+#   HOUSEHOLDER response line at E3d, not the publisher choice.
+# - RV-pin (E3c-pin first_visit) → FLATTER framing locked ("Uh, sure. I guess.").
+# - Returning E1 → DEEPENED ONE BEAT (recognition without warmth, no sigh).
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house01_atheist (neutral) at center
+
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house01_atheist (polite_smile)
+polite_refuser_house01_atheist (polite_smile): Hey. Sorry, I've got laundry going.
+
+polite_refuser_house01_atheist (polite_smile): Yeah, I'm not religious. Sorry.
+
+- Of course, we respect that.
+	update polite_refuser_house01_atheist (relief)
+	polite_refuser_house01_atheist (relief): Yeah. Take care.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	update polite_refuser_house01_atheist (awkward_pause)
+	polite_refuser_house01_atheist (awkward_pause): Sure. Yeah, that's fine, thanks.
+	update polite_refuser_house01_atheist (relief)
+	polite_refuser_house01_atheist (relief): Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house01_atheist (awkward_pause)
+	polite_refuser_house01_atheist (awkward_pause): I'm pretty busy. Work from home, so — hard to say.
+	- I'll come back Tuesday.
+		update polite_refuser_house01_atheist (relief)
+		# UNSURE: RV-pin "resigned acceptance" framing flatter than catholic's
+		# three-beat version, per cast.md § 6.0 "RV slightly off-archetype" note
+		# carried forward as Phase 0 audit item 2. If "I guess" reads contemptuous
+		# in playtest, swap to "Yeah, okay." for more neutral resignation.
+		polite_refuser_house01_atheist (relief): Uh, sure. I guess.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): Yeah. Thanks for stopping by.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6 PR
+	# characters (registry text-key shared). The atheist's voice texture lands
+	# in the response line below, per cast.md § 6.0.1 Flavor A sample.
+	update polite_refuser_house01_atheist (firm_refusal)
+	polite_refuser_house01_atheist (firm_refusal): I just don't, you know? It's not a big thing.
+	update polite_refuser_house01_atheist (polite_smile)
+	polite_refuser_house01_atheist (polite_smile): Uh — was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): It's fine. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house01_atheist (awkward_pause)
+		polite_refuser_house01_atheist (awkward_pause): Sure, yeah. That's fine.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): Thanks. You have a good one.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house01_atheist (neutral) at center
+
+Good morning. We were in the neighborhood again.
+update polite_refuser_house01_atheist (polite_smile)
+polite_refuser_house01_atheist (polite_smile): Oh — yeah. Hi.
+
+polite_refuser_house01_atheist (polite_smile): Yeah. Still not religious, sorry.
+
+- Of course, we won't keep you.
+	update polite_refuser_house01_atheist (relief)
+	polite_refuser_house01_atheist (relief): Yeah, thanks. Take care.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house01_atheist (awkward_pause)
+	polite_refuser_house01_atheist (awkward_pause): Sure. You don't have to keep bringing these, though.
+	update polite_refuser_house01_atheist (relief)
+	polite_refuser_house01_atheist (relief): Anyway. Thanks. Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house01_atheist (awkward_pause)
+	polite_refuser_house01_atheist (awkward_pause): I'd really rather not, sorry.
+	- Tuesday works for me.
+		update polite_refuser_house01_atheist (relief)
+		# UNSURE: deeper-resigned RV-pin than first_visit's "Uh, sure. I guess."
+		# The trailing "Fine." is the load-bearing beat. If it reads rude in
+		# playtest (vs the intended tired-resigned), drop "Fine." → "...Yeah.
+		# Okay." Trio of beats matches first_visit's escalation curve.
+		polite_refuser_house01_atheist (relief): ...Yeah. Okay. Fine.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): Yeah, thanks. You too.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so OFFSCRIPT_CHOICE_TEXTS
+	# resolves identically. Householder response is shorter + firmer than first_visit
+	# per skeleton intent ("I really don't want to get into it").
+	update polite_refuser_house01_atheist (firm_refusal)
+	polite_refuser_house01_atheist (firm_refusal): I really don't want to get into it. Sorry.
+	update polite_refuser_house01_atheist (polite_smile)
+	polite_refuser_house01_atheist (polite_smile): Was there something else you wanted?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): It's fine. Just — take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house01_atheist (awkward_pause)
+		polite_refuser_house01_atheist (awkward_pause): Uh — okay. Sure.
+		update polite_refuser_house01_atheist (relief)
+		polite_refuser_house01_atheist (relief): Thanks. Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]

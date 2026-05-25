@@ -1,0 +1,271 @@
+# Curious Seeker — House #4 grief flavor, v1.
+# Renamed M4.6+ from curious_seeker_v1.dtl. first_visit branch is M4.2
+# canonical content (preserved verbatim); returning branch authored
+# M4.6 Phase 4 (this pass). Voice profile: cast.md § 6.2.1.
+#
+# INTERPRETATION (M4.2 subagent, preserved verbatim):
+#   This Curious Seeker is a woman somewhere in her 30s-40s who answered
+#   the door already half-distracted by a thing she's been carrying for
+#   a few days — a friend's husband just died and she doesn't know what
+#   to say. She isn't religious; she isn't anti-religious. When she sees
+#   two people with magazines on her porch she registers, in the same
+#   instant, "oh, this isn't a good time" AND "wait — these people talk
+#   about death for a living." The question comes out before she's
+#   decided to ask it. She is not testing the publisher. She does not
+#   want a study, a magazine, or a return visit — those are the wrong
+#   shape for what she came to the door with. She wants one specific
+#   sentence she can carry to her friend.
+#
+#   On the publisher side: the first three E3 choices are the trained
+#   moves (cast.md § 6.2's warning: "the publisher will be tempted to
+#   oversell"). They all redirect her question into the standard
+#   ministry pipeline — magazine, study, return visit. Only Choice 4
+#   actually answers what she asked. That is the gap dialogue-context.md
+#   § 7 calls out: the on-script choices have the rehearsed quality of
+#   stock door-presentation; the off-script choice is less polished and
+#   more present.
+#
+#   Canonical opening picked from cast.md § 6.2's four options: the
+#   grieving-friend question. It is the highest-yield for the M4 doubt
+#   mechanic because the on-script choices all land as small evasions
+#   of a real human ask.
+#
+# RETURNING-BRANCH INTERPRETATION (M4.6 Phase 4 subagent, this pass):
+#   Same character, visit 2. arc_state is binary so the interval is not
+#   knowable to the writer — could be next Saturday or several weeks.
+#   The grief texture is the same person's grief at a different stage —
+#   she has lived with it some, hasn't worked it out, isn't asking the
+#   doorstep question again because that was a moment that happened.
+#   She remembers the publisher. She doesn't perform recognition; she
+#   just registers it. The returning E2 names "the thing I asked you
+#   about, before" without re-asking it — grief moved inward.
+#
+# BRANCH TOPOLOGY (structurally locked, unchanged from M4.1)
+#   E1  Publisher pitch (anonymous, no character)
+#   E2  Curious Seeker opens fully and asks a real question
+#   E3  Publisher chooses one of 4 responses:
+#         Choice 1 — magazine offer        → TRACT_LEFT
+#         Choice 2 — invite to study       → BIBLE_STUDY_STARTED
+#         Choice 3 — schedule return visit → RETURN_VISIT_SCHEDULED
+#         Choice 4 — off-script (gated)    → REFUSED
+#   E4  Each branch: 1–2 householder lines, portrait beat,
+#       [signal arg="OUTCOME"], [end_timeline]
+#
+# OUTCOMES emitted via [signal arg="..."]:
+#   TRACT_LEFT, BIBLE_STUDY_STARTED, RETURN_VISIT_SCHEDULED, REFUSED
+# door_knock.gd::_on_dialogic_signal maps these to House.State.
+#
+# CHOICE 4 is doubt-gated at DoubtMeter.value >= 25.
+#
+# Off-script choice text "I don't know. Honestly." matches
+# door_knock.gd::OFFSCRIPT_CHOICE_TEXTS for T1 (+3 doubt). Shared with
+# house09 inquisitive; no registry update needed this session.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session — returning only):
+# - Q1a: interval phrasing IMPLIED VIA STATE (no explicit "couple weeks").
+# - Q1b: funeral occurrence UNSPECIFIED (reads across anticipatory and
+#   post-funeral grief stages).
+# - Q1c: BIBLE_STUDY_STARTED — ACCEPT WITH FRICTION (signal still fires;
+#   line text reads slower / more hesitant than first_visit). UNSURE per
+#   cast.md § 6.2 grief-fragility.
+# - Q1d: returning DEFENSIBLE ACROSS ALL 4 PRIOR OUTCOMES (arc_state
+#   binary; STATUS L351-356). Off-script E3d UNSURE for the post-off-
+#   script-prior edge case.
+#
+# Phase 0 resolutions:
+# - Off-script choice text "I don't know. Honestly." KEPT verbatim
+#   (registry shared with house09; no edit).
+# - Publisher E1 returning ("Good morning. We were in the neighborhood
+#   again.") preserved per skeleton — matches PR returning convention.
+# - Portrait expression beats preserved per skeleton.
+# - First_visit branch M4.2 canonical — preserved verbatim; the three
+#   first_visit # UNSURE flags (M4.2) remain untouched.
+#
+# arc_state branching: first_visit plays the M4.2 content; returning
+# plays the M4.6 Phase 4 content (this pass). Same top-level if/else +
+# jump/label pattern as the M4.6 PR character files so M4.2 content
+# stays at column 0.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join curious_seeker_house04_grief (neutral) at center
+
+# E1 — Publisher pitch. Householder is half-distracted when she opens
+# the door; the pitch lands in the middle of the thing she's been
+# turning over for days, and the door stays open.
+Good morning. We're sharing a brief encouraging message from the Bible today — about the hope we have for the people we've lost.
+update curious_seeker_house04_grief (interested_lean_in)
+curious_seeker_house04_grief (interested_lean_in): Oh — hi. Sorry, I was — yeah, come up. I can hear you.
+# RESOLVED: opened the publisher line with the "people we've lost" framing rather than the generic "suffering in the world" version used in the polite_refuser pitch. Gives the householder a natural hook to ask the question that's already on her mind.
+# UNSURE: "come up" assumes a porch with a couple steps. Reads suburban-house-with-stoop to me but may want "come in closer" or just "I can hear you" in a flatter setting.
+
+# E2 — Householder asks the canonical grieving-friend question.
+update curious_seeker_house04_grief (genuine_question)
+curious_seeker_house04_grief (genuine_question): Actually — can I ask you something? This is going to sound out of nowhere. My friend's husband just died. Like, last week. And I — I don't know what to say to her. I don't know what people like you say. About — where he is now, or whatever. Is that — is that a weird thing to ask?
+
+# E3 — Publisher chooses one of 4 responses. The first three are
+# trained moves; Choice 4 is off-script and gated on doubt ≥ 25.
+- We actually have something on exactly that — can I show you?
+	# E4-a — TRACT_LEFT. Trained move: redirect to printed material.
+	update curious_seeker_house04_grief (considering)
+	curious_seeker_house04_grief (considering): Oh — okay. Yeah. Yeah, sure, I'll — I'll take a look at it.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Thanks. I'll — I'll read it. Maybe I can find something in there for her.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We actually study the Bible with people in their homes — would you want to do that together?
+	# E4-b — BIBLE_STUDY_STARTED. Gold-star outcome (doubt -3) but the
+	# riskiest oversell move — she asked one sentence and got offered a
+	# weekly meeting. She accepts because she's the kind of person who
+	# accepts an offered hand.
+	update curious_seeker_house04_grief (interested_lean_in)
+	curious_seeker_house04_grief (interested_lean_in): Oh — that's — wow, okay. You'd really do that? I mean — yeah. Yeah, I think I'd like that.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Okay. Yeah. Let me grab my number for you. And — thank you. Really. I wasn't expecting that today.
+	# UNSURE: "let me grab my number for you" assumes the publisher writes down a phone number rather than scheduling a fixed time. Real practice is usually "would Tuesday or Thursday work?" with a specific time.
+	[signal arg="BIBLE_STUDY_STARTED"]
+	[end_timeline]
+- Could I come back another time? I'd like to talk about it properly.
+	# E4-c — RETURN_VISIT_SCHEDULED. The trained "soft" move — kindest
+	# of the on-script three because it acknowledges the question
+	# deserves more than a porch answer, but still defers presence.
+	update curious_seeker_house04_grief (considering)
+	curious_seeker_house04_grief (considering): Oh — sure. Yeah, that'd be — that's nice of you. I'm usually around evenings, after — after six is good.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Okay. Yeah, come by. I'll — I'll be here. Thank you.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	# door_knock.gd. The publisher drops the pitch and tells the truth.
+	update curious_seeker_house04_grief (genuine_question)
+	curious_seeker_house04_grief (genuine_question): Oh. Oh — okay. Yeah, I — I don't either. I guess nobody really does, huh.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Thank you, though. For — for not just giving me a pamphlet. I'll figure something out for her. You guys take care, okay?
+	# UNSURE: "pamphlet" rather than "magazine" — householders outside the org often blur the two; pamphlet is the more common civilian word.
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label returning
+
+# Returning branch — character recognizes the publisher from a prior
+# visit. M4.6 Phase 4 content. arc_state is binary so the interval is
+# not knowable here (STATUS L355-356); content written defensible
+# across both short-interval (next Saturday) and longer-interval
+# (several weeks) re-knocks, and across all 4 prior outcomes.
+# Per Phase 1 locks above:
+#   - interval implied via state (Q1a)
+#   - funeral occurrence unspecified (Q1b)
+#   - BIBLE_STUDY_STARTED accepts with friction (Q1c)
+#   - defensible across all 4 prior outcomes (Q1d)
+
+join curious_seeker_house04_grief (neutral) at center
+
+# E1 — Publisher returning opener (locked verbatim across all M4.6
+# characters); householder recognition is quiet rather than warm. She
+# remembers; she doesn't perform remembering. Em-dash opener consistent
+# with M4.2 voice.
+Good morning. We were in the neighborhood again.
+update curious_seeker_house04_grief (interested_lean_in)
+curious_seeker_house04_grief (interested_lean_in): Oh — hi. Yeah, I — I remember you guys. Hi.
+
+# E2 — Load-bearing returning line. Grief texture stays center but
+# inward; she names "the thing I asked you about, before" without
+# re-asking it verbatim. Time-passage implied via "still" and "a
+# little weird, still" — works for both 1-week and 6-week intervals.
+# She invites the publisher back into the pitch by ending with an
+# opening ("What's up?"); the on-script E3 choices can take "exactly
+# that" as referring to the unspecified-but-named "thing".
+update curious_seeker_house04_grief (genuine_question)
+# UNSURE: "the thing I asked you about, before" reads natural across
+# TRACT_LEFT / BIBLE_STUDY_STARTED / RETURN_VISIT_SCHEDULED priors,
+# but slightly tense across the off-script-prior path — the publisher
+# already gave the honest answer once, so her circling back to the
+# question could read as "your answer didn't help" (the on-the-nose
+# red line per the briefing). Kept because she's not assessing the
+# answer, just naming where her own head is — but flag for playtest
+# specifically on the off-script-prior re-entry.
+curious_seeker_house04_grief (genuine_question): Sorry — it's been a little weird around here, still. That thing I asked you about, before. I keep — yeah. Anyway. ...What's up?
+
+- We actually have something on exactly that — can I show you?
+	# E4-a — TRACT_LEFT. Trained pivot to print again. Returning version
+	# is flatter than first_visit (which named the friend); she accepts
+	# but doesn't promise the print will land. The "for her" naming from
+	# first_visit dropped; the print might be for the friend, might be
+	# for herself — left ambiguous.
+	update curious_seeker_house04_grief (considering)
+	curious_seeker_house04_grief (considering): Oh — okay. Yeah. Yeah, sure, I'll — I'll take a look.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Thanks. I'll spend some time with it. Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We actually study the Bible with people in their homes — would you want to do that together?
+	# E4-b — BIBLE_STUDY_STARTED. Q1c lock: she accepts but with
+	# friction. Multi-beat hesitation before the yes — slower and more
+	# considered than first_visit's "wow, okay. ...yeah, I think I'd
+	# like that." Topology forces the signal; the line text shows the
+	# cost. Number-handoff close consistent with M4.2 first_visit so
+	# the practice-detail UNSURE flag carried in the M4.2 block still
+	# covers this branch.
+	update curious_seeker_house04_grief (interested_lean_in)
+	# UNSURE: BIBLE_STUDY_STARTED acceptance on the returning branch
+	# specifically. cast.md § 6.2 flags CS-grief as fragile here — the
+	# publisher pressing for a study on visit 2 should not cleanly land
+	# unless the topology forces it (which it does). The line is written
+	# as accept-with-friction so the cost is visible. If playtest reads
+	# this as false-accept (she really wouldn't agree on visit 2), the
+	# softer swap is "I — yeah. I don't know. Maybe. ...Yeah. Okay. Just
+	# — let me think about it, but yeah, you can — you can leave me your
+	# number." Same signal fires; the agreement just reads thinner.
+	curious_seeker_house04_grief (interested_lean_in): Oh — okay. ...I don't know. I — yeah. Maybe. ...Yeah. Okay. I think I want to try.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Okay. Yeah, let me — let me get my number for you. ...Thanks. For coming back.
+	[signal arg="BIBLE_STUDY_STARTED"]
+	[end_timeline]
+- Could I come back another time? I'd like to talk about it properly.
+	# E4-c — RETURN_VISIT_SCHEDULED. Shorter than first_visit; she
+	# already knows the rhythm. "Evenings" reference preserves the
+	# first_visit detail without repeating verbatim.
+	update curious_seeker_house04_grief (considering)
+	curious_seeker_house04_grief (considering): Oh — sure. Yeah, that — that's fine. Evenings still, after six.
+	update curious_seeker_house04_grief (warm_thank_you)
+	curious_seeker_house04_grief (warm_thank_you): Okay. Yeah, just — come by. Take care.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	# door_knock.gd (shared text-key with house09). Direction-A
+	# (she opens further, quietly) chosen over Direction-B (she closes
+	# down because she's embarrassed by her own openness last time) —
+	# see UNSURE below. Close is the meta-move "thank you for not
+	# pretending you have it figured out either" — adjacent to M4.2's
+	# "thank you for not just giving me a pamphlet" but not verbatim.
+	update curious_seeker_house04_grief (genuine_question)
+	# UNSURE: Direction-A vs Direction-B at E3d returning. Direction-A
+	# (chosen) = she opens further, with a small beat of recognition that
+	# nobody has it figured out and that's livable. Direction-B (not
+	# chosen) = she closes down, embarrassed by her doorstep-overshare
+	# from before ("I shouldn't have — I'm sorry, I bothered you with
+	# all of that, last time"). Direction-B is a real grief beat per the
+	# briefing but reads against the publisher's "+3 for asking real
+	# questions" mechanic intent. If playtest finds Direction-A too neat,
+	# the Direction-B swap is documented here for one-line replacement.
+	curious_seeker_house04_grief (genuine_question): Oh. ...Yeah. Yeah, I — I don't either, still. I think — I think that's maybe okay. It has to be.
+	update curious_seeker_house04_grief (warm_thank_you)
+	# UNSURE: returning E3d close "thank you for not pretending you have
+	# it figured out either." Adjacent to the M4.2 first_visit close
+	# (STATUS L1283-1288 flagged the M4.2 "thank you for not just giving
+	# me a pamphlet" as edge-of-red-line for dialogue-context.md § 8
+	# "trust the player to notice"). Kept because she's naming her own
+	# gratitude, not narrating the game's critique — the "either" is the
+	# texture word, making it a bond rather than a verdict. If playtest
+	# reads it as the householder narrating the game's thesis, soften to
+	# "...Thanks. For coming back. ...Take care, okay?"
+	curious_seeker_house04_grief (warm_thank_you): ...Thank you. For coming back. For not pretending you have it figured out either. You guys take care, okay?
+	[signal arg="REFUSED"]
+	[end_timeline]

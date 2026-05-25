@@ -1,0 +1,273 @@
+# Polite Refuser — House #12 atheist (intellectual flavor), v1.
+#
+# M4.6 structural skeleton + M4.6 Phase 4 dialogue subagent content pass.
+# Voice profile: cast.md § 6.0.1 Flavor B — intellectual, thoughtful,
+# polite-but-firm. The second atheist of the pigeonhole pair (House #1
+# is tired flavor; this one is the contrast voice).
+#
+# Pigeonhole differentiation note (locked anchor; House #1 atheist):
+# H1 voice is FLAT and SHORT — done with the conversation. H12 voice is
+# THOUGHTFUL and QUALIFIED — used to being deliberate, has more words,
+# more pauses, more empathy-bar anchors ("I appreciate what you're doing").
+# Both refuse with the same firmness. Differentiation lives in cadence
+# (qualifiers + apologies + considered-thinking rhythm) and not in any
+# explicit "I'm an atheist" framing — neither character says it.
+#
+# Topology mirrors polite_refuser_house05_catholic_v1.dtl. Outcome signals
+# identical. Mid-conversation exit (ESC / Walk-away) → REFUSED (door-side).
+# arc_state branching via top-level if/else + jump/label.
+# Character slug: polite_refuser_house12_atheist.
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Suburban American man, late 40s to mid-50s, partnered (spouse at home; no
+# audible cameo). Has done his own reading on religion-and-meaning questions
+# over years and landed somewhere settled and irreligious. Polite to the
+# publishers as people — recognizes they're young, sincere, doing their
+# assignment. Speaks in qualified sentences with built-in pauses because
+# being thoughtful is a habit. Knows the doorstep isn't the venue for the
+# argument he could give, and deliberately declines to give it. That
+# declination IS the voice. Uses first-person singular "I" — his refusal is
+# his thinking, not a household consensus (differentiates from the Catholic
+# "we go to St. Mark's" household-anchored "we", the Episcopalian "we're
+# already members" parish-anchored "we", and the gay couple's load-bearing
+# "we"). His apologetic "Sorry" tic at the end of declines is the empathy-
+# bar anchor that prevents intellectual condescension from landing.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session, 2026-05-24):
+# - Q1a: man, late 40s to mid-50s, partnered (no audible cameo)
+# - Q1b: clean — no profession cue (cadence + qualifiers carry the
+#   "reads, thinks carefully" texture implicitly; explicit "I've read
+#   about this" beats explicitly rejected as condescension trap per the
+#   session brief's "what lands wrong" list)
+# - Q1c: courteous-thoughtful tract accept ("Of course — sure. I'll
+#   take a look. Thank you."); cast.md § 6.0.1 Flavor B doesn't flag
+#   low probability so no UNSURE annotation on the topology route
+# - Q1d: returning branch defensible across all 4 prior outcomes
+#   (arc_state binary; STATUS L351-354). UNSURE captures the
+#   TRACT_LEFT-specific arc beat we forgo (intellectual character
+#   ACTUALLY reading the tract between visits would be voice-true)
+#
+# Phase 0 silent-decision resolutions:
+# - E3c-pin first_visit (RV-pin) → QUALIFIED-ACCEPTING locked per Phase 0
+#   audit option (c): "...Alright. Sure. Though I should be honest with
+#   you — my answer won't be any different than it is now." Pre-declines
+#   while topology-accepting RV_SCHEDULED. Voice-true; routes via the
+#   RV_SCHEDULED signal arg. UNSURE annotated.
+# - E3d off-script publisher choice text "Why is that for you?" KEPT
+#   verbatim; OFFSCRIPT_CHOICE_TEXTS dict unchanged. Cast.md § 6.0.1
+#   Flavor B canonical "It's a long story. Not really doorstep material."
+#   lands in the HOUSEHOLDER response, not the publisher choice.
+# - "Knows JW-adjacent theology in a passing way" awareness beat → ABSENT
+#   from explicit dialogue. Cast.md § 6.0.1 Flavor B is explicit that the
+#   character WON'T deploy it; the awareness lives in the rhythm
+#   (qualified declination, "long story", "doorstep material" — all
+#   imply he has thought-through views but is choosing not to share).
+#   No "I know what you're going to say next" beat anywhere in the file.
+# - Returning E1 stutter → SOFT ACKNOWLEDGMENT WITH "yes" CONFIRMATION
+#   ("Oh — yes. Hello again."). The "yes" is the thoughtful-confirmation
+#   tic that differentiates from Catholic's "uh, hi again", atheist-tired's
+#   "yeah. Hi", Episcopalian's clean "hello again", Jewish's stutter-
+#   absent "Hello again", and gay couple's "hi again".
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house12_atheist (neutral) at center
+
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house12_atheist (polite_smile)
+polite_refuser_house12_atheist (polite_smile): Oh — hello there.
+
+# UNSURE: E2 lands the cast.md § 6.0.1 Flavor B canonical "I've thought about
+# all of this and landed somewhere different" with an intellectual-voice
+# wrapper. Three risks layered: (1) the "actually" + "well" qualifier rhythm
+# could read as performative-thoughtful rather than habitual-thoughtful; if
+# playtest reads as performance, trim to "Thanks. I've thought about all of
+# this pretty carefully, and I've landed somewhere different. I appreciate
+# what you're doing, though." (drops "actually" + "well —", keeps the
+# empathy-bar close); (2) "I appreciate what you're doing, though" is the
+# empathy-bar anchor that prevents condescension — if playtest somehow reads
+# the line as still smug, the fix is to add a softer beat AFTER, e.g.
+# "...I appreciate what you're doing. Genuinely." — the "genuinely" doubles
+# down on sincerity; (3) "pretty carefully" is the load-bearing intellectual
+# tell — drops the "I've thought about all of this" canonical from passive
+# claim to active stance. If it reads as overclaiming, swap to "honestly"
+# ("I've honestly thought about all of this...") which is a softer marker.
+polite_refuser_house12_atheist (polite_smile): Thanks. I've actually thought about all of this pretty carefully, and — well, I've landed somewhere different. I appreciate what you're doing, though.
+
+- Of course, we respect that.
+	# E3a — accept refusal cleanly → REFUSED. Thoughtful close: "I appreciate
+	# that" doubles as the intellectual's specific acknowledgment of the
+	# publisher's graceful-accept (vs the Episcopalian's effusive "Thank you
+	# so much" and the atheist-tired's flat "Yeah. Take care.").
+	update polite_refuser_house12_atheist (relief)
+	polite_refuser_house12_atheist (relief): Thank you. I appreciate that. You take care.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	# E3b — Q1c locked: courteous-thoughtful accept. "I'll take a look" is the
+	# polite small-untruth a thoughtful person says at their own door — voice-
+	# true even though he likely won't actually read it. Cast.md § 6.0.1
+	# Flavor B doesn't flag low probability so no topology-extension UNSURE.
+	update polite_refuser_house12_atheist (awkward_pause)
+	polite_refuser_house12_atheist (awkward_pause): Of course — sure. I'll take a look. Thank you.
+	update polite_refuser_house12_atheist (relief)
+	polite_refuser_house12_atheist (relief): Take care, then. Have a good morning.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	# E3c — hedge with reasoning. The "useful for either of us" frame is the
+	# voice-defining empathy-bar move — he's declining as a kindness to the
+	# publisher's time, not as a brush-off.
+	update polite_refuser_house12_atheist (awkward_pause)
+	polite_refuser_house12_atheist (awkward_pause): Honestly — I really don't think that'd lead anywhere useful for either of us. I appreciate the offer, though.
+	- I'll come back Tuesday.
+		# UNSURE: RV-pin "qualified-accepting" framing locked per Phase 0 audit
+		# option (c). The "my answer won't be any different" pre-decline is
+		# voice-true (cast.md § 6.0.1 Flavor B: "won't argue at the door;
+		# recognizes the doorstep isn't the venue") but contradicts the
+		# RV_SCHEDULED outcome the topology routes through. Risk: reads as a
+		# "no actually" rather than the gold-star outcome. If playtest reads
+		# as contradictory, the swap is the plainer formal-accept matching
+		# Episcopalian's pattern: "...Alright. Tuesday afternoon, then. Sure."
+		# (drops the pre-decline beat; relies on the routing alone).
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): ...Alright. Sure. Though I should be honest with you — my answer won't be any different than it is now.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): Thank you for stopping by. You take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6
+	# PR characters (registry text-key shared). The intellectual's voice
+	# texture lands in the response line below — cast.md § 6.0.1 Flavor B
+	# canonical "It's a long story. Not really doorstep material." with one
+	# beat of "honestly" tic-qualifier and one beat of acknowledgment that
+	# the publisher just asked a real question. RED LINE: this is the line
+	# where condescension is most likely to land. "Not really doorstep
+	# material" must NOT read as "you're not smart enough for this
+	# conversation" — it must read as "I know better than to do this here."
+	update polite_refuser_house12_atheist (firm_refusal)
+	polite_refuser_house12_atheist (firm_refusal): Honestly — it's a long story. Not really doorstep material.
+	update polite_refuser_house12_atheist (polite_smile)
+	polite_refuser_house12_atheist (polite_smile): Anyway — was there something else?
+	- I'm sorry, that was forward of me.
+		# E4d-a — gracious close. "It's a fair question" is the intellectual's
+		# explicit acknowledgment of the publisher's vulnerability in asking —
+		# the empathy-bar anchor that prevents the off-script moment from
+		# landing as a soft put-down.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): Not at all — it's a fair question. You take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house12_atheist (awkward_pause)
+		polite_refuser_house12_atheist (awkward_pause): Of course — sure. I'll take a look.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): Thank you. You take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house12_atheist (neutral) at center
+
+Good morning. We were in the neighborhood again.
+update polite_refuser_house12_atheist (polite_smile)
+polite_refuser_house12_atheist (polite_smile): Oh — yes. Hello again.
+
+# UNSURE: returning E2 — Q1d defensible-across-all-4-outcomes locked, so the
+# line cannot reference what happened last time. "Still in the same place"
+# implicitly callbacks first_visit's "landed somewhere different" — defensible
+# even on a re-knock after BIBLE_STUDY_STARTED (which can't fire from PR
+# anyway) or RV_SCHEDULED. Risk this session is unique: this is the FIRST
+# session where TRACT_LEFT-pinning had meaningful arc texture per the brief
+# (the intellectual character actually READING the tract between visits is a
+# real beat). The defensible phrasing forgoes that. If close-interval
+# playtest after TRACT_LEFT specifically reads as missed-opportunity, M4.7+
+# arc-state granularity work could route post-TRACT_LEFT to a different
+# returning E2 ("I did look at what you left, actually — thank you. But it
+# didn't move me.") — explicitly deferred per the session brief's structural-
+# edits non-scope.
+polite_refuser_house12_atheist (polite_smile): I appreciate you coming back. But honestly — my thinking hasn't shifted. Still in the same place. I'm sorry.
+
+- Of course, we won't keep you.
+	update polite_refuser_house12_atheist (relief)
+	polite_refuser_house12_atheist (relief): Thank you for coming by. You take care.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house12_atheist (awkward_pause)
+	# UNSURE: skeleton DRAFT for returning E3b said "accepts again, honest 'I
+	# appreciate the effort'." The "I appreciate the effort, honestly" beat
+	# echoes the empathy-bar anchor without sliding into the H1-atheist-
+	# returning's tract-fatigue beat ("Sure. You don't have to keep bringing
+	# these, though.") — two consecutive atheist-house tract-fatigue beats
+	# would read as writer-tic. If H8-pattern playtest reveals "appreciate
+	# the effort" reads as condescending ("thanks for trying, but..."),
+	# swap to "Sure — thank you." which matches the Jewish returning's
+	# compression pattern and drops the "effort" framing entirely.
+	polite_refuser_house12_atheist (awkward_pause): Sure. I appreciate the effort, honestly. Thank you.
+	update polite_refuser_house12_atheist (relief)
+	polite_refuser_house12_atheist (relief): You take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house12_atheist (awkward_pause)
+	polite_refuser_house12_atheist (awkward_pause): Honestly — I really don't think it'd be a good use of either of our time. I appreciate the offer, though.
+	- Tuesday works for me.
+		# UNSURE: returning E3c-pin compounds the first_visit pre-decline risk
+		# — this is the SECOND time he's qualified-accepting an RV_SCHEDULED
+		# while pre-declining the conversation. Cast.md § 6.0.1 Flavor B
+		# "won't argue at the door" voice principle is consistent across both
+		# branches, but on a second visit the gap between voice ("same answer")
+		# and topology (RV_SCHEDULED) widens. If playtest reads as too
+		# contradictory at returning specifically, the swap is the plainer
+		# formal accept: "...Alright. Tuesday." (matches Jewish first_visit
+		# pattern; drops the pre-decline preview entirely).
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): ...Alright. Tuesday, then. I'll be honest with you, though — same answer.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): You as well. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so
+	# OFFSCRIPT_CHOICE_TEXTS resolves identically (+3). Householder response
+	# is the firming-on-repeat pattern (matches Catholic returning E3d's
+	# doubled "I really — I really don't want to get into all that"
+	# escalation). RED LINE: still NOT condescending — the "still" framing
+	# reads as "this is still the kind of thing I don't get into at the
+	# door" (abstract) rather than "as I already told you" (memory callback
+	# that would read as scold). If close-interval playtest reads the
+	# "still" as scold, swap to "Honestly — it's a long story, and the
+	# doorstep really isn't the place. Sorry." (drops both "still"
+	# markers; relies on the cadence-match with first_visit E3d to do the
+	# repeat-firming work).
+	update polite_refuser_house12_atheist (firm_refusal)
+	polite_refuser_house12_atheist (firm_refusal): Honestly — it's still a long story. And the doorstep still isn't really the place. Sorry.
+	update polite_refuser_house12_atheist (polite_smile)
+	polite_refuser_house12_atheist (polite_smile): Anyway. Was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): Not at all. You take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house12_atheist (awkward_pause)
+		polite_refuser_house12_atheist (awkward_pause): Of course.
+		update polite_refuser_house12_atheist (relief)
+		polite_refuser_house12_atheist (relief): Thank you. Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]

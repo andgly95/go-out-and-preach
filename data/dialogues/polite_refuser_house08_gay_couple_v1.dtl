@@ -1,0 +1,238 @@
+# Polite Refuser — House #8 gay couple, v1.
+#
+# M4.6 structural skeleton + M4.6 Phase 4 dialogue subagent content pass.
+# Voice profile: cast.md § 6.0.4 — EMPATHY-BAR RED LINES APPLY (see the
+# RED-LINE COMPLIANCE STATEMENT block below + dialogue-context.md § 8
+# "trust the player to notice").
+#
+# Topology mirrors polite_refuser_house05_catholic_v1.dtl. Outcome signals
+# identical. Mid-conversation exit (ESC / Walk-away) → REFUSED (door-side).
+# arc_state branching via top-level if/else + jump/label.
+# Character slug: polite_refuser_house08_gay_couple.
+#
+# Character interpretation (Phase 4 subagent, M4.6+):
+# Gay male couple, partners or married, lived in the neighborhood for years.
+# The partner who answers is mid-40s — settled, polite, has answered the door
+# to publishers before with calm civility. The other partner is audible from
+# inside the house at the first_visit E1 beat — a single offhand mundane line
+# ("Honey, who is it?") that the publisher's brain registers as ordinary
+# Saturday-morning domestic life. No second-partner cameo on returning visits
+# (the first-visit beat is where the texture lands; returning reads as same
+# partner re-answering). The "we" in his lines is the household. Voice DNA =
+# direct-kind-firm: short sentences, no stutter, no performed warmth, no
+# performed coldness. Settled-in-his-own-doorway. Pigeonhole differentiation:
+# Catholic (§ 6.0.2) verbal-rich stutter + St. Mark's; Jewish (§ 6.0.3)
+# brevity-as-weight without domestic-life cameo; Episcopalian (§ 6.0.5)
+# named clergy + gracious-practiced warmth; atheist-tired (§ 6.0.1 A) flat
+# short. Gay-couple voice carries the load-bearing domestic-life beat that
+# no other PR character has.
+#
+# Phase 1 locks (Andrew, M4.6 Phase 4 session, 2026-05-24):
+# - Q1a: gay male couple, mid-40s; speaking partner is the one at the door
+# - Q1b: cameo content = "Honey, who is it?" via inline stage-direction
+#   COMMENT at E1 first_visit only (Phase 0 audit option a)
+# - Q1c: years-in-the-neighborhood only — no kids/pets/hobby exposition
+# - Q1d: returning branch defensible across all 4 prior outcomes
+#   (arc_state binary; STATUS L351-354)
+#
+# Phase 0 silent-decision resolutions:
+# - Second-partner cameo → INLINE SCENE-NOTE COMMENT at E1 first_visit only.
+#   Schema has no off-stage speaker support; the cameo is design intent for
+#   the future audio/portrait pass. A spoken-line scaffold would require a
+#   new speaker slug + Dialogic event blocks — structural, explicitly deferred.
+# - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
+#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Cast.md § 6.0.4 canonical response
+#   "We're really not looking to get into all that. Thanks though." lands in
+#   the HOUSEHOLDER response at E3d first_visit.
+# - "Have a good day" vs "Have a blessed day" mismatch → lands at E3a
+#   first_visit ONLY. Other relief closes read neutrally ("take care",
+#   "thanks") so the mismatch lands as a deliberate vocab choice, not a tic.
+#   Cast.md § 6.0.4: "May offer 'have a good day' rather than 'have a
+#   blessed day' — a small religious-vocabulary mismatch the publisher's
+#   brain registers."
+#
+# RED-LINE COMPLIANCE STATEMENT (cast.md § 6.0.4 internalized):
+# Zero "coming out" beats anywhere in this file. Zero "you know we're..."
+# lines. Zero "we don't need your religion" lines. Zero performed-tolerance
+# framing. Zero performed-victim framing. The cameo is mundane domestic
+# texture — partner audible asking who's at the door — not a statement.
+# The historical / theological weight the player feels at this doorstep is
+# the player's; the dialogue trusts the player to carry it.
+
+if TerritoryManager.pending_arc_state() == "first_visit":
+	jump first_visit
+else:
+	jump returning
+
+label first_visit
+
+join polite_refuser_house08_gay_couple (neutral) at center
+
+# Scene note: a partner is audible from somewhere inside the house —
+# "Honey, who is it?" — a single offhand mundane line the publisher's
+# brain registers as ordinary Saturday-morning domestic life. Per
+# cast.md § 6.0.4 voice notes and Phase 0 audit (Q1b): inline comment
+# only, no spoken-line scaffold (the schema has no off-stage speaker
+# support; a topology extension is the structural fix, deferred).
+#
+# UNSURE: the cameo lives ONLY in this scene-note today; no audible
+# beat reaches the player in v1. If playtest reads as missing the
+# second-person domestic texture (the load-bearing differentiator vs
+# the other PR voices), the fix is a topology extension — new speaker
+# slug for the off-stage partner + a single ambient Dialogic event
+# block here — explicitly deferred per cast.md § 6.0.4 and the
+# session brief's structural-edits non-scope.
+
+Good morning. We're sharing a brief encouraging message from the Bible today.
+update polite_refuser_house08_gay_couple (polite_smile)
+polite_refuser_house08_gay_couple (polite_smile): Oh — hi there.
+
+polite_refuser_house08_gay_couple (polite_smile): We're not interested, but thanks for stopping by.
+
+- Of course, we respect that.
+	# E3a — clean refusal close. Vocab-mismatch beat lands here per Phase 0
+	# resolution: the publisher's implied close would be "Have a blessed day";
+	# the householder offers "Have a good day" instead — a small religious-
+	# vocabulary mismatch the publisher's brain registers as the player hears
+	# the line. Other relief closes (E3b/E3c/E4d-*) read neutrally so the
+	# mismatch lands as a deliberate vocab choice, not a tic.
+	update polite_refuser_house08_gay_couple (relief)
+	# UNSURE: vocab-mismatch placement at E3a first_visit ONLY. Risk: one
+	# beat across a single Saturday may be too quiet to register against
+	# the publisher's expected "blessed day" close. If playtest shows the
+	# mismatch is invisible, the next-pass move is to also land it at
+	# returning E3a ("You take care now. Have a good day.") — doubles the
+	# exposure without becoming a tic since the two are separated by at
+	# minimum one week per arc_state binary.
+	polite_refuser_house08_gay_couple (relief): You too. Have a good day.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you anyway?
+	update polite_refuser_house08_gay_couple (awkward_pause)
+	polite_refuser_house08_gay_couple (awkward_pause): Sure, thanks.
+	update polite_refuser_house08_gay_couple (relief)
+	polite_refuser_house08_gay_couple (relief): Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house08_gay_couple (awkward_pause)
+	# UNSURE: skeleton E3c DRAFT pointed at "we're really not looking to
+	# get into all that" but that's the canonical E3d off-script line per
+	# cast.md § 6.0.4 ("We're really not looking to get into all that.
+	# Thanks though."). Reworded E3c to an RV-specific hedge ("schedule
+	# anything") to preserve the canonical's weight at E3d where the
+	# red-line response lives. If playtest reads E3c as off-tone from
+	# skeleton intent, the swap is to use "all that" at E3c at the cost
+	# of softening E3d's canonical weight.
+	polite_refuser_house08_gay_couple (awkward_pause): We're not really looking to schedule anything, but thank you.
+	- I'll come back Tuesday.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): ...Alright. We're usually around.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Sounds good, take care.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): Thanks for stopping by.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6
+	# PR characters (registry text-key shared). The gay couple's voice texture
+	# lands in the response line below, per cast.md § 6.0.4 canonical sample.
+	# RED LINE: the "all that" in the response is doing weight-via-vagueness
+	# work — it covers the theological AND the personal without naming either.
+	# The dialogue does NOT turn this moment into a reckoning. Trust the player.
+	update polite_refuser_house08_gay_couple (firm_refusal)
+	polite_refuser_house08_gay_couple (firm_refusal): We're really not looking to get into all that. Thanks though.
+	update polite_refuser_house08_gay_couple (polite_smile)
+	polite_refuser_house08_gay_couple (polite_smile): Was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): All good. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house08_gay_couple (awkward_pause)
+		polite_refuser_house08_gay_couple (awkward_pause): Sure.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
+
+label returning
+
+join polite_refuser_house08_gay_couple (neutral) at center
+
+Good morning. We were in the neighborhood again.
+update polite_refuser_house08_gay_couple (polite_smile)
+polite_refuser_house08_gay_couple (polite_smile): Oh — hi again.
+
+polite_refuser_house08_gay_couple (polite_smile): We're still not interested. Thanks for stopping by, though.
+
+- Of course, we won't keep you.
+	update polite_refuser_house08_gay_couple (relief)
+	polite_refuser_house08_gay_couple (relief): You take care now.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- May I leave this with you?
+	update polite_refuser_house08_gay_couple (awkward_pause)
+	# UNSURE: skeleton DRAFT for returning E3b said "accepts tract again,
+	# possibly with mild 'you can stop' note." Dropped the explicit
+	# instruction to avoid echoing H1 atheist returning E3b ("Sure. You
+	# don't have to keep bringing these, though.") — two consecutive PR
+	# houses with identical tract-fatigue beats would read as a writer-
+	# tic, not as character. The brevity ("Alright. Thanks.") carries the
+	# "we're done" implication. If playtest reads the H8 line as too
+	# acquiescent and the "you can stop" beat is wanted, the swap is
+	# "Sure. You can save these for folks who'd want one, though."
+	# (redirects rather than instructs — direct-kind-firm per the
+	# couple's voice).
+	polite_refuser_house08_gay_couple (awkward_pause): Alright. Thanks.
+	update polite_refuser_house08_gay_couple (relief)
+	polite_refuser_house08_gay_couple (relief): Take care.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	update polite_refuser_house08_gay_couple (awkward_pause)
+	polite_refuser_house08_gay_couple (awkward_pause): I don't really think we'd be a great fit for what you're doing.
+	- Tuesday works for me.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): ...Alright.
+		[signal arg="RETURN_VISIT_SCHEDULED"]
+		[end_timeline]
+	- Take care.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so
+	# OFFSCRIPT_CHOICE_TEXTS resolves identically (+3). Householder response
+	# is shorter than first_visit per skeleton intent ("still NOT a
+	# confrontation").
+	update polite_refuser_house08_gay_couple (firm_refusal)
+	# UNSURE: returning E3d compression. "Same as last time" gestures at
+	# the memory callback (Catholic returning uses "like I said"; Jewish
+	# uses "as I think I said"). Risk on close-interval returns: reads
+	# mildly chiding ("same as last time" lands harder than the other PR
+	# memory-callbacks because the rest of the line is shorter). If
+	# close-interval playtest reads as scold, swap to "Not really our
+	# thing. Sorry." — drops the memory callback, matches Jewish E3d
+	# returning's compression pattern ("It isn't. Sorry.") and preserves
+	# the no-confrontation red line.
+	polite_refuser_house08_gay_couple (firm_refusal): Same as last time. Not really our thing.
+	update polite_refuser_house08_gay_couple (polite_smile)
+	polite_refuser_house08_gay_couple (polite_smile): Was there something else?
+	- I'm sorry, that was forward of me.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): It's fine. Take care.
+		[signal arg="REFUSED"]
+		[end_timeline]
+	- May I leave this with you?
+		update polite_refuser_house08_gay_couple (awkward_pause)
+		polite_refuser_house08_gay_couple (awkward_pause): Sure.
+		update polite_refuser_house08_gay_couple (relief)
+		polite_refuser_house08_gay_couple (relief): Take care.
+		[signal arg="TRACT_LEFT"]
+		[end_timeline]
