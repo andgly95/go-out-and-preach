@@ -37,13 +37,16 @@ const OUTCOME_DOUBT_DELTAS: Dictionary = {
 	"BIBLE_STUDY_STARTED": -3,     # D3 deepest positive — months of contact
 }
 
-# T1 — off-script choices. Registry of choice-text strings that fire the
-# off-script doubt event. Multi-timeline registry as of M4.1 (M3 was single
-# string). Still text-keyed and therefore brittle — STATUS carries the
-# tightening target (replace with a Dialogic choice tag or [signal] shim).
+# T1 — off-script choices. Maps choice-text → doubt delta. Multi-timeline
+# registry (M4.1) with per-choice magnitudes (M4.3 — Apostate's off-script
+# fires +2 rather than the PR/CS +3 because the encounter itself carries
+# more weight; see Q5 calibration in plan). Still text-keyed and therefore
+# brittle — STATUS carries the tightening target (replace with a Dialogic
+# choice tag or [signal] shim).
 const OFFSCRIPT_CHOICE_TEXTS: Dictionary = {
-	"Why is that for you?": true,    # polite_refuser_v1.dtl E3d
-	"I don't know. Honestly.": true, # curious_seeker_v1.dtl E3d (M4.2 dialogue subagent pass)
+	"Why is that for you?":              3,  # polite_refuser_v1.dtl E3d
+	"I don't know. Honestly.":           3,  # curious_seeker_v1.dtl E3d (M4.2)
+	"I'm sorry that happened to you.":   2,  # apostate_wounded_v1.dtl E4c (M4.3)
 }
 
 const HOSTILE_SLAMMER_ARCHETYPE: StringName = &"hostile_slammer"
@@ -168,12 +171,14 @@ func _on_dialogic_signal(arg: Variant) -> void:
 
 
 func _on_choice_selected(info: Dictionary) -> void:
-	# T1 — off-script choice. Multi-timeline text registry (M4.1). Brittle by
-	# design: STATUS flags it as a tightening target (replace with a Dialogic
-	# choice tag or metadata once the addon offers a stable hook).
+	# T1 — off-script choice. Per-choice delta registry (M4.3 refactor —
+	# Apostate's off-script costs +2 while PR/CS stay at +3). Brittle by
+	# design: STATUS flags the text-keyed lookup as a tightening target
+	# (replace with a Dialogic choice tag or metadata once the addon offers
+	# a stable hook).
 	var text: String = String(info.get("text", "")).strip_edges()
 	if OFFSCRIPT_CHOICE_TEXTS.has(text):
-		DoubtMeter.apply(3, &"offscript_why_taken")
+		DoubtMeter.apply(int(OFFSCRIPT_CHOICE_TEXTS[text]), &"offscript_choice")
 
 
 func _on_timeline_ended() -> void:
@@ -279,6 +284,15 @@ func _resolve_with_outcome(outcome: int) -> void:
 		Dialogic.timeline_ended.disconnect(_on_timeline_ended)
 	if Dialogic.Choices.choice_selected.is_connected(_on_choice_selected):
 		Dialogic.Choices.choice_selected.disconnect(_on_choice_selected)
+	# M4.6 — character's arc_state transitions to "returning" on any terminal
+	# outcome (Dialogic signal, walk-away, or Hostile Slammer scene). The
+	# character behind this door remembers being knocked. Mutated BEFORE
+	# resolve_pending_house so the persisted state reflects the new arc.
+	# Hostile Slammer + Apostate don't currently read arc_state in their .dtl;
+	# the write is harmless. arc_state survives both per-day and per-week
+	# clickability resets in territory_manager.gd.
+	if _pending_house != null:
+		_pending_house.arc_state = &"returning"
 	TerritoryManager.resolve_pending_house(outcome)
 	if not _dialogue_id.is_empty():
 		SignalBus.dialogue_ended.emit(_dialogue_id)

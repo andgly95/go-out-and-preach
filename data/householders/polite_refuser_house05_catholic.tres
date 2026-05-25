@@ -4,9 +4,11 @@
 
 [resource]
 script = ExtResource("1_householder")
-id = &"polite_refuser"
+id = &"polite_refuser_house05_catholic"
 display_name = ""
 archetype = &"polite_refuser"
-dialogue_timeline = "res://data/dialogues/polite_refuser_v1.dtl"
+dialogue_timeline = "res://data/dialogues/polite_refuser_house05_catholic_v1.dtl"
 dialogic_character = null
 doubt_delta_overrides = {}
+voice_subtype = &"catholic"
+character_name = ""

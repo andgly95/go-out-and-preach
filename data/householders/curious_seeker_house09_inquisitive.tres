@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_householder")
-id = &"curious_seeker_house04_grief"
+id = &"curious_seeker_house09_inquisitive"
 display_name = ""
 archetype = &"curious_seeker"
-dialogue_timeline = "res://data/dialogues/curious_seeker_house04_grief_v1.dtl"
+dialogue_timeline = "res://data/dialogues/curious_seeker_house09_inquisitive_v1.dtl"
 dialogic_character = null
 doubt_delta_overrides = {}
-voice_subtype = &"grief"
+voice_subtype = &"inquisitive"
 character_name = ""

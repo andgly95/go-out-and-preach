@@ -1,0 +1,172 @@
+# Apostate (Wounded variant) — door-knock conversation, v1 (M4.3 structural
+# placeholder). Branching, portraits, and outcome signals locked in this
+# session per the goop-character skill; line text is "DRAFT PENDING" until
+# the dialogue subagent runs in a separate session.
+#
+# INTERPRETATION (orchestrator, M4.3):
+#   The Wounded Apostate is a former member. The publishers are recognized
+#   within the first ten seconds — the householder has been on the other
+#   side of this door. They are not hostile; they are tired. The grief
+#   about leaving is not weaponized; it is named. The cost named is
+#   concrete: a parent or sibling who will not speak to them. Per cast.md
+#   § 6.6 Wounded variant.
+#
+# BRANCH TOPOLOGY (locked; line text DRAFT PENDING)
+#   E1   Publisher pitch (anonymous) → Apostate appears (tired)
+#   E2   Apostate names the recognition (precise org vocabulary as "tell")
+#   E3   Apostate names what happened (grief — disfellowshipping cost)
+#          Choice 1 — "We're sorry to bother you."        → E4a REFUSED (de-escalate)
+#          Choice 2 — "Would you like a magazine?"        → E4b TRACT_LEFT (press)
+#          Choice 3 — "I'm sorry that happened to you."   → E4c REFUSED (off-script)
+#                     | [if DoubtMeter.value >= 35]
+#   E4a  Apostate (quiet_resignation) — brief close → [signal arg="REFUSED"]
+#   E4b  Apostate (wounded_acceptance) — brief close → [signal arg="TRACT_LEFT"]
+#   E4c  Apostate (grief) — deepest line in the timeline → [signal arg="REFUSED"]
+#
+# OUTCOMES emitted via [signal arg="..."]:
+#   REFUSED, TRACT_LEFT
+# door_knock.gd::_on_dialogic_signal maps these to House.State. No RV_SCHED
+# or BIBLE_STUDY from this door per Q3 (M4.4 may revisit for Gentle variant).
+#
+# DOUBT MECHANIC — first archetype to exercise "+doubt on positive outcomes."
+#   doubt_delta_overrides (apostate_wounded.tres):
+#     REFUSED:    +3   (vs global +1)
+#     TRACT_LEFT: +2   (vs global -1 — net swing of +3, the "positive
+#                       outcome still costs" beat)
+#   Off-script choice (E3 Choice 3) fires +2 via the per-choice delta
+#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS (M4.3 refactored the
+#   registry from Dictionary[String, bool] → Dictionary[String, int] so
+#   PR/CS stay at +3 while Apostate uses +2).
+#   Exposure ceiling per encounter: +5 (off-script + REFUSED).
+#
+# CHOICE 3 (off-script) is doubt-gated higher than PR/CS (≥35 vs ≥25):
+#   | [if DoubtMeter.value >= 35] [else=disable alt_text=""]
+#   Per Q4: you have to be significantly doubting to recognize and take
+#   the moment with an Apostate.
+#
+# COORDINATION (M4.3):
+#   The off-script choice text "I'm sorry that happened to you." must be
+#   registered in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 2.
+#   STATUS's M4 tightening target ("T1 brittleness — still text-keyed")
+#   remains open; this milestone only loosens the magnitude side.
+#
+# REVEAL-40 chain: standard generic chain (Q6). If doubt is at 39 walking
+# up to House #7, reveal-40 plays first, then the Apostate timeline starts.
+# If the Apostate encounter pushes doubt past 40 mid-conversation, the
+# reveal queues for the next door (consume_reveal_40 is one-shot).
+#
+# Mid-conversation exit (ESC / Walk-away button) is handled in door_knock.gd,
+# not here — it terminates the timeline and resolves REFUSED (with T2 +2
+# doubt). The walk-away path does NOT apply the +3 REFUSED override; it
+# uses the T2 walked_away delta only.
+#
+# Publisher lines intentionally anonymous: scene is householder POV,
+# matching polite_refuser_v1.dtl and curious_seeker_v1.dtl.
+
+join apostate_wounded (tired) at center
+
+# E1 — Publisher pitch. Anonymous publisher line, then the householder
+# answers slowly. The "tired" portrait holds; recognition is in E2 not E1.
+# Standard generic pitch (matches PR's E1) — no "people we've lost" hook
+# like CS uses, because the householder identity is hidden from the
+# publishers in E1 and the recognition is hers to deliver in E2.
+Good morning. We're sharing a brief encouraging message from the Bible today.
+apostate_wounded (tired): Oh — hi. Sorry, I was… yeah. Hi.
+
+# E2 — Apostate names the recognition. The "tell" — a precise piece of org
+# vocabulary used the way only a former member would use it (a publication
+# title, a structural term, an endearment). Per cast.md § 6.6: establishes
+# WHO they were before naming what happened.
+update apostate_wounded (recognition)
+apostate_wounded (recognition): …That's the public Lighthouse, isn't it.
+# UNSURE: the tell is the *public* edition — only an ex-member tracks the
+# public-vs-study distinction. Assumes the publisher carries the magazine
+# pre-folded and visible at the door (per dialogue-context.md § 10). If
+# the porch art doesn't show a magazine in-frame, the line still reads
+# but loses one beat of evidentiary weight. Andrew to verify against the
+# door_knock background art when it lands.
+
+# E3 — Apostate names what happened. The grief moment. Per cast.md Wounded:
+# the disfellowshipping line — concrete, named. The cost is a person who
+# will not speak to them. The line should land without dramatization;
+# per dialogue-context.md § 8, the game does not point at the wound — the
+# householder names it themselves.
+update apostate_wounded (grief)
+apostate_wounded (grief): My mother won't speak to me. It's been almost five years. — Did you know that's what they do?
+# UNSURE: "almost five years" — picked five because it lands as fact
+# (not a fresh wound) without being so distant the grief feels archival.
+# Three or seven both defensible; Andrew may want longer to match how
+# this Apostate sits within the M4.4 trio (Hostile / Wounded / Gentle).
+# UNSURE: mother specifically (vs. sibling) per the cast.md § 6.6
+# canonical sample. If M4.4 ships sibling-cost on one of the other two
+# variants, keeping mother here as the deepest version reads right;
+# if all three name "mother" the variety collapses.
+
+# Publisher choice. Three options. Choice 3 is doubt-gated at ≥35.
+- We're sorry to bother you.
+	# E4a — De-escalation branch. The publisher backs off cleanly. The
+	# Apostate's response is quiet resignation, not relief — the publishers
+	# are leaving, but the conversation already did its work.
+	# Routes to REFUSED. doubt_delta_overrides applies +3.
+	update apostate_wounded (quiet_resignation)
+	apostate_wounded (quiet_resignation): Yeah. …Okay. You take care.
+	# UNSURE: "You take care" register sits close to PR's "you have a
+	# good one" relief close. The Wounded variant's version is meant to
+	# land knowingly (a person who used to walk these blocks telling
+	# the publishers to be careful out there) rather than as relief.
+	# The deflated "Yeah. …Okay." pause is the differentiator; if it
+	# reads as warm-PR rather than tired-knowing during playtest, swap
+	# to a flatter alternative ("Yeah. …Okay. Go on, then.").
+	[signal arg="REFUSED"]
+	[end_timeline]
+- Would you like a magazine?
+	# E4b — Tract branch. The publisher presses for the trained outcome.
+	# The Apostate accepts the magazine — the wound is in the acceptance,
+	# not the refusal. Per cast.md Wounded: they know publishers have to
+	# fill the time. The acceptance is a small kindness extended TO the
+	# publishers, which is exactly why it costs the player doubt.
+	# Routes to TRACT_LEFT. doubt_delta_overrides applies +2.
+	update apostate_wounded (wounded_acceptance)
+	apostate_wounded (wounded_acceptance): Yeah. You can leave it. It's okay.
+	# Per the file note: no thanks added. "You can leave it" is permission-
+	# extended-to-the-publisher, not gratitude. "It's okay" is her telling
+	# them — not herself — that taking the magazine doesn't cost her
+	# anything. The wound is in the kindness she's doing for them.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- I'm sorry that happened to you. | [if DoubtMeter.value >= 35] [else=disable alt_text=""]
+	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 35 (higher than PR/CS's 25).
+	# Per Q4: you have to be significantly doubting to recognize and take
+	# the moment with an Apostate.
+	#
+	# Per dialogue-context.md § 7, off-script lines should sound less
+	# polished and more present. The choice text IS the line, said aloud
+	# (matches PR's "Why is that for you?" and CS's "I don't know. Honestly."
+	# patterns — the choice text and the spoken publisher line are one
+	# and the same).
+	#
+	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
+	# against OFFSCRIPT_CHOICE_TEXTS (per-choice delta registry as of
+	# M4.3). This choice fires +2. Off-script collapses to REFUSED per
+	# Q3 — the moment is too heavy to also leave a tract.
+	#
+	# Apostate's response is the deepest line in the timeline. Per
+	# dialogue-context.md § 8 "trust the player to notice" — the line
+	# should land without underlining. The Apostate may thank the
+	# publisher, or may not. Subagent's call.
+	update apostate_wounded (grief)
+	apostate_wounded (grief): Oh. — …Thank you. I — yeah. Thank you.
+	# UNSURE: doubled "Thank you" is the deepest call I had to make.
+	# Read 1 (intended): broken receipt — she has no script for being
+	# acknowledged at her own doorstep, so she falls back on the only
+	# response that fits and repeats it because the first one didn't
+	# discharge the moment. The "I — yeah" between is the aborted
+	# thought.
+	# Read 2 (risk): grateful-as-performance, which dialogue-context.md
+	# § 8 specifically warns against. Andrew to verify the line lands
+	# as present rather than performed during playtest. If it lands
+	# performed, trim to "Oh. — …Thank you." (single, smaller) or
+	# strip the thanks entirely ("Oh. — …Yeah.") per cast.md § 6.6's
+	# "may thank or may not" option.
+	[signal arg="REFUSED"]
+	[end_timeline]

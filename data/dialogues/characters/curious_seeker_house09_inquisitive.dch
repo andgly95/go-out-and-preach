@@ -2,25 +2,30 @@
 "@path": "res://addons/dialogic/Resources/character.gd",
 "@subpath": NodePath(""),
 &"_translation_id": "",
-&"color": Color(0.78, 0.74, 0.66, 1),
+&"color": Color(0.75, 0.63, 0.50, 1),
 &"custom_info": {
 "sound_mood_default": "",
 "sound_moods": {},
 "style": ""
 },
 &"default_portrait": "neutral",
-&"description": "M4.6 — House #5 Catholic PR. M3-validated content (\"we go to St. Mark's\"). Voice subtype: catholic per cast.md § 6.0.2.",
+&"description": "M4.6+ — House #9 Curious Seeker (inquisitive flavor per cast.md § 6.2.2). \"What's your group about?\" angle; neighborly, low-stakes, intellectually open. Warm sandy-brown tint to distinguish from House #4 grief sage.",
 &"display_name": "Householder",
 &"mirror": false,
 &"nicknames": [],
 &"offset": Vector2(0, 0),
 &"portraits": {
-"awkward_pause": {
+"considering": {
 "image": "",
 "offset": Vector2(0, 0),
 "scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
-"firm_refusal": {
+"genuine_question": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"interested_lean_in": {
 "image": "",
 "offset": Vector2(0, 0),
 "scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
@@ -30,12 +35,7 @@
 "offset": Vector2(0, 0),
 "scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
-"polite_smile": {
-"image": "",
-"offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
-},
-"relief": {
+"warm_thank_you": {
 "image": "",
 "offset": Vector2(0, 0),
 "scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"

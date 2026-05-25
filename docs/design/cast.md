@@ -376,9 +376,176 @@ Three example Householders of Note (pick one or rotate by territory):
 
 ---
 
-## 6. Remaining Householder Archetypes
+## 6. Householder Archetypes
 
-The Polite Refuser is documented in `dialogue-context.md` § 6. The remaining six follow the same shape.
+The Polite Refuser is documented here at § 6.0 (with five sub-type voices); the cadence reference and the canonical sample interaction remain in `dialogue-context.md` § 6. The remaining six archetypes follow.
+
+### 6.0 Polite Refuser
+
+The dominant *answered-door* outcome (~17% per door, per `encounter-distribution.md` § 3). Six of Maple Street's twelve houses are PR. Per-house identity is permanent: each PR house has one specific family who lives there, and that family belongs to one of five voice sub-types below.
+
+**Profile (shared across all sub-types).** Suburban American, 35-65, middle class, varied religious or post-religious background. Has had publishers at the door before. No interest in religious conversation, unwilling to be rude. Goal: end the interaction quickly without seeming like a bad person.
+
+**Voice traits shared across sub-types.**
+- Slightly awkward warmth; smiles, but a constrained smile
+- Opens the door partway; body language says "I'm not going to invite you in"
+- Sentences trail off; "uh" and "you know" appear more than in normal conversation
+- Reaches for stock politeness phrases
+
+**Common defenses (vary by sub-type — the *content* of the defense is the texture).**
+1. Existing-belief claim ("I'm Catholic," "we're Jewish," "we already have a church")
+2. Time excuse ("I'm in the middle of something")
+3. Vague refusal ("I'm not interested, but thank you")
+4. Acceptance to end the interaction (takes the tract specifically so the conversation ends)
+
+**What no PR sub-type will do.**
+- Engage on theology (that's `Curious Seeker` or `Disillusioned Catholic`)
+- Slam the door (that's `Hostile Slammer`)
+- Argue (that's `Hostile Christian`)
+- Ask follow-up questions
+
+**Sub-type pinning to PR houses on Maple Street** (see `territory_manager.gd::DISTRIBUTION`):
+
+| House | Sub-type | § |
+|---|---|---|
+| #1 | Atheist (tired flavor) | 6.0.1 |
+| #3 | Jewish | 6.0.3 |
+| #5 | Catholic (M3 canonical) | 6.0.2 |
+| #8 | Gay couple | 6.0.4 |
+| #10 | Episcopalian | 6.0.5 |
+| #12 | Atheist (intellectual flavor) | 6.0.1 |
+
+---
+
+#### 6.0.1 Atheist
+
+Two voice flavors covering the two atheist-PR houses. The dialogue subagent treats them as distinct characters, not as variations on a template.
+
+**Flavor A — Tired (House #1).**
+- Has had publishers at the door multiple times this year
+- Genuinely doesn't care; just wants the conversation done
+- The "existing belief" defense doesn't apply (no belief to claim). Falls to "I'm not religious" or "I don't believe in any of that, sorry"
+- Often opens the door already mid-something (laundry, phone, dinner) — the time excuse is real, not deflective
+- Voice is short, slightly flat. No edge, no smugness — just done.
+- Off-script "Why is that for you?" → "I just don't, you know? It's not a big thing."
+
+**Flavor B — Intellectual (House #12).**
+- Reads, follows current events, knows JW-adjacent theology in a passing way
+- Polite to the publishers as people; rejects the offer with the same firmness but more words
+- Voice has a slight cadence of someone used to being thoughtful — pauses, qualifies
+- Sample: "Thanks, but I've thought about all of this and landed somewhere different."
+- Won't argue at the door; recognizes the doorstep isn't the venue
+- Off-script "Why is that for you?" → "It's a long story. Not really doorstep material."
+
+**What lands wrong for both flavors.**
+- Smug atheism (neither character is "winning" anything)
+- Detailed theological pushback (that's Hostile Christian territory)
+- Treating "I'm an atheist" as a punchline
+- Letting Flavor B's intellectualism become condescension toward the publisher
+
+---
+
+#### 6.0.2 Catholic — "we go to St. Mark's" (House #5, M3 canonical)
+
+Baseline documented in the existing `polite_refuser_house05_catholic_v1.dtl` (renamed from `polite_refuser_v1.dtl` in M4.6). The hyperlocal denominational anchor ("St. Mark's") is the key beat — it grounds the refusal in a specific community membership the householder isn't going to abandon. "We go to St. Mark's" lands harder than "I have my own beliefs" because it points at a real social fabric the publisher cannot enter.
+
+**Profile.** Probably lapsed or Christmas-and-Easter Catholic; the parish identity matters more than the theology. The "we" is the household.
+
+**Voice notes.**
+- Defense is community-anchored: "we have a church"
+- Mild Catholic vocabulary appears reflexively ("St. Mark's" said with the article)
+- Off-script "Why is that for you?" → "It's, you know — kind of personal."
+
+The dialogue subagent does not need to author new first-visit content for House #5; M3 content is preserved verbatim. The arc-continuation branch (`returning`) is new for M4.6 and gets a dedicated subagent pass.
+
+---
+
+#### 6.0.3 Jewish (House #3)
+
+> **EMPATHY-BAR RED LINES — READ FIRST. DO NOT VIOLATE.**
+>
+> - The Jewish refuser does **NOT** lecture the publisher about WWII / Holocaust history. Not one sentence. Not a glance referenced in stage direction.
+> - The Society of the Truth's real-world echo (Jehovah's Witnesses) has a specific WWII history. The Jewish householder is aware of all of it. **The player notices. The dialogue does not point at it.**
+> - The refusal is closer to "I have my own faith tradition, thank you" than to confrontation. The weight lives in what is NOT said.
+> - Cultural cadence — Yiddish-inflected English is a content choice with regional/generational specificity. Default to neutral suburban American with one or two textural beats. Don't lean on accent for ethnic signaling.
+> - "I'm Jewish" is a fine line. "And your people..." is not. The publisher receives the refusal; the dialogue cannot turn the moment into a reckoning. Trust the player. `dialogue-context.md` § 8 applies above all here.
+
+**Profile.** 40s-60s, suburban professional. Cultural and possibly religious Jew. May attend services for High Holidays; may not. Jewish identity is integrated into normal life — a mezuzah visible on the doorframe, not a debating posture.
+
+**Voice.**
+- Direct: "I appreciate it, but we're Jewish."
+- Warm but firm. The brevity of the answer is the weight.
+- May glance at the visible *Lighthouse* magazine in the publisher's hand and recognize what it is — pause registered, then nothing said
+- Off-script "Why is that for you?" → "It just isn't. Sorry."
+
+**Common defenses (in order).**
+1. Existing-belief claim — "we're Jewish"
+2. Vague refusal — "no thank you, really"
+3. Tract acceptance to end the interaction (low probability — many Jewish households decline JW literature on principle without explaining why)
+
+**What lands wrong.**
+- ANY dialogue that gestures at WWII / Holocaust history — no Anne Frank reference, no "your people," no "I find it strange that..." beat
+- Stage-Jewish accent or vocabulary tics deployed for color
+- Reducing the character to "the Jewish one" — they are a person who happens to be Jewish
+- A "we know what your organization teaches about us" beat — even softened, the dialogue must NOT carry this. The player carries it.
+
+---
+
+#### 6.0.4 Gay couple (House #8)
+
+> **EMPATHY-BAR RED LINES — READ FIRST. DO NOT VIOLATE.**
+>
+> - The couple is **NOT** a vehicle for the game's argument about the org's theology on same-sex relationships.
+> - The Society of the Truth has a specific stance. The couple knows what's on the magazine being offered. **The player notices. The dialogue does not point at it.**
+> - Voice cadence: one partner answers; the other may be audible from another room ("Who is it, honey?") — a small detail the player registers as domestic life, not as a statement.
+> - Defense is "we're not interested, thank you" — not a debate, not a confrontation, not a "we don't need your kind here" moment.
+> - Do **NOT** have the couple deliver a lecture, a reproach, or a "you know we're..." line. The publisher figures it out from the doorway scene; the couple does not announce themselves to make a point.
+> - Trust the player. The discomfort the player feels at the doorstep is the entire mechanism. `dialogue-context.md` § 8 applies above all here.
+
+**Profile.** 30s-50s, suburban or urban-edge professionals. Long-term partners or married. Lived in the neighborhood for years. Have answered the door to publishers before with calm civility.
+
+**Voice.**
+- The partner who answers is whose voice the player hears. The other partner may be heard from another room — a single offhand line, mundane content
+- Direct, kind, firm: "We're not interested, but thanks for stopping by."
+- May offer "have a good day" rather than "have a blessed day" — a small religious-vocabulary mismatch the publisher's brain registers
+- Off-script "Why is that for you?" → "We're really not looking to get into all that. Thanks though."
+
+**Common defenses.**
+1. Vague refusal — "we're not interested"
+2. Time excuse — "we're about to head out"
+3. Acceptance to end the interaction — possible; this couple isn't going to die on the hill of refusing a tract
+
+**What lands wrong.**
+- Any dialogue where the couple "comes out" to the publisher to make a point
+- Performative warmth that reads as the couple performing tolerance for the bigoted-other
+- Performative coldness that reads as the couple as victim
+- A "we don't need your religion" line — too on the nose; not what these characters would actually say at their own door
+- Any second-partner cameo about anything other than mundane domestic texture (asking who's at the door, calling about dinner, an audible TV in the background)
+
+---
+
+#### 6.0.5 Episcopalian (House #10)
+
+**Profile.** 50s-60s, lifelong mainline Protestant. Already a member of an Episcopal parish — attends most weeks. Theologically literate in a quiet way. Not interested in switching denominations, not interested in arguing about it.
+
+**Voice.**
+- Polite-distance: "Thank you, but we're already members of an Episcopal church."
+- Possibly mentions the priest by title: "Father Reynolds is wonderful — we've been there fifteen years."
+- The mention of an existing pastor + existing community ends the conversation cleanly. No opening.
+- Slight verbal warmth toward the publisher — the Episcopalian voice is closest to the "polite Christian neighbor" cadence
+- Off-script "Why is that for you?" → "It's where we worship. That's really all there is to it." Friendly tone; conversation-closer.
+
+**Common defenses.**
+1. Existing-belief claim — "we have a church"
+2. Acceptance to end the interaction — moderate-to-high probability; tract goes in the recycling later
+3. Vague refusal — used only if pressed
+
+**What lands wrong.**
+- Treating mainline Protestants as Christianity-lite (the Episcopalian voice would notice)
+- A theological debate beat (Episcopalian vs JW theology is a real disagreement; the player and householder both know this isn't the venue)
+- Generic "religious" stereotyping — the Episcopalian distinctness is the quiet confidence, inherited tradition, faith integrated into a Tuesday afternoon
+
+---
 
 ### 6.1 Hostile Slammer
 
@@ -403,17 +570,62 @@ The Polite Refuser is documented in `dialogue-context.md` § 6. The remaining si
 
 **Profile.** Actually wants to talk. Asks a question. Tone is interested, not testing. The danger for the publisher: this is a real opening, and they will be tempted to oversell.
 
-**Voice.** Open, sometimes vulnerable. Sample openings:
-- "Sure, I have a minute. What's your group about?"
-- "I've been wondering what happens after we die."
-- "Can I ask you something? My friend's husband just passed and I don't know what to say to her."
-- "Do you guys believe in Jesus?"
+**Voice (shared across sub-types).** Open, sometimes vulnerable. Sample openings (one per sub-type below):
+- "Sure, I have a minute. What's your group about?"           — § 6.2.2 inquisitive
+- "I've been wondering what happens after we die."            — future
+- "Can I ask you something? My friend's husband just passed…" — § 6.2.1 grief
+- "Do you guys believe in Jesus?"                              — future
 
 **Common beats.** Stands in the doorway with the door fully open. Invites the publishers to sit on the porch. Asks follow-up questions. Accepts the magazine, sometimes accepts a study, sometimes asks to be visited again.
 
 **What they won't do.** Argue. Test. Reject without engagement.
 
 **What lands wrong.** Making them naïve. Making them a setup for an easy conversion. Making them a foil for the publisher's pitch — they should have their own actual reason for being curious.
+
+**Sub-type pinning to CS houses on Maple Street** (see `territory_manager.gd::DISTRIBUTION`):
+
+| House | Sub-type | § |
+|---|---|---|
+| #4 | Grief (M4.2 canonical) | 6.2.1 |
+| #9 | Inquisitive | 6.2.2 |
+
+---
+
+#### 6.2.1 Grief — "my friend's husband just passed" (House #4, M4.2 canonical)
+
+Baseline documented in the existing `curious_seeker_house04_grief_v1.dtl` (renamed M4.6+ from `curious_seeker_v1.dtl`). The canonical opening was picked by the M4.2 dialogue subagent from § 6.2's four sample questions — the grieving-friend one is the highest-yield for the M4 doubt mechanic because the on-script publisher choices land as small evasions of a real human ask.
+
+**Profile.** Woman in her 30s-40s. Not religious; not anti-religious. Carrying a friend's husband's recent death for a few days, hasn't figured out what to say. Opens the door already half-distracted by that. When she sees publishers with magazines on her porch, recognizes that they "talk about death for a living" — the question comes out before she's quite decided to ask it. She is not testing. She does not want a study, magazine, or return visit; she wants one specific sentence she can carry to her friend.
+
+**Voice.**
+- Half-distracted opener: "Oh — hi. Sorry, I was — yeah, come up. I can hear you."
+- Question delivered with social padding: "Actually — can I ask you something? This is going to sound out of nowhere."
+- Off-script gratitude has subtle contrast: "Thank you, though. For — for not just giving me a pamphlet."
+
+**What lands wrong.**
+- A grief-curious householder who is theatrically sad. The grief is in the texture, not the volume.
+- A householder who asks the question rhetorically. She's actually asking.
+- A publisher response that "wins" the grief moment. The off-script honest answer is meant to land as a small failure of training, not a triumph.
+
+The dialogue subagent does not need to author new first-visit content for House #4; M4.2 content is preserved verbatim. The arc-continuation branch (`returning`) is M4.6+ scaffolding and gets a dedicated subagent pass.
+
+---
+
+#### 6.2.2 Inquisitive — "what's your group about?" (House #9)
+
+**Profile.** Neighbor in their 30s-50s. Just a few minutes on a Saturday morning, genuinely curious about who keeps coming around with magazines. Not religious, not anti-religious, not searching for meaning. Has the time and the social ease to ask the question most householders don't bother with. The classic "happy to chat with a stranger about ideas" type.
+
+**Voice.**
+- Warm, neighborly: "Oh, hi! You're the people who come around with the magazines, right?"
+- Question without weight: "Sure, I have a minute. What's your group about, exactly?"
+- The "exactly" is the tell — they've watched the publishers walk past for years and want a real answer.
+- Off-script publisher honesty receives warm surprise: "Huh, fair enough — I appreciate the honesty."
+
+**What lands wrong.**
+- An inquisitive householder who is secretly searching. They're not. Curiosity is the whole motivation.
+- Treating the question as an opening for a full pitch. The publisher will be tempted; the character would dial back if pushed.
+- A debate beat. This character isn't going to argue, even if the publisher's answer is unsatisfying.
+- A "secret-cynic" tell. This character is just a neighbor.
 
 ---
 
@@ -536,8 +748,9 @@ The Polite Refuser is documented in `dialogue-context.md` § 6. The remaining si
 | Sister Who Talks | Warm-breathless | "I just want to say..." | Quick |
 | Worldly Coworker | Casual-modern | "no worries" | Informal |
 | Householder of Note | Varies | Varies | Varies |
+| Polite Refuser (shared) | Awkward-warm | "I'm — I'm all set, thanks." | Trailing |
 | Hostile Slammer | Curt | "Not interested." | Final |
-| Curious Seeker | Open | "Can I ask you something?" | Considered |
+| Curious Seeker (shared) | Open | "Can I ask you something?" | Considered |
 | Lonely Elderly | Meandering | "Now what was I saying?" | Slow |
 | Disillusioned Catholic | Searching | "I have some issues with..." | Thoughtful |
 | Hostile Christian | Confident-confrontational | "Actually, the Bible says..." | Assertive |

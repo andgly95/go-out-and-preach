@@ -23,3 +23,14 @@ class_name Householder
 # zero out REFUSED — the slam is too brief to land emotionally per
 # dialogue-context.md § 6.
 @export var doubt_delta_overrides: Dictionary = {}
+
+# M4.6 — voice-category cross-reference into cast.md § 6.x. Sub-archetype
+# distinction within an archetype (e.g. PR sub-types: atheist / catholic /
+# jewish / gay_couple / episcopalian). Not used at runtime today; gives
+# the dialogue subagent a single hook into the voice profile when authoring.
+@export var voice_subtype: StringName = &""
+
+# M4.6 — optional display name for STATUS / debug / future portrait labels
+# (e.g. "The Patel family"). Empty string allowed. Distinct from
+# display_name (which is the Dialogic speaker label, typically "Householder").
+@export var character_name: String = ""

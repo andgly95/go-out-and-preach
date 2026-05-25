@@ -12,19 +12,27 @@ extends Control
 ## 9/37/63% — tuned by eye against territory_map_v1.png.
 
 const SLOT_FRACTIONS: Array = [
-	# x,    y,    w,     h     (each as fraction of CenterMap rect)
-	Vector4(0.060, 0.085, 0.205, 0.245),
-	Vector4(0.278, 0.085, 0.205, 0.245),
-	Vector4(0.498, 0.085, 0.205, 0.245),
-	Vector4(0.718, 0.085, 0.222, 0.245),
-	Vector4(0.060, 0.360, 0.205, 0.245),
-	Vector4(0.278, 0.360, 0.205, 0.245),
-	Vector4(0.498, 0.360, 0.205, 0.245),
-	Vector4(0.718, 0.360, 0.222, 0.245),
-	Vector4(0.060, 0.635, 0.205, 0.245),
-	Vector4(0.278, 0.635, 0.205, 0.245),
-	Vector4(0.498, 0.635, 0.205, 0.245),
-	Vector4(0.718, 0.635, 0.222, 0.245),
+	# x, y, w, h (each as fraction of CenterMap rect).
+	# Eye-tuned against assets/sprites/territory/background.png.
+	# Reference anchor: House #3 — x=0.498, the column we treat as
+	# "correct" and tune the other three columns around. Per-column
+	# delta tightened from 0.220 → 0.205 so the leftmost (#1 / #5 / #9)
+	# and rightmost (#4 / #8 / #12) columns pull in toward the center.
+	# Row 1 + Row 2 y also pulled up (more aggressively for Row 2) so
+	# medallions sit at the actual top of each painted yard instead of
+	# drifting down into the sidewalk gap.
+	Vector4(0.088, 0.085, 0.205, 0.215),  # Row 0 — #1
+	Vector4(0.293, 0.085, 0.205, 0.215),  # Row 0 — #2
+	Vector4(0.498, 0.085, 0.205, 0.215),  # Row 0 — #3 (reference)
+	Vector4(0.703, 0.085, 0.222, 0.215),  # Row 0 — #4
+	Vector4(0.088, 0.340, 0.205, 0.215),  # Row 1 — #5
+	Vector4(0.293, 0.340, 0.205, 0.215),  # Row 1 — #6
+	Vector4(0.498, 0.340, 0.205, 0.215),  # Row 1 — #7
+	Vector4(0.703, 0.340, 0.222, 0.215),  # Row 1 — #8
+	Vector4(0.088, 0.600, 0.205, 0.190),  # Row 2 — #9
+	Vector4(0.293, 0.600, 0.205, 0.190),  # Row 2 — #10
+	Vector4(0.498, 0.600, 0.205, 0.190),  # Row 2 — #11
+	Vector4(0.703, 0.600, 0.222, 0.190),  # Row 2 — #12
 ]
 
 const BADGE_GREEN: Color  = Color(0.36, 0.55, 0.36, 0.94)
@@ -32,6 +40,9 @@ const BADGE_AMBER: Color  = Color(0.78, 0.60, 0.30, 0.94)
 const BADGE_RED:   Color  = Color(0.55, 0.20, 0.20, 0.94)
 const BADGE_GREY:  Color  = Color(0.45, 0.45, 0.45, 0.94)
 const BADGE_CREAM: Color  = Color(0.85, 0.78, 0.62, 0.88)
+# M4.6+ — brighter green for the BIBLE_STUDY_STARTED lifetime pip so it
+# visually outranks TRACT_LEFT's muted green at a glance.
+const BADGE_GREEN_BRIGHT: Color = Color(0.42, 0.72, 0.44, 0.96)
 
 const GOLD: Color         = Color(0.78, 0.62, 0.28, 1.0)
 const NAVY_DEEP: Color    = Color(0.09, 0.11, 0.16, 0.92)
@@ -66,6 +77,10 @@ var _hover_house_id:    StringName = &""
 var _tract_left_count: int = 0
 var _return_visit_count: int = 0
 var _studies_started_count: int = 0
+
+# M4.5 — gate further clicks during the ~1s NOT_HOME beat so racing clicks
+# don't stack tweens. Cleared by the tween.finished callback.
+var _beat_active: bool = false
 
 
 func _ready() -> void:
@@ -171,6 +186,25 @@ func _make_slot(house: House) -> Control:
 	badge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	badge.add_child(badge_label)
 
+	# M4.6+ — lifetime indicator pip at top-right of the slot. Visible only
+	# when the house has a prior positive outcome (TRACT_LEFT / RV / STUDY).
+	# Persists across the weekly clickability reset so the player sees
+	# "I've made progress here before" even when the badge shows NOT VISITED.
+	var pip: Panel = Panel.new()
+	pip.name = "LifetimePip"
+	pip.anchor_left = 1.0
+	pip.anchor_right = 1.0
+	pip.anchor_top = 0.0
+	pip.anchor_bottom = 0.0
+	pip.offset_left = -22.0
+	pip.offset_right = -6.0
+	pip.offset_top = 6.0
+	pip.offset_bottom = 22.0
+	pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pip.visible = false  # _refresh_slot toggles based on lifetime_best_outcome
+	pip.add_theme_stylebox_override("panel", _make_pip_style(BADGE_GREEN))
+	root.add_child(pip)
+
 	# Top-level click + hover wiring lives on `root` so the medallion and
 	# badge can pass mouse through to the same target.
 	root.mouse_entered.connect(_on_slot_hover.bind(house.id))
@@ -213,6 +247,48 @@ func _refresh_slot(house: House) -> void:
 	badge_label.add_theme_color_override("font_color", info.get("text_color"))
 	var hit: Panel = slot.get_node("Hit")
 	hit.add_theme_stylebox_override("panel", _make_slot_style(house.id == _selected_house_id))
+	# M4.6+ — lifetime pip (top-right, persists across resets).
+	var pip: Panel = slot.get_node("LifetimePip")
+	var pip_color: Variant = _pip_color_for_lifetime(house.lifetime_best_outcome)
+	if pip_color == null:
+		pip.visible = false
+	else:
+		pip.visible = true
+		pip.add_theme_stylebox_override("panel", _make_pip_style(pip_color))
+	# M4.6+ — disabled-click cursor cue. A house with state != NOT_VISITED
+	# is locked until the next reset hook fires (next service day for
+	# NOT_HOME, next Sunday rollover for resolved outcomes). Hover-select
+	# still works (detail panel shows what happened).
+	if house.state == House.State.NOT_VISITED:
+		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	else:
+		slot.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+
+
+func _pip_color_for_lifetime(lifetime: int) -> Variant:
+	# Returns Color or null. null = don't show the pip.
+	match lifetime:
+		House.State.TRACT_LEFT:
+			return BADGE_GREEN
+		House.State.RETURN_VISIT_SCHEDULED:
+			return BADGE_AMBER
+		House.State.BIBLE_STUDY_STARTED:
+			return BADGE_GREEN_BRIGHT
+		_:
+			return null
+
+
+func _make_pip_style(color: Color) -> StyleBoxFlat:
+	var sb: StyleBoxFlat = StyleBoxFlat.new()
+	sb.bg_color = color
+	sb.border_color = NAVY_DEEP
+	sb.set_border_width_all(1)
+	# 16x16 pip → corner radius 8 = full circle.
+	sb.corner_radius_top_left = 8
+	sb.corner_radius_top_right = 8
+	sb.corner_radius_bottom_left = 8
+	sb.corner_radius_bottom_right = 8
+	return sb
 
 
 func _badge_info_for_state(state: int) -> Dictionary:
@@ -286,8 +362,32 @@ func _on_slot_exit(house_id: StringName) -> void:
 
 
 func _on_slot_gui_input(event: InputEvent, house_id: StringName) -> void:
+	if _beat_active:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		# Debug bypass: Shift+click skips the §3 roll and treats the door
+		# as answered. M4.5 spike playtests need to target the Apostate
+		# slot directly when the roller rolls cold. Also bypasses the M4.6+
+		# clickability gate below so resolved slots can be re-visited for
+		# arc-state branch testing. OS.is_debug_build only.
+		if event.shift_pressed and OS.is_debug_build():
+			_force_answered_visit(house_id)
+			return
+		# M4.6+ — gate clicks on already-visited houses. A house with
+		# state != NOT_VISITED is locked until the next reset hook fires.
+		# Silent ignore — the cursor shape (set in _refresh_slot) is the
+		# affordance cue, the badge color tells the player what happened.
+		var house: House = TerritoryManager.get_house(house_id)
+		if house == null or house.state != House.State.NOT_VISITED:
+			return
 		_commit_visit(house_id)
+
+
+func _force_answered_visit(house_id: StringName) -> void:
+	print_debug("[M4.5 debug] Shift+click bypass: forcing answered for %s" % house_id)
+	TerritoryManager.set_pending_house(house_id)
+	TerritoryManager.resolve_householder_for_pending_house()
+	get_tree().change_scene_to_file("res://scenes/door_knock.tscn")
 
 
 func _select(house_id: StringName) -> void:
@@ -306,8 +406,51 @@ func _select(house_id: StringName) -> void:
 
 
 func _commit_visit(house_id: StringName) -> void:
+	if _beat_active:
+		return
+	if TerritoryManager.roll_door_outcome():
+		# §3 answered. §4 Apostate sub-roll (no-op for non-Apostate houses;
+		# v1 maps all sub-types back to Wounded) then existing scene flow.
+		TerritoryManager.set_pending_house(house_id)
+		TerritoryManager.resolve_householder_for_pending_house()
+		get_tree().change_scene_to_file("res://scenes/door_knock.tscn")
+		return
+	# Not home. Resolve in-place with a brief on-map beat; no scene change.
+	_resolve_not_home(house_id)
+
+
+func _resolve_not_home(house_id: StringName) -> void:
+	# State first: resolve_pending_house ticks hours, flips the badge to
+	# grey "NOT HOME" via the territory_house_visited → _on_house_visited
+	# chain, and updates Today's Progress. The beat label then layers on
+	# top of the already-flipped badge as a "registered" feedback beat.
+	_beat_active = true
 	TerritoryManager.set_pending_house(house_id)
-	get_tree().change_scene_to_file("res://scenes/door_knock.tscn")
+	TerritoryManager.resolve_pending_house(House.State.NOT_HOME)
+	var slot: Control = _house_slots.get(house_id)
+	if slot == null:
+		_beat_active = false
+		return
+	var label: Label = Label.new()
+	label.text = tr("No one came to the door.")
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.anchor_right = 1.0
+	label.anchor_bottom = 1.0
+	label.add_theme_color_override("font_color", CREAM_TEXT)
+	label.add_theme_font_size_override("font_size", 13)
+	label.modulate.a = 0.0
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(label)
+	var tween: Tween = create_tween()
+	tween.tween_property(label, "modulate:a", 0.92, 0.2)
+	tween.tween_interval(0.5)
+	tween.tween_property(label, "modulate:a", 0.0, 0.3)
+	tween.finished.connect(func() -> void:
+		if is_instance_valid(label):
+			label.queue_free()
+		_beat_active = false
+	)
 
 
 # --- Detail panel ------------------------------------------------------------
@@ -384,6 +527,7 @@ func _build_legend() -> void:
 		{"color": BADGE_AMBER, "label": "Return Visit", "note": "Conversation will continue."},
 		{"color": BADGE_GREEN, "label": "Study Started","note": "Weekly study in progress."},
 		{"color": BADGE_RED,   "label": "Refused",      "note": "Door closed politely or otherwise."},
+		{"color": BADGE_GREY,  "label": "Not Home",     "note": "No one came to the door."},
 		{"color": BADGE_CREAM, "label": "Not Visited",  "note": "No prior contact."},
 	]
 	for entry in entries:

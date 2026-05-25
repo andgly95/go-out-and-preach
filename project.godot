@@ -32,12 +32,26 @@ PlayerState="*res://scripts/entities/player_state.gd"
 [dialogic]
 
 directories/dch_directory={
-"curious_seeker": "res://data/dialogues/characters/curious_seeker.dch",
-"polite_refuser": "res://data/dialogues/characters/polite_refuser.dch"
+"apostate_wounded": "res://data/dialogues/characters/apostate_wounded.dch",
+"curious_seeker_house04_grief": "res://data/dialogues/characters/curious_seeker_house04_grief.dch",
+"curious_seeker_house09_inquisitive": "res://data/dialogues/characters/curious_seeker_house09_inquisitive.dch",
+"polite_refuser_house01_atheist": "res://data/dialogues/characters/polite_refuser_house01_atheist.dch",
+"polite_refuser_house03_jewish": "res://data/dialogues/characters/polite_refuser_house03_jewish.dch",
+"polite_refuser_house05_catholic": "res://data/dialogues/characters/polite_refuser_house05_catholic.dch",
+"polite_refuser_house08_gay_couple": "res://data/dialogues/characters/polite_refuser_house08_gay_couple.dch",
+"polite_refuser_house10_episcopalian": "res://data/dialogues/characters/polite_refuser_house10_episcopalian.dch",
+"polite_refuser_house12_atheist": "res://data/dialogues/characters/polite_refuser_house12_atheist.dch"
 }
 directories/dtl_directory={
-"curious_seeker_v1": "res://data/dialogues/curious_seeker_v1.dtl",
-"polite_refuser_v1": "res://data/dialogues/polite_refuser_v1.dtl",
+"apostate_wounded_v1": "res://data/dialogues/apostate_wounded_v1.dtl",
+"curious_seeker_house04_grief_v1": "res://data/dialogues/curious_seeker_house04_grief_v1.dtl",
+"curious_seeker_house09_inquisitive_v1": "res://data/dialogues/curious_seeker_house09_inquisitive_v1.dtl",
+"polite_refuser_house01_atheist_v1": "res://data/dialogues/polite_refuser_house01_atheist_v1.dtl",
+"polite_refuser_house03_jewish_v1": "res://data/dialogues/polite_refuser_house03_jewish_v1.dtl",
+"polite_refuser_house05_catholic_v1": "res://data/dialogues/polite_refuser_house05_catholic_v1.dtl",
+"polite_refuser_house08_gay_couple_v1": "res://data/dialogues/polite_refuser_house08_gay_couple_v1.dtl",
+"polite_refuser_house10_episcopalian_v1": "res://data/dialogues/polite_refuser_house10_episcopalian_v1.dtl",
+"polite_refuser_house12_atheist_v1": "res://data/dialogues/polite_refuser_house12_atheist_v1.dtl",
 "reveal_40": "res://data/dialogues/internals/reveal_40.dtl"
 }
 layout/style_directory={}

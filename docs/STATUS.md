@@ -1,22 +1,731 @@
 # STATUS
 
-Last updated: 2026-05-23
+Last updated: 2026-05-24 (M4.6 Phases 0–4 ship; M5 queued)
 
 ## Next session (queued)
 
-**M4.3 — The Apostate.** Three variants per cast.md § 6.6 (Hostile /
-Wounded / Gentle). Doubt deltas calibration-sensitive — surface in
-Phase 1. With M4.1's `doubt_delta_overrides` field already in place,
-Apostate-specific deltas live in `data/householders/apostate.tres` (or
-three variants: `apostate_hostile.tres`, `apostate_wounded.tres`,
-`apostate_gentle.tres`). The +doubt-on-positive-outcome semantic does
-need a small mechanism beyond the overlay — likely a per-archetype
-"positive outcomes also cost N" flag, or full custom deltas including
-positive ones (`{"REFUSED": 4, "TRACT_LEFT": 3, ...}`). Surface in
-M4.3 Phase 1.
+**M5 — Hall of Witness meeting scenes.** Canonical milestone per GDD
+§ 13. Sunday = Public Talk + Lighthouse Study (two back-to-back talks
+by different elders); Tuesday = Midweek Meeting (ministry training).
+Player choice to attend or skip each meeting; if attending, a brief
+social-positioning beat then a 3-page dialogue cutscene per talk.
+Authentic-voice elder speeches drawn from a canned-speech repository
+so consecutive Sundays don't repeat verbatim. Effects on Conviction,
+Standing: Elders, Energy, and a possible doubt nudge for skipping
+that loops back to the M4 doubt system.
 
-House #7 is the reserved slot (currently rendering Polite Refuser as
-placeholder per `territory_manager.gd::DISTRIBUTION`).
+**Phase 1 architecture decisions locked (2026-05-24 conversation):**
+- **Q1.scope** — Structural first (M5.0–M5.2: scaffold + 1 placeholder
+  speech per type), content second (M5.3: dialogue subagent pool
+  authoring). Mirrors M4.6's split-gate phasing.
+- **Q1.pretalk** — Seat picker + social-positioning moment (both).
+  Seat picks once per meeting and persists across both Sunday talks;
+  social moment depends on who the chosen seat sits near. Two
+  interaction layers before each meeting; +1.5× session scope vs the
+  recommended single-layer option, accepted.
+- **Q1.delivery** — Hybrid: 3-page click-through monologue with
+  doubt-gated inner-voice interjections between elder lines. Reuses
+  M4 reveal-40 pattern (`DoubtMeter.value >= threshold` gate). Inner
+  voice is italic, non-advancing, fades after ~2s.
+- **Q1.repository** — Whole-speech .dtl pool. Each speech is one
+  self-contained .dtl with all 3 pages. Pool per meeting type
+  (`public_talk`, `lighthouse_study`, `midweek_training`); random
+  pick at meeting time with last-played exclusion to prevent
+  immediate repeat. Mirrors per-house .dtl pattern from M4.6.
+
+**Phase 1.5 calibration decisions locked (same conversation):**
+- **Q5.speaker** — Fixed by talk type. Coordinator of Elders delivers
+  Public Talk and Midweek (warm, gathering / training register).
+  Strict Elder delivers Lighthouse Study (rigorous, paragraph-by-
+  paragraph register). Stable voice anchors per slot; add 1–2 more
+  elder profiles to cast.md § 1.x in a future milestone for inside-
+  slot variety. Visiting-speaker pattern from GDD canon for PT
+  deferred to that future milestone.
+- **Q6.effects** — Moderate magnitudes on completion: Public Talk
+  +2 Conviction +1 Standing-Elders; Lighthouse Study +1/+1; Midweek
+  +2/+2. Energy -1 Sunday (covers both PT and LS), -1 Tuesday.
+  Attendance contributes meaningfully to Conviction without
+  overshadowing Saturday field-service hours.
+- **Q7.skip** — Skipping fires Standing-Elders -2 + doubt +1. No
+  Conviction change (Conviction reflects faith, not behavior). Ties
+  skipping into the M4 doubt spine — the empty seat reads as a small
+  internal failure to a devout publisher.
+- **Q8.innervoice** — Single threshold matching door_knock reveal-40
+  pattern: `DoubtMeter.value >= 40` gates one italic inner-voice line
+  per talk at a hand-authored beat marked in the .dtl. Across 9
+  speeches in v1 pool (3 per type), 9 hand-authored inner-voice
+  lines total. Inner-voice line uses italic style, non-advancing,
+  fades after ~2s. Mechanically consistent with M4.
+
+**Phase 1 proposed defaults (revisable in Phase 0):**
+- Speech pool size v1 = 3 per type = 9 total speeches. Tunable when
+  M5.3 dialogue subagent queue is scoped.
+- Seat count = 6 named seats: Front-Left, Front-Right, Middle-Left,
+  Middle-Right, Back-Left, Back-Right. Each pinned to one neighbor
+  identity (Service Partner, Sister Who Talks, Strict Elder's wife,
+  a Lonely Elderly attendee, the Parent in the Truth, sit-alone slot).
+- Social-moment options per seat = 2 short choices based on the
+  pinned neighbor. ±1 Standing (Family / Congregation / Elders)
+  per pick.
+- Per-meeting flow:
+  - Sunday: attend? → seat picker → social moment → PT 3pg (Coordinator)
+    → LS 3pg (Strict Elder) → resolve (effects fire) → return to week_view
+  - Tuesday: attend? → seat picker → social moment → Midweek 3pg
+    (Coordinator) → resolve → return to week_view
+
+**Architecture sketch (M5.0 – M5.3):**
+- M5.0 — `scenes/meeting_hall.tscn` + `scripts/ui/meeting_hall.gd`.
+  Single scene parameterized by meeting type (Sunday two-talk vs
+  Tuesday one-talk). Hall background placeholder, 4–6 seats overlay,
+  speaker portrait + name panel, dialogic-driven 3-page talk pane,
+  inner-voice italic overlay layer.
+- M5.1 — `scripts/ui/week_view.gd` gains "Attend Meeting" button
+  on Sunday + Tuesday day cards (mirrors "Go Out in Service" pattern).
+  Routes to `meeting_hall.tscn` with `MeetingManager.set_pending_meeting`
+  set; `Skip` advances phase and fires doubt/conviction skip-deltas.
+- M5.2 — One placeholder speech per type (3 .dtl files), one elder
+  identity per type, one seat layout, one social-moment per seat.
+  Wires `Dialogic.signal()` → `_resolve_with_outcome(COMPLETED)`
+  mirroring door_knock's resolution pattern.
+- M5.3 — Dialogue subagent passes for the canned-speech pool
+  (per Phase 1.5 size lock). Each subagent session = one full
+  speech, voice-grounded in cast.md elder profile + authenticity-
+  notes.md texture; CLAUDE.md legal guardrails enforced (no lifted
+  publication text).
+
+Wires into existing `week_view` Sunday + Tuesday `DAY_CONTENT`;
+likely needs `SignalBus.meeting_attended` / `meeting_skipped` /
+`talk_completed` signals; `MeetingManager` autoload similar to
+`TerritoryManager` for pending-meeting state + speech-pool picking
++ last-played tracking. Cast.md elder roster (§ 1.x — Coordinator of
+Elders, Strict Elder) drives speaker identity. Sermon content needs
+authenticity-notes.md texture per CLAUDE.md legal guardrails (no
+lifted publication text).
+
+**M4.4 — Hostile + Gentle Apostate variants.** Still deferred below
+M5 per user direction. M4.5 already wired the integration point:
+`APOSTATE_SUBTYPE_PATHS` in `territory_manager.gd` maps all three
+keys (hostile/wounded/gentle) to `apostate_wounded.tres` today;
+M4.4 drops in new `.tres` resources for Hostile + Gentle (plus
+their `.dch` + `.dtl` triplets) and updates the two path values —
+no call-site changes needed. `resolve_householder_for_pending_house`
+already does the per-knock variant pick at the § 4 weights
+(40/35/25 Hostile/Wounded/Gentle). Four open calibration questions
+carried forward: (1) does House #7 rotate between the three
+variants per Saturday — the M4.5 sub-roll mechanically does this
+each knock; question is whether per-knock variety is the *desired*
+texture or whether DIST should pin a specific variant per house;
+(2) BIBLE_STUDY_STARTED and RV_SCHEDULED reachability from the
+Gentle Apostate (most plausible variant for player-pressed positive
+outcomes); (3) confirm Wounded's +3/+2 deltas play right before
+locking Hostile (~+5/+3?) and Gentle (~+2/+4 — gentlest pressure,
+longest doubt tail?) magnitudes; (4) within-Apostate-trio variety
+of the named loss — Wounded names the mother; seed Hostile and/or
+Gentle with sibling or whole-congregation framing — see UNSURE in
+`apostate_wounded_v1.dtl` E3.
+
+**Uncommitted carry-over from M4.3 + M4.6.** The Phase 4 dialogue-
+content commit (`da4441d`) only landed the *renamed* canonical
+files (curious_seeker_house04_grief + polite_refuser_house05_catholic
+.dtl). Still uncommitted on disk: M4.6 Phase 0–2 system code
+(territory_manager.gd, door_knock.gd, house.gd, householder.gd,
+territory_map.gd, project.godot), 6 new-character .tres + .dch
+triplets (5 PR + 1 CS), the M4.3 Apostate triplet + portrait pair,
+the M4.6 shared placeholder portrait scaffold, cast.md voice
+profile additions, and four `.png.import` files. A single bundled
+M4.6 follow-on commit lands these — recommend doing it before M5
+Phase 0 to avoid mixing milestones.
+
+## M4.6 — Per-house PR character identity + dialogue arc continuation: complete (Phases 0–4 shipped; gate playtest pending)
+
+Phases 0–4 all shipped this session (2026-05-24). Phase 4 commit
+`da4441d` landed 8 dialogue subagent passes — 6 PR characters + 2 CS
+characters, each .dtl with both `first_visit` and `returning`
+arc-state branches authored end-to-end. House #4 grief and House #5
+Catholic preserved their M4.2 / M3 canonical first_visit text
+verbatim; only their `returning` branches were newly authored.
+Topology, signal args, portrait beats, off-script registry text,
+and the if/else+jump/label arc-state wrappers preserved per skeleton.
+UNSURE flags embedded per character for Andrew's gate playtest
+review. Phase 3 gate playtest still pending Andrew (9-item checklist
+below). Headless boot clean on both `territory_map.tscn` and
+`main_menu.tscn` (only standard `--quit-after` cleanup warnings).
+
+**Commit state caveat.** Only the rename + dialogue content for
+the two pre-existing canonical files committed in `da4441d`. The
+M4.6 Phase 0–2 system code and the 6 new-character triplets (and
+the M4.3 Apostate triplet from prior session) remain uncommitted —
+see "Uncommitted carry-over" in the queued section above.
+
+**Architecture pivot from the original M4.6 framing.** The session's
+plan-mode design surfaced (via user direction) that the M4.5 Apostate
+sub-roll pattern (variant rolled per knock) is the WRONG precedent
+for PR. Each PR house has a permanent, specific family who lives
+there — character identity is preserved across visits, weeks, and
+re-knocks because portraits will be authored per character later.
+That requires per-house pinning at territory build time, NOT per-knock
+sub-rolling. M4.6 ships that pivot plus two additional systems:
+
+1. **Dialogue arc continuation.** Re-knocking a PR house plays a
+   different opener — the character recognizes the publisher. Each
+   .dtl branches at the top on `TerritoryManager.pending_arc_state()`
+   via a top-level `if`/`else` + `jump`/`label` (cleaner than nested
+   indentation; M3 content stays at column 0).
+2. **Clickability reset rules** (Andrew's clarification): NOT_HOME
+   clears on the next service day in the SAME week (Thursday NOT_HOME
+   → re-knockable Saturday); resolved outcomes (TRACT_LEFT / REFUSED
+   / RV_SCHEDULED / BIBLE_STUDY_STARTED) clear on Sunday rollover
+   into the next week; `house.arc_state` is NEVER reset, so character
+   memory persists across both reset types.
+
+**Phase 1 locked decisions (Q1a + Q1.granularity + Q1.scope +
+Q1.reset + Q1.naming + Q1.catholic + Q1.sessions):**
+- Q1a — voice profiles authored THIS session in cast.md § 6.0 (new
+  parent PR section + 5 sub-type subsections, mirroring § 6.6
+  Apostate's three-flavor structure). dialogue-context.md § 6 PR
+  entry stays as the cadence/sample reference.
+- Q1.granularity — 6 unique characters across 6 PR houses, NOT 5
+  sub-types reused. Sub-types are voice categories. Pigeonhole:
+  atheist repeats at houses #1 (tired flavor § 6.0.1 A) and #12
+  (intellectual flavor § 6.0.1 B) — two distinct voices, same
+  category.
+- Q1.scope — line-pool intra-visit variation DEFERRED; arc-based
+  cross-visit variation lands. Weekly re-knock support lands with
+  the per-day / per-week split above.
+- Q1.naming — `polite_refuser_house03_jewish.tres` convention
+  (position + subtype, greppable both ways).
+- Q1.catholic — existing M3-validated triplet renamed to house05
+  (`polite_refuser_house05_catholic.*`). M3 dialogue text preserved
+  verbatim as the "first_visit" branch. The Catholic subagent
+  session in Phase 4 writes only the "returning" branch.
+- Q1.sessions — one dialogue subagent session per character (6
+  sessions queued), full arc both branches per session, per the
+  goop-character skill's voice-per-session rule.
+
+**Sub-type to PR-house mapping (locked in DISTRIBUTION):**
+- House #1: atheist (tired) — § 6.0.1 Flavor A
+- House #3: Jewish — § 6.0.3 EMPATHY-BAR red lines apply
+- House #5: Catholic — § 6.0.2, M3 canonical
+- House #8: gay couple — § 6.0.4 EMPATHY-BAR red lines apply
+- House #10: Episcopalian — § 6.0.5
+- House #12: atheist (intellectual) — § 6.0.1 Flavor B
+
+**Files modified (5 code + 3 docs):**
+- `scripts/entities/householder.gd` — added `voice_subtype: StringName`
+  and `character_name: String` (cast.md § 6.0.x cross-ref + future
+  display-name hook).
+- `scripts/entities/house.gd` — added `arc_state: StringName =
+  &"first_visit"`. Orthogonal to `state` enum (click-state); never
+  reset by the new reset hooks.
+- `scripts/systems/territory_manager.gd` — major: 5 new
+  HOUSEHOLDER_PATHS keys (existing `polite_refuser` key removed),
+  DISTRIBUTION pinning per-PR-house, FALLBACK_ARCHETYPE flipped to
+  `polite_refuser_house05_catholic` (the M3-validated content),
+  reset hooks `_on_phase_changed` (per-service-day NOT_HOME clear)
+  and `_on_week_advanced` (per-week resolved clear), and a new
+  `pending_arc_state()` accessor mirroring the
+  `DoubtMeter.value` access pattern for .dtl inline expressions.
+- `scripts/ui/door_knock.gd` — `_resolve_with_outcome` now sets
+  `_pending_house.arc_state = &"returning"` on every terminal
+  outcome (Dialogic signal, walk-away, or Hostile Slammer scene).
+- `project.godot` — `dch_directory` and `dtl_directory` each gain 6
+  new entries; existing `polite_refuser` / `polite_refuser_v1`
+  entries removed (replaced by the 6 per-house entries).
+- `docs/design/cast.md` — added § 6.0 Polite Refuser parent section
+  plus § 6.0.1 atheist (two flavors), § 6.0.2 Catholic (M3 canonical),
+  § 6.0.3 Jewish (EMPATHY-BAR red lines), § 6.0.4 gay couple
+  (EMPATHY-BAR red lines), § 6.0.5 Episcopalian. § 7 quick-reference
+  table gained a Polite Refuser (shared) row.
+- `docs/STATUS.md` — this section + queue promotion.
+
+**Files renamed (3, via `git mv` to preserve history):**
+- `data/householders/polite_refuser.tres` →
+  `polite_refuser_house05_catholic.tres` (id, voice_subtype,
+  dialogue_timeline path updated inline)
+- `data/dialogues/characters/polite_refuser.dch` →
+  `polite_refuser_house05_catholic.dch` (description updated;
+  portrait scene paths re-pointed at the consolidated
+  `_shared_placeholder/`)
+- `data/dialogues/polite_refuser_v1.dtl` →
+  `polite_refuser_house05_catholic_v1.dtl` (speaker slug updated
+  throughout; arc_state if/else+jump/label wrapper added with M3
+  content as the first_visit branch and a [DRAFT PENDING]
+  scaffolding for returning)
+
+**Files created (18 — 5 triplets × 3 + portrait + consolidation):**
+- 5 new `.tres` Householders (house01 atheist, house03 jewish,
+  house08 gay_couple, house10 episcopalian, house12 atheist).
+  Each with `archetype = &"polite_refuser"` (broad category) +
+  per-house `id` slug + `voice_subtype` + empty `character_name`.
+- 5 new `.dch` Dialogic Characters with distinct `color` fields
+  (atheist=grey-blue, jewish=warm tan, gay_couple=teal,
+  episcopalian=lavender-grey, intellectual atheist=olive) driving
+  the shared placeholder portrait tint.
+- 5 new `.dtl` Dialogic Timelines — structural skeletons with both
+  `first_visit` and `returning` arc branches, full E1–E4 choice
+  topology mirroring the Catholic .dtl, all speaking lines as
+  `[DRAFT PENDING — house?? subtype branch E#]` placeholders.
+- `assets/sprites/portraits/_shared_placeholder/placeholder_portrait.gd`
+  + `.tscn` — shared placeholder script that reads
+  `character.color` × per-expression brightness multiplier, so all
+  6 PR characters render distinct colors using one script.
+
+**Files unchanged by intent (asserted):**
+- `scripts/systems/doubt_meter.gd` — arc_state is content state,
+  not doubt state. No trigger changes.
+- `scripts/systems/time_manager.gd` — `week_advanced` + `phase_changed`
+  signals already exist; reset hooks consume them as-is.
+- `scripts/ui/territory_map.gd` — slot interaction unchanged. The
+  reset hooks fire `territory_house_visited` with NOT_VISITED state,
+  so badges re-flip without a new signal type or handler edit.
+- `assets/sprites/portraits/polite_refuser/` (original M3 placeholder)
+  — left in place; no references remain after the .dch rename, so
+  it's effectively dead. Future cleanup pass can delete.
+- `assets/sprites/portraits/curious_seeker/` and `apostate_wounded/`
+  placeholder dirs — unchanged. The shared placeholder is PR-only
+  for M4.6.
+- `data/dialogues/curious_seeker_v1.dtl`, `apostate_wounded_v1.dtl`,
+  `internals/reveal_40.dtl` — untouched. arc_state branching is
+  not yet wired into those .dtl files (CS still 1 character across
+  2 houses; future per-house identity work for CS / HS is a
+  follow-on milestone).
+
+**Headless boot:** clean on both scenes
+(`godot --headless --quit-after 4 res://scenes/territory_map.tscn`
+and `... res://scenes/main_menu.tscn`); only the standard
+`--quit-after` cleanup warnings (ObjectDB leaked / 26 resources in
+use). No autoload errors, no .tres / .dch parse errors, no .gd
+parse errors. `godot --headless --check-only` was attempted but
+hangs in parallel with the editor process; the boot test covers
+the equivalent surface for M4.6 changes (script parse + .tres
+load + autoload chain).
+
+**Polish add (same session, post-Phase-2):** two follow-up requests
+landed in-session, both extending the territory_map slot rendering
+and Householder/House schema. They're tracked here as part of M4.6
+rather than a separate milestone because they're tightly coupled to
+the per-house reset rules above.
+
+1. **Click gate on resolved houses.** `_on_slot_gui_input` now
+   ignores left-clicks on any house with `state != NOT_VISITED`.
+   Affordance cue: the slot's `mouse_default_cursor_shape` flips
+   to `CURSOR_FORBIDDEN` on resolved slots and back to
+   `CURSOR_POINTING_HAND` after a reset. Hover/select still works
+   so the detail panel populates regardless. Debug `Shift+click`
+   bypass also skips the click gate (so arc-state branch testing
+   can re-visit resolved houses without waiting for resets).
+2. **Lifetime indicator pip.** New `House.lifetime_best_outcome:
+   int = State.NOT_VISITED` field, upgraded in
+   `TerritoryManager.resolve_pending_house` whenever the new
+   positive outcome ranks higher than the current lifetime value
+   (TRACT_LEFT=3 < RV=4 < STUDY=5, monotonic with State enum
+   order; REFUSED=2 and NOT_HOME=1 never upgrade). Reset hooks
+   leave this field untouched, so the indicator persists across
+   per-day and per-week resets. Rendered as a 16×16 circular pip
+   anchored at the top-right corner of each slot:
+   - TRACT_LEFT lifetime → `BADGE_GREEN` (muted)
+   - RV_SCHEDULED lifetime → `BADGE_AMBER`
+   - BIBLE_STUDY_STARTED lifetime → new `BADGE_GREEN_BRIGHT`
+     (saturated; visually outranks plain TRACT_LEFT at a glance)
+   - Otherwise → invisible (no progress yet)
+
+**Files modified by the polish add (3):**
+- `scripts/entities/house.gd` — added `lifetime_best_outcome: int`.
+- `scripts/systems/territory_manager.gd` — `resolve_pending_house`
+  upgrade logic + new private `_is_positive_outcome` helper.
+- `scripts/ui/territory_map.gd` — new `BADGE_GREEN_BRIGHT` const,
+  `LifetimePip` Panel added in `_make_slot`, refresh + cursor
+  logic in `_refresh_slot`, new `_pip_color_for_lifetime` +
+  `_make_pip_style` helpers, click gate in `_on_slot_gui_input`.
+
+**No file renames or new triplets from the polish add** —
+content stays at the M4.6 Phase 2 set.
+
+**Second polish add (same session) — Curious Seeker pinning.** User
+flagged that Houses #4 and #9 were both serving the same Curious
+Seeker character (since CS was still on the M4.1 shared-template
+model after PR moved to per-house identity). Applied the M4.6 PR
+pattern to CS: two unique characters, sub-types as voice categories,
+arc_state branching scaffolded for both.
+
+**Sub-type → CS-house mapping:**
+- House #4: grief (M4.2 canonical, "my friend's husband just passed")
+  per cast.md § 6.2.1.
+- House #9: inquisitive ("what's your group about?") per cast.md
+  § 6.2.2 — NEW character, [DRAFT PENDING] dialogue.
+
+**Files renamed (3, via `git mv`):**
+- `data/householders/curious_seeker.tres` →
+  `curious_seeker_house04_grief.tres` (id, voice_subtype,
+  dialogue_timeline path updated)
+- `data/dialogues/characters/curious_seeker.dch` →
+  `curious_seeker_house04_grief.dch` (description updated;
+  portrait scene paths re-pointed at `_shared_placeholder/`)
+- `data/dialogues/curious_seeker_v1.dtl` →
+  `curious_seeker_house04_grief_v1.dtl` (speaker slug
+  `curious_seeker` → `curious_seeker_house04_grief` throughout;
+  M4.2 content wrapped in `first_visit` branch via top-level
+  if/else + jump/label; `returning` branch scaffolded as
+  [DRAFT PENDING])
+
+**Files created (3, new house09 triplet):**
+- `data/householders/curious_seeker_house09_inquisitive.tres`
+- `data/dialogues/characters/curious_seeker_house09_inquisitive.dch`
+  — distinct color `Color(0.75, 0.63, 0.50, 1)` (warm sandy-brown)
+  vs house04 grief's `Color(0.62, 0.7, 0.65, 1)` (sage greenish-grey)
+- `data/dialogues/curious_seeker_house09_inquisitive_v1.dtl` —
+  full skeleton with both arc branches, all lines [DRAFT PENDING]
+
+**Files modified (4):**
+- `assets/sprites/portraits/_shared_placeholder/placeholder_portrait.gd`
+  — `EXPRESSION_BRIGHTNESS` extended to include CS expression names
+  (`interested_lean_in`, `genuine_question`, `considering`,
+  `warm_thank_you`) so both CS characters render with
+  character-color × per-expression brightness like the PR
+  characters.
+- `scripts/systems/territory_manager.gd` — `HOUSEHOLDER_PATHS`
+  loses `curious_seeker` key, gains the two house-pinned CS keys.
+  `DISTRIBUTION` slots 4 and 9 updated.
+- `project.godot` — `dch_directory` / `dtl_directory`: removed
+  `curious_seeker` / `curious_seeker_v1` entries, added the four
+  new per-house entries.
+- `docs/design/cast.md` — § 6.2 Curious Seeker section gained a
+  sub-type pinning table and two subsections (§ 6.2.1 grief —
+  documenting the M4.2 canonical interpretation; § 6.2.2
+  inquisitive — new voice profile). § 7 quick-reference row
+  updated to "Curious Seeker (shared)".
+
+**Phase 4 dialogue subagent queue updated.** The 6-session queue
+from the PR work expands to 8 sessions:
+- 6 PR character sessions (unchanged)
+- 1 CS house04 grief — arc-continuation-only session (first_visit
+  content is M4.2 canonical, only `returning` branch needs
+  authoring)
+- 1 CS house09 inquisitive — full first_visit + returning session
+
+**Files unchanged by intent:**
+- `assets/sprites/portraits/curious_seeker/` (M4.1 placeholder dir)
+  — left in place; no references remain after the .dch rename, so
+  it's now dead (same disposition as the original M3 PR placeholder
+  dir). Future cleanup pass can delete both.
+- `scripts/ui/door_knock.gd::OFFSCRIPT_CHOICE_TEXTS` — the off-script
+  text-key `"I don't know. Honestly."` covers both CS characters
+  (the new inquisitive character's [DRAFT PENDING] notes preserve
+  the same text-key explicitly so no registry update is needed
+  during Phase 4 unless the subagent re-words it).
+
+**Headless boot:** clean on `territory_map.tscn` after the CS
+work (same pattern as the M4.6 boot — standard `--quit-after`
+cleanup warnings only).
+
+**Phase 3 gate playtest (Andrew):**
+- [ ] 6 PR houses (#1/3/5/8/10/12) load distinct characters —
+      hover detail panels show distinct slugs; clicked portraits
+      render distinct colors.
+- [ ] Click House #1 → atheist first_visit branch plays
+      ([DRAFT PENDING] placeholders visible); resolve TRACT_LEFT.
+- [ ] Click House #1 again same Saturday → still TRACT_LEFT,
+      no re-click.
+- [ ] Advance to Sun Week 2 → return to territory_map (if Saturday
+      → next phase auto-routes to week_view, advance once more) →
+      House #1 reset to NOT_VISITED. Click House #1 → atheist
+      RETURNING branch plays. **CRITICAL: arc_state persisted.**
+- [ ] Thursday service: NOT_HOME at a PR house; advance Thu → Fri
+      → Sat; open territory_map → that house re-clickable
+      (NOT_VISITED).
+- [ ] Thursday service: TRACT_LEFT at a PR house; advance to Sat
+      same week; that house still locked (TRACT_LEFT badge);
+      advance Sat → Sun Week 2; same house now NOT_VISITED.
+- [ ] No regression — House #7 (Apostate) still sub-rolls per knock;
+      Houses #2/6/11 still play Hostile Slammer scene; Houses #4/9
+      still play Curious Seeker with off-script gated at doubt 25.
+- [ ] M4.5 Shift+click debug bypass still works on PR houses (rare
+      sub-type spike-testing not yet needed since sub-types are
+      pinned, but bypass for sub-type playtesting still useful).
+- [ ] **.dtl parse** — first knock on each of the 6 PR houses
+      successfully starts the Dialogic timeline (Dialogic runtime
+      parses the .dtl on `Dialogic.start()`). If any character's
+      .dtl errors, the if/else+jump/label scaffolding may need
+      revision; the Catholic .dtl is the safest reference since it
+      shipped with M3 content (only the wrapper is new).
+
+**Open unknowns surfaced for future milestones:**
+- **Line-pool intra-visit variation.** If a player walks away from
+  a PR house and immediately re-clicks the same Saturday (NOT_HOME
+  not gating since arc didn't fire), they'd see the identical
+  opener. M4.6 scope explicitly deferred this. M4.7+ candidate.
+- **arc_state coarseness.** v1 has 2 states (`first_visit` /
+  `returning`). The 4 prior-outcome distinctions (`post_refused`
+  vs `post_tract_left` etc.) collapse to `returning` for now.
+  Playtest may reveal the same returning branch reading across
+  outcomes feels generic — M4.7+ content extension, no schema
+  change required.
+- **Custom portraits per character.** Placeholder consolidation
+  ships with 6 distinct colors via the shared script; real art
+  per character is a deferred polish session.
+- **`character_name` field empty for all 6 PR characters.** The
+  dialogue subagent's Phase 4 sessions choose family names per
+  cultural specificity; the field gets populated alongside the
+  dialogue writing. Detail-panel display of character_name is also
+  a polish add (currently `territory_map.gd` doesn't read it).
+- **Sub-type identity for other archetypes.** Curious Seeker (2
+  houses) and Hostile Slammer (3 houses) still share templates.
+  Per-house identity for CS / HS is a follow-on milestone with
+  the same scope multiplier (×3 dialogue surface area for HS,
+  ×2 for CS).
+- **OFFSCRIPT_CHOICE_TEXTS registry text-key brittleness.** Still
+  present from M4.3 STATUS. The "Why is that for you?" key works
+  across all 6 PR characters since they share the off-script
+  prompt text. If a Phase 4 dialogue subagent re-words the
+  off-script choice for any character, the dict needs a new entry.
+
+## M4.5 — Encounter Distribution Spike: complete
+
+End-to-end NOT_HOME flow shipped. Per-knock outcome roll model
+validated: `TerritoryManager.roll_door_outcome()` returns true
+(~26.5%) / false (~73.5%); answered path runs §4 Apostate
+sub-roll (`roll_apostate_subtype`) then the existing M3+M4 door-
+knock flow; not-home path resolves in-place via
+`territory_map.gd::_resolve_not_home` with a brief on-map beat
+("No one came to the door.", 0.2s fade-in / 0.5s hold / 0.3s
+fade-out tween over the clicked slot), no scene transition. The
+existing `SignalBus.territory_house_visited` → `_on_house_visited`
+chain handles the grey "NOT HOME" badge, detail panel copy, hours
+tick, and Today's Progress untouched.
+
+**Phase 1 decisions locked (Q1a–f):**
+- Q1a — at-knock-time roll (each click rolls fresh).
+- Q1b — hybrid: DIST pins archetype-when-answered; roller picks
+  answered vs. not-answered (binary). House #7 stays the Apostate
+  slot; M4.6 sub-type trees inherit the same authorial-override
+  model.
+- Q1c — NO_ANSWER_BUT_HOME (§3, 3.5%) folded into NOT_HOME for v1.
+  Combined ~73.5% not-home rate. Atmospheric beat content
+  re-investible in M4.7+.
+- Q1d — NOT_HOME visual after knock only (forced by Q1a).
+- Q1e — same `HOURS_PER_KNOCK` (0.25h) for NOT_HOME. Single
+  tunable constant; revisit post-playtest if cadence is off.
+- Q1f — moot under hybrid (DIST owns archetype distribution; the
+  roller never picks unimplemented archetypes).
+
+**Cadence verdict (Andrew playtest, single Saturday):** 3 answered
+of 12 (25%, expected 26.5%). The math holds and the NOT_HOME beat
+reads as feedback rather than friction. House #7 Apostate happened
+to roll NOT_HOME this run; the spike-friendliness gap that
+surfaced — targeted testing of single-slot rare archetypes is
+~26.5%/Saturday reachable — got a debug-only workaround.
+
+**Architectural verdict:** Keep the hybrid. DIST + at-knock roller
++ §4 sub-roll all hold. No revert needed; promote M4.6.
+
+**Open unknowns surfaced for future milestones:**
+- **Rare-archetype reachability.** Single-slot archetypes are
+  ~26.5%/Saturday reachable, ~80% cumulative after 5 Saturdays.
+  Atmospheric rarity (intentional) or testing friction (calibrate)?
+  `P_ANSWERED` is the one-line tunable.
+- **NOT_HOME-house re-clickability.** Pre-existing M2-era
+  behavior, now exposed: a NOT_HOME house can be re-clicked and
+  re-rolls. Should resolution lock the slot? Spike didn't address;
+  M4.7 candidate.
+- **Per-territory `P_ANSWERED`.** §6.1 modifiers explicitly call
+  for apartment-dense ×0.8 NOT_HOME, working-class ×1.1, etc.
+  M4.5 ships a single global constant. M4.7+ multi-territory work
+  lays the override mechanism; `const P_ANSWERED` is the hook
+  point.
+- **Save/load and at-knock RNG (M7).** Rolls fire per-click at
+  runtime, no save state needed. M7 reload mid-Saturday will see
+  outcomes-so-far in `house.state` and not re-roll resolved
+  houses — same as today, but worth re-confirming when M7 lands.
+- **Within-archetype sub-roll architecture (M4.6 input).** §4 is
+  the only sub-roll wired today; generalizing to PR / CS / etc.
+  is M4.6's central work. The pattern is established but not yet
+  abstracted (PR doesn't have its own `PR_SUB_WEIGHTS` constant or
+  archetype-category dispatch).
+
+**Files modified (2 code + 1 doc):**
+- `scripts/systems/territory_manager.gd` — added constants
+  `P_ANSWERED` (0.265), `APOSTATE_SUB_WEIGHTS` (40/35/25),
+  `APOSTATE_SUBTYPE_PATHS` (all three v1 keys → apostate_wounded
+  .tres; M4.4 swap point), `APOSTATE_ARCHETYPES`; new functions
+  `roll_door_outcome`, `roll_apostate_subtype`,
+  `resolve_householder_for_pending_house`. No changes to
+  `_build_default_territory`, `resolve_pending_house`, or
+  `outcome_label`.
+- `scripts/ui/territory_map.gd` — new `_beat_active` state flag
+  and `_resolve_not_home` helper; `_commit_visit` now branches on
+  `TerritoryManager.roll_door_outcome()`; `_on_slot_gui_input`
+  gates clicks during the ~1s NOT_HOME beat; **debug-only
+  Shift+click bypass** via `_force_answered_visit` (gated on
+  `OS.is_debug_build()`) for targeted spike-testing of rare slots;
+  `_build_legend` gains a grey "Not Home" row.
+- `docs/STATUS.md` — this section plus queue promotion.
+
+**Files explicitly unchanged (asserted):**
+- `scripts/systems/doubt_meter.gd` — NOT_HOME fires zero doubt
+  events; T4 (Saturday-zero-RV) unchanged.
+- `scripts/entities/house.gd` — `State.NOT_HOME` already in enum.
+- `scripts/ui/door_knock.gd` — NOT_HOME never enters this scene.
+- `scripts/systems/territory_manager.gd::DISTRIBUTION` — House #7
+  stays apostate_wounded under hybrid model; no slot reassignment.
+- All `data/dialogues/*` and `data/householders/*` — no new
+  content this spike.
+- `project.godot` — no autoload additions.
+
+**Headless boot:** clean on `territory_map.tscn` (direct) and
+`main_menu.tscn` (autoload chain) — only standard `--quit-after`
+cleanup warnings (ObjectDB leaked / 26 resources in use), no
+parse errors.
+
+**Debug Shift+click note:** The bypass is committed (not stripped
+post-spike) because M4.6 sub-type playtesting will face the same
+rare-slot reachability friction — generalizing the sub-roll to PR
+sub-types means individual PR sub-types are 1/6 chance per PR
+slot × 26.5% answered = ~4.4% per knock, even less reachable than
+the Apostate. Shift+click stays useful. Strip if M4.7+ adds a
+designed-in playtest seed/force mechanism.
+
+## M4.3 — The Apostate (Wounded variant): Phases 0–2 complete
+
+Structural ship: Wounded Apostate now lives at House #7 in Maple
+Street; placeholder Polite Refuser flipped out. `apostate_wounded`
+.tres + .dch + _v1.dtl triplet plus a placeholder portrait pair
+(`assets/sprites/portraits/apostate_wounded/`) mirror the
+PR/CS pattern. All dialogue lines are `[DRAFT PENDING — …]`
+placeholders pending the M4.3 Phase 3 subagent run.
+
+**Locked decisions (Q1–Q6):**
+- Q1: Wounded only this session; Hostile + Gentle queue for M4.4.
+- Q2: +doubt-on-positive mechanism = extend `doubt_delta_overrides`
+  dict (zero schema change; `_resolve_doubt_delta` already handles
+  arbitrary ints). First archetype to exercise the semantic.
+- Q3: Outcomes reachable = REFUSED + TRACT_LEFT only (no RV_SCHED,
+  no BIBLE_STUDY from this door; defer to Gentle in M4.4).
+- Q4: Off-script choice = "I'm sorry that happened to you.", gated
+  at `DoubtMeter.value >= 35` (higher than PR/CS's 25). Collapses
+  to REFUSED — the moment is too heavy to also leave a tract.
+- Q5: Calibration locked. `doubt_delta_overrides = {"REFUSED": 3,
+  "TRACT_LEFT": 2}`. Off-script choice fires +2 via the registry.
+  Exposure ceiling per encounter: +5 (off-script + REFUSED).
+- Q6: Reveal-40 chain = standard generic. No new plumbing.
+
+**One deviation from the literal plan:** the plan said "No other
+code changes" beyond adding the Apostate's off-script choice text
+to `OFFSCRIPT_CHOICE_TEXTS`. But the existing handler hardcoded +3
+for any registry entry, which conflicted with Q5's +2 Apostate
+calibration. Resolved by refactoring `OFFSCRIPT_CHOICE_TEXTS` from
+`Dictionary[String, bool]` → `Dictionary[String, int]` (per-choice
+delta). PR and CS stay at +3 by entry value; Apostate is +2.
+`_on_choice_selected` now reads `int(OFFSCRIPT_CHOICE_TEXTS[text])`.
+Doubt source label changed from `&"offscript_why_taken"` (PR-
+specific) to `&"offscript_choice"` (generic). Stale documentary
+comment in `polite_refuser_v1.dtl` updated to reflect the new
+shape — this is the only PR-content touch and is annotation-only,
+no dialogue text changed. STATUS's "T1 brittleness — still text-
+keyed" tightening target remains open (the magnitude is now data,
+but the lookup is still string-equal).
+
+**Files created (5):**
+- `data/householders/apostate_wounded.tres`
+- `data/dialogues/characters/apostate_wounded.dch`
+- `data/dialogues/apostate_wounded_v1.dtl` (DRAFT PENDING)
+- `assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn`
+- `assets/sprites/portraits/apostate_wounded/placeholder_portrait.gd`
+
+**Files modified (4):**
+- `scripts/systems/territory_manager.gd` — `HOUSEHOLDER_PATHS` +
+  `DISTRIBUTION[6]` flip from `&"polite_refuser"` to `&"apostate_wounded"`.
+- `scripts/ui/door_knock.gd` — registry refactor + new entry.
+- `project.godot` — Dialogic dch_directory + dtl_directory.
+- `data/dialogues/polite_refuser_v1.dtl` — documentary comment
+  update only (no dialogue change).
+
+**Verification status:** Headless `godot --headless --check-only`
+ran without error output (exit 0) but was slow due to the editor
+holding the project simultaneously, so I'm treating it as
+inconclusive rather than fully clean. Andrew's gate playtest
+(Phase 4) covers the rest: traverse all three terminal branches at
+House #7, confirm off-script disabled when doubt < 35, verify
+doubt deltas fire as +3 REFUSED / +2 TRACT_LEFT / +2 extra
+off-script, confirm reveal-40 fires the next door if doubt
+crossed 40 during the encounter.
+
+**Silent-decisions audit (Phase 0):** No undiscovered silent
+decisions surfaced beyond the OFFSCRIPT_CHOICE_TEXTS hardcoded
++3 (which became Q5's deviation). `_resolve_doubt_delta`,
+reveal-40 chain, and the `Householder` schema were all confirmed
+inert for Apostate work — the mechanism was already in place from
+M4.1, just not exercised.
+
+## M4.3 Phase 3 — dialogue subagent pass complete
+
+All seven `[DRAFT PENDING — …]` placeholders in
+`apostate_wounded_v1.dtl` replaced with final line text. Structure,
+branch logic, choice gating, portrait beats, and off-script
+registry text all untouched per the goop-character skill's Phase 3
+contract. Off-script choice text "I'm sorry that happened to you."
+matches the registry exactly (door_knock.gd line 49) so T1 +2
+still fires. Five exchanges written total (E1 publisher + E1
+householder + E2 recognition + E3 grief + the three E4 closes);
+three outcomes reachable across the branches as planned (E4a
+REFUSED, E4b TRACT_LEFT, E4c REFUSED via off-script).
+
+**Subagent interpretation locked into the file:** Wounded Apostate
+is a woman in her early-to-mid 40s, born-in, disfellowshipped ~5
+years ago, opens the door tired and unrehearsed. The E2 "tell" is
+"…That's the public Lighthouse, isn't it." — the *public-vs-study
+edition* distinction is the precise piece of org vocabulary only
+an ex-member tracks. The E3 grief line names the mother
+specifically, with elapsed time ("It's been almost five years.")
+sitting in the sentence. The E4c off-script response is a broken
+doubled "Thank you" with an aborted thought between, intended to
+read as receipt-without-script rather than grateful-as-performance.
+
+**# UNSURE flags embedded for Andrew's playtest review (4 total):**
+- **E2 — public Lighthouse tell**: assumes the publisher's pre-folded
+  magazine is visible at the door (per dialogue-context.md § 10).
+  Re-check once door_knock background art lands; if no magazine
+  in-frame, the tell loses one beat of evidentiary weight but still
+  reads.
+- **E3 — "almost five years"**: picked five for fact-not-fresh-wound
+  texture. Three or seven both defensible; revisit when M4.4 Hostile
+  + Gentle variants land so the three Apostates' time-since-leaving
+  reads as varied rather than coincidental.
+- **E3 — mother specifically**: per cast.md § 6.6 canonical sample.
+  If M4.4 ships sibling-cost or whole-congregation-cost framing on
+  Hostile or Gentle, keeping mother on Wounded reads as the deepest
+  version. If all three name mother, within-archetype variety
+  collapses — fold this into M4.4's voice planning. (Mirrored into
+  the M4.4 entry in "Next session (queued)" above.)
+- **E4a — "You take care" register**: sits adjacent to the Polite
+  Refuser's "you have a good one" relief close. Intended to land
+  knowingly (former publisher → publishers) rather than as warmth.
+  If it reads warm during playtest, the file note suggests
+  "Yeah. …Okay. Go on, then." as a flatter swap.
+- **E4c — doubled "Thank you"**: deepest call in the pass and the
+  one with the most risk. Read 1 (intended): broken receipt, she
+  has no script for being acknowledged at her doorstep. Read 2
+  (risk): grateful-as-performance, which dialogue-context.md § 8
+  warns against. File note documents the trim options
+  ("Oh. — …Thank you." or "Oh. — …Yeah.") for one-line softening
+  during playtest if needed.
+
+**Structural concerns surfaced (flagged for Phase 4, not fixed in
+Phase 3):**
+- The Wounded Apostate's E1 opener is the same generic pitch line
+  as Polite Refuser's E1 ("Good morning. We're sharing a brief
+  encouraging message from the Bible today."). Intentional — the
+  recognition is hers to deliver in E2, so the publisher should
+  not telegraph anything in E1. But if a player runs three doors
+  in a row that all open with the identical pitch verbatim, it
+  will read as copy-paste. M4.4 / M4.6 line-pool variation work
+  resolves this naturally; flagging now in case it surfaces
+  during the M4.3 playtest before that work lands.
+- The `[end_timeline]` is present on every branch and the
+  `[signal arg="..."]` immediately precedes it on each — the
+  structure parses cleanly by inspection but headless
+  `godot --headless --check-only` not re-run this session
+  (Phase 3 is content-only, no structural edits). Phase 4
+  playtest validates the parse and the branch reachability.
 
 ## Current milestone
 
@@ -726,20 +1435,19 @@ session reveals an issue.
 
 ## Roadmap after M4-LF1
 
-- **M4.3 — The Apostate (NEXT).** See "Next session (queued)" above.
-  Dedicated session
-  per the skill's special-case clause. New +doubt-on-REFUSED code path is the
-  next mechanic addition. With M4.1's `doubt_delta_overrides`
-  field already in place, Apostate-specific deltas live in
-  `data/householders/apostate.tres` (or three variants:
-  `apostate_hostile.tres`, `apostate_wounded.tres`,
-  `apostate_gentle.tres` per cast.md § 6.6). The +doubt-on-
-  positive-outcome semantic does need a small mechanism beyond
-  the overlay — likely a per-archetype "positive outcomes also
-  cost N" flag, or full custom deltas including positive ones
-  (`{"REFUSED": 4, "TRACT_LEFT": 3, ...}`). Surface in M4.3
-  Phase 1.
-- **M4.4 — Within-archetype variety + remaining archetypes.**
+- **M4.3 — The Apostate (Wounded variant): Phases 0–2 shipped.**
+  See "M4.3 — The Apostate (Wounded variant): Phases 0–2 complete"
+  above. Next up: Phase 3 dialogue subagent pass (DRAFT PENDING
+  placeholders → final line text in `apostate_wounded_v1.dtl`).
+  Then Phase 4 (Andrew playtest at House #7) and Phase 5 (this
+  STATUS, already updated). The "+doubt on positive outcomes"
+  mechanic shipped as Option A (extend `doubt_delta_overrides` per
+  outcome, zero schema change). Hostile + Gentle variants queue
+  for M4.4.
+- **M4.4 — Hostile + Gentle Apostate variants + within-archetype
+  variety + remaining archetypes.** Hostile and Gentle Apostate
+  variants take priority; calibration questions in "Next session
+  (queued)" block. Pre-existing M4.4 scope still in play:
   User-deferred from M4.1 (asked "why not multiple PR characters?";
   answered "scope was archetype variety, not within-archetype").
   Scope: (A) 3 cosmetic Polite Refuser .dch variants + .tres
@@ -753,11 +1461,11 @@ session reveals an issue.
 
 ## Open / deferred for next session
 
-- **M4.3 — The Apostate.** Highest priority next session. Three
-  variants per cast.md § 6.6 (Hostile / Wounded / Gentle). Doubt deltas
-  calibration-sensitive — surface in Phase 1. House #7 in Maple Street
-  is the reserved slot; it currently renders Polite Refuser as
-  placeholder per `territory_manager.gd::DISTRIBUTION`.
+- **M4.3 Phase 3 — Wounded Apostate dialogue subagent pass.**
+  Highest priority next session. See "Next session (queued)"
+  above. Wounded variant structural ship is done; Phase 3 fills
+  `[DRAFT PENDING — …]` placeholders in `apostate_wounded_v1.dtl`
+  with final line text per the goop-character skill template.
 - **M4-LF1 visual gate playtest** — see "Gate verification" above.
   Andrew opens the editor, plays a Saturday, walks the checklist.
 - **Three `# UNSURE` flags from M4.2** in `curious_seeker_v1.dtl`

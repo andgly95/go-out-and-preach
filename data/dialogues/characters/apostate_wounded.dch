@@ -1,0 +1,45 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.62, 0.66, 0.72, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "tired",
+&"description": "Apostate (Wounded variant). M4.3 structural placeholder — dialogue subagent fills line text in a separate session.",
+&"display_name": "Householder",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"grief": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn"
+},
+"quiet_resignation": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn"
+},
+"recognition": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn"
+},
+"tired": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn"
+},
+"wounded_acceptance": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/apostate_wounded/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}

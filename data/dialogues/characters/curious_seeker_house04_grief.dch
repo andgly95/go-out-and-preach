@@ -9,7 +9,7 @@
 "style": ""
 },
 &"default_portrait": "neutral",
-&"description": "Curious Seeker archetype. M4.1 structural placeholder — dialogue subagent fills line text in M4.2.",
+&"description": "M4.6+ — House #4 Curious Seeker (grief flavor per cast.md § 6.2.1). M4.2 dialogue canonical. Sage greenish-grey tint.",
 &"display_name": "Householder",
 &"mirror": false,
 &"nicknames": [],
@@ -18,27 +18,27 @@
 "considering": {
 "image": "",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/curious_seeker/placeholder_portrait.tscn"
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
 "genuine_question": {
 "image": "",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/curious_seeker/placeholder_portrait.tscn"
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
 "interested_lean_in": {
 "image": "",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/curious_seeker/placeholder_portrait.tscn"
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
 "neutral": {
 "image": "",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/curious_seeker/placeholder_portrait.tscn"
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 },
 "warm_thank_you": {
 "image": "",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/curious_seeker/placeholder_portrait.tscn"
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
 }
 },
 &"scale": 1.0
