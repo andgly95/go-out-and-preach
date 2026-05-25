@@ -1,0 +1,31 @@
+# Public Talk — coordinator v1 (M5.3, pool entry 1 of 3).
+#
+# Speaker: elder_coordinator (cast.md § 4.1, Coordinator of Elders).
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"public_talk", &"coordinator_pt_v1").
+#
+# Pool: this is one of three Public Talk speeches in
+# MeetingManager.TALK_TYPE_TO_SPEECH_POOL[&"public_talk"]. Last-played
+# exclusion (MeetingManager.pick_speech_for) prevents consecutive Sundays
+# repeating verbatim. The three Public Talks share the Coordinator's warm-
+# patriarchal register (cast.md § 4.1) but cover distinct themes; see _v2 /
+# _v3 in this directory for the other two entries.
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at a hand-
+# authored beat between pages 2 and 3, landing as a private thought
+# catching on something just said — not commentary on the speaker.
+
+join elder_coordinator (neutral) at center
+
+elder_coordinator (neutral): Good morning, brothers and sisters. It's a real joy to see all the friends here this morning. Our theme today comes from a thought at John 13:35 — that by the love among us, all will know who we belong to. I want us to sit with that, just for a moment, before we go any further.
+
+elder_coordinator (neutral): I was thinking this week about Sister Marin — many of you know her. Her car wouldn't start Thursday morning and within an hour there were three brothers in her driveway. She didn't have to call anyone. That's what we mean by the love among the friends. It isn't something we work up. It's something the spirit produces, quietly, in a people who have stopped living for themselves.
+
+if DoubtMeter.value >= 40:
+	[i]Three brothers in her driveway. You wonder who would be in yours.[/i]
+
+elder_coordinator (neutral): So as you go through your week, brothers and sisters — at work, at school, in the territory — consider how you might be that quiet answer for someone here. A phone call. A ride to the Hall. A note in the mail. These are not small things. As Paul reminded the Hebrews, we are not to forsake the gathering of ourselves together, but to encourage one another, and so much the more as we see the day approaching. Have a blessed Sunday.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

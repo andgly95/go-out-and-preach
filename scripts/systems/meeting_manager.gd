@@ -36,13 +36,14 @@ const TALK_TYPE_TO_SPEAKER: Dictionary = {
 	&"midweek_training": &"elder_coordinator",
 }
 
-# Speech pool per talk type — v1 ships one placeholder each. M5.3 expands
-# each to 3 speeches authored by dialogue subagent sessions. Slugs match
-# .dtl basenames; full paths derived via _path_for_slug below.
+# Speech pool per talk type — M5.3 expanded each pool to 3 speeches authored
+# by the dialogue subagent. Slugs match .dtl basenames; full paths derived
+# via get_speech_path below. pick_speech_for applies last-played exclusion
+# so consecutive same-type meetings don't repeat verbatim.
 const TALK_TYPE_TO_SPEECH_POOL: Dictionary = {
-	&"public_talk":      [&"placeholder_pt_v1"],
-	&"lighthouse_study": [&"placeholder_ls_v1"],
-	&"midweek_training": [&"placeholder_mw_v1"],
+	&"public_talk":      [&"coordinator_pt_v1", &"coordinator_pt_v2", &"coordinator_pt_v3"],
+	&"lighthouse_study": [&"strict_ls_v1",      &"strict_ls_v2",      &"strict_ls_v3"],
+	&"midweek_training": [&"coordinator_mw_v1", &"coordinator_mw_v2", &"coordinator_mw_v3"],
 }
 
 # Per-talk effects fired on talk_completed (Phase 1.5 Q6).
@@ -81,45 +82,45 @@ const SEAT_NEIGHBORS: Dictionary = {
 # passes rewrite to authentic voice per cast.md.
 const SOCIAL_MOMENT_OPTIONS: Dictionary = {
 	&"service_partner": {
-		"prompt": "Your service partner saved you the seat. They smile when you slide in.",
+		"prompt": "Your service partner slides over to make room. \"Saved you a spot. Long week, huh?\"",
 		"choices": [
-			{"label": "Smile back, say hello.", "standing_type": &"congregation", "standing_delta": 1},
-			{"label": "Nod and open the songbook.", "standing_type": &"congregation", "standing_delta": 0},
+			{"label": "\"Yeah. Glad to be here.\"", "standing_type": &"congregation", "standing_delta": 1},
+			{"label": "Half-smile and reach for the songbook.", "standing_type": &"congregation", "standing_delta": 0},
 		],
 	},
 	&"sister_who_talks": {
-		"prompt": "The Sister Who Talks leans over before you've settled. \"Did you hear about Brother Phillips?\"",
+		"prompt": "She leans in before you've even set your bag down. \"Oh — I just want to say, did you hear about Brother Phillips? Such a sweet brother, but —\"",
 		"choices": [
-			{"label": "Listen warmly — \"What's going on?\"", "standing_type": &"congregation", "standing_delta": 1},
-			{"label": "Smile, then look down at your bag.", "standing_type": &"congregation", "standing_delta": 0},
+			{"label": "\"What's going on with him?\"", "standing_type": &"congregation", "standing_delta": 1},
+			{"label": "\"Maybe after the meeting, sister.\"", "standing_type": &"congregation", "standing_delta": 0},
 		],
 	},
 	&"strict_elder_wife": {
-		"prompt": "The Strict Elder's wife sits very still beside you. She doesn't look over.",
+		"prompt": "The Strict Elder's wife sits straight-backed in the seat beside you, songbook already open. She doesn't turn her head.",
 		"choices": [
-			{"label": "Greet her quietly — \"Good morning, sister.\"", "standing_type": &"elders", "standing_delta": 1},
-			{"label": "Leave the silence as it is.", "standing_type": &"elders", "standing_delta": 0},
+			{"label": "\"Good morning, Sister Whitcomb.\"", "standing_type": &"elders", "standing_delta": 1},
+			{"label": "Open your own songbook and let her be.", "standing_type": &"elders", "standing_delta": 0},
 		],
 	},
 	&"lonely_elderly": {
-		"prompt": "The elderly sister beside you reaches for her songbook with a small effort.",
+		"prompt": "The elderly sister beside you is thumbing through her songbook, lost. \"Now what number was it again, dear?\"",
 		"choices": [
-			{"label": "Find the page for her.", "standing_type": &"congregation", "standing_delta": 1},
-			{"label": "Open your own and wait.", "standing_type": &"congregation", "standing_delta": 0},
+			{"label": "\"Song 47 — here, let me show you.\"", "standing_type": &"congregation", "standing_delta": 1},
+			{"label": "Smile, find your own page.", "standing_type": &"congregation", "standing_delta": 0},
 		],
 	},
 	&"parent_in_truth": {
-		"prompt": "Your parent in the Truth catches your eye from across the row. They look pleased to see you.",
+		"prompt": "Your parent in the Truth catches your eye from down the row. They mouth \"we love you\" and tap the seat between them — but it's already taken.",
 		"choices": [
-			{"label": "Smile and mouth \"good morning.\"", "standing_type": &"family", "standing_delta": 1},
-			{"label": "Nod and turn forward.", "standing_type": &"family", "standing_delta": 0},
+			{"label": "Smile back and mouth \"love you too.\"", "standing_type": &"family", "standing_delta": 1},
+			{"label": "Nod once and face the platform.", "standing_type": &"family", "standing_delta": 0},
 		],
 	},
 	&"sit_alone": {
-		"prompt": "The back row is mostly empty. You can hear the air handler.",
+		"prompt": "The back row is mostly empty. You can hear the air handler running, and someone's cough two rows up.",
 		"choices": [
-			{"label": "Settle in and breathe.", "standing_type": &"congregation", "standing_delta": 0},
-			{"label": "Glance forward — see who's here.", "standing_type": &"congregation", "standing_delta": 0},
+			{"label": "Settle in. Breathe.", "standing_type": &"congregation", "standing_delta": 0},
+			{"label": "Glance forward — see who came.", "standing_type": &"congregation", "standing_delta": 0},
 		],
 	},
 }

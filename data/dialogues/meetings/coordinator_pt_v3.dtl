@@ -1,0 +1,30 @@
+# Public Talk — coordinator v3 (M5.3, pool entry 3 of 3).
+#
+# Speaker: elder_coordinator (cast.md § 4.1, Coordinator of Elders).
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"public_talk", &"coordinator_pt_v3").
+#
+# Pool: this is one of three Public Talk speeches in
+# MeetingManager.TALK_TYPE_TO_SPEECH_POOL[&"public_talk"]. Theme distinct
+# from _v1 and _v2. Register: warm-patriarchal per cast.md § 4.1; the
+# Coordinator never raises his voice, never threatens, never loses
+# composure. He reframes, gently.
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at a hand-
+# authored beat between pages 2 and 3, landing as a private thought
+# catching on something just said — not commentary on the speaker.
+
+join elder_coordinator (neutral) at center
+
+elder_coordinator (neutral): Good morning, brothers and sisters. I want to speak this morning to the young ones especially — though I think this lands for all of us. Our theme is one we sometimes call "making the truth your own." It's the idea Paul touched at Romans 12:2 — that we test for ourselves what the good and acceptable and complete will of God is.
+
+elder_coordinator (neutral): Now, many of you here today were brought into the Truth by parents who loved you. That's a precious thing. But there comes a moment — and you'll know it when it arrives — when the Truth has to stop being your mother's, or your father's, or this Hall's. It has to become yours. Have you thought about that? It isn't a crisis. It's a quiet handing-over. The day you choose this for the same reasons they did, only because you've sat with them and found them true.
+
+if DoubtMeter.value >= 40:
+	[i]A quiet handing-over. You aren't sure when yours happened, or if it has.[/i]
+
+elder_coordinator (neutral): So this week, brothers and sisters, I'd encourage you to ask yourself one small question. Why is this mine? Sit with it. Don't rush the answer. The friends here are not going anywhere; we'll still be in this room next Sunday. And as Joshua said to the people, choose for yourselves whom you will serve. The choosing is the gift. Have a blessed day.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

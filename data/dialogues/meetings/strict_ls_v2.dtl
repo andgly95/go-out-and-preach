@@ -1,0 +1,30 @@
+# Lighthouse Study — strict v2 (M5.3, pool entry 2 of 3).
+#
+# Speaker: elder_strict (cast.md § 4.2, Strict Elder). Voice is paragraph-
+# by-paragraph rigorous, scripture-with-citations, no small talk.
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"lighthouse_study", &"strict_ls_v2").
+#
+# Pool: one of three Lighthouse Study speeches. Paragraph topic distinct
+# from _v1 and _v3. Register: clipped-doctrinal, "consider the principle,"
+# direct eye contact, slight emphasis on words like "submission" and
+# "spiritual cleanliness" per cast.md § 4.2.
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at a hand-
+# authored beat between paragraph callouts. The Strict Elder's register
+# tends to provoke sharper inner monologue than the Coordinator's warmth.
+
+join elder_strict (neutral) at center
+
+elder_strict (neutral): Paragraph one. The question reads: "How does proper submission to the theocratic arrangement protect the congregation?" The answer is straightforward. Submission is how a body of believers stays one body. Without it, we are individuals with opinions, not Jehovah's people.
+
+elder_strict (neutral): Paragraph two. Read Hebrews 13:17. "Be obedient to those who are taking the lead among you, and be submissive." Note the apostle does not write — be submissive when you happen to agree. He writes — be submissive. The brothers who take the lead will give an account to Jehovah for the souls in their care. That is not a light weight. The friends help carry it by not adding their own resistance to the load.
+
+if DoubtMeter.value >= 40:
+	[i]"When you happen to agree." You catch on the word. The paragraph does not let you keep it.[/i]
+
+elder_strict (neutral): Paragraph three. Consider the principle at Numbers 12. Miriam questioned Moses — privately, to her brother. Jehovah did not consider it a private matter. The arrangement matters because Jehovah established it. If you find yourself wanting to push back against counsel from the brothers, the question is not whether you are right. The question is whether you have submitted. The two are not the same.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

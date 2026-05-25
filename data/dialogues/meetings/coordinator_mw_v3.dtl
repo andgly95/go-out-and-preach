@@ -1,0 +1,30 @@
+# Midweek Training — coordinator v3 (M5.3, pool entry 3 of 3).
+#
+# Speaker: elder_coordinator (cast.md § 4.1). Midweek register is
+# instructional/ministry-training rather than warm-gathering — same voice
+# but tuned for practical application.
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"midweek_training", &"coordinator_mw_v3").
+#
+# Pool: one of three Midweek Training speeches. Practical-application
+# content distinct from _v1 and _v2. Voice anchor: same Coordinator
+# but with the instructional register that fits Tuesday-night training
+# rather than Sunday-morning gathering.
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at the page-2
+# beat.
+
+join elder_coordinator (neutral) at center
+
+elder_coordinator (neutral): Good evening, brothers and sisters. Tonight's part addresses something many of us hope for and few of us have the practice of: starting a Bible study from a magazine call. The honest truth is that most of our magazine offers end at the door. But sometimes — and not as rarely as you'd think — the householder hands you the opening, and the question is whether you take it.
+
+elder_coordinator (neutral): Here's the demonstration. Brother Wen at house number — well, he won't mind me telling it — number twenty-eight on Cedar last spring. He offered the *Lighthouse* article on family. The householder said, "Funny, my husband and I were just talking about this last night." Now, the trained instinct is to launch into the article. Brother Wen didn't. He simply asked, "Would the two of you be willing to look at this together for half an hour next week, just to see if it's useful?" That's the question. Notice how small it is. Half an hour. Just to see. The yes was easy because the ask was easy.
+
+if DoubtMeter.value >= 40:
+	[i]The yes was easy because the ask was easy. You wonder which of your yeses were like that.[/i]
+
+elder_coordinator (neutral): So this week, brothers and sisters, the practice is this: when the householder offers you an opening, make the next step small. Smaller than feels right. You might consider phrasing it the way Brother Wen did. The Bible study begins long before anyone calls it that. Have a good evening, and we'll be praying for the work this Saturday.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

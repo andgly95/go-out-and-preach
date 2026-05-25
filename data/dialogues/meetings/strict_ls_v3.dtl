@@ -1,0 +1,30 @@
+# Lighthouse Study — strict v3 (M5.3, pool entry 3 of 3).
+#
+# Speaker: elder_strict (cast.md § 4.2, Strict Elder). Voice is paragraph-
+# by-paragraph rigorous, scripture-with-citations, no small talk.
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"lighthouse_study", &"strict_ls_v3").
+#
+# Pool: one of three Lighthouse Study speeches. Paragraph topic distinct
+# from _v1 and _v2. Same clipped-doctrinal register; the elder doesn't
+# joke, doesn't soften, doesn't show weakness or admit doubt
+# (cast.md § 4.2).
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at a hand-
+# authored beat between paragraph callouts. The Strict Elder's register
+# tends to provoke sharper inner monologue than the Coordinator's warmth.
+
+join elder_strict (neutral) at center
+
+elder_strict (neutral): Paragraph one. The question reads: "What does faithful endurance under trial require of us?" The answer is endurance, not escape. The Christian is not promised a life without trial. The Christian is promised the strength to stand through one.
+
+elder_strict (neutral): Paragraph two. Read James 1:12. "Happy is the man who keeps on enduring trial, because on becoming approved he will receive the crown of life." Note the word — approved. There is a testing here. The trial is not punishment. The trial is the means by which Jehovah sees who his people are. Job did not understand his trial in the moment. He endured it anyway. That is the example.
+
+if DoubtMeter.value >= 40:
+	[i]Job did not understand. You wonder if "did not understand" is the same as "was not told."[/i]
+
+elder_strict (neutral): Paragraph three. The application is direct. When a hardship comes — and one is coming for each of us; that is the nature of this system — the question is not whether you feel strong. The question is whether you remain at the meetings, in the ministry, with the friends. Consider the principle at 1 Corinthians 10:13. Jehovah will not let you be tried beyond what you can bear. He will. You can rely on it. The brothers are confident in that.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

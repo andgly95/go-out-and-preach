@@ -1,0 +1,33 @@
+# Midweek Training — coordinator v2 (M5.3, pool entry 2 of 3).
+#
+# Speaker: elder_coordinator (cast.md § 4.1). Midweek register is
+# instructional/ministry-training rather than warm-gathering — same voice
+# but tuned for practical application.
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"midweek_training", &"coordinator_mw_v2").
+#
+# Pool: one of three Midweek Training speeches. Practical-application
+# content distinct from _v1 and _v3 (e.g., the three could cover: a
+# specific door scenario, a return-visit follow-up, a Bible study
+# starting beat). Voice anchor: warm-patriarchal but in a ministry-
+# training register — "you might find," "consider how the brothers
+# at..."
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at the page-2
+# beat. Midweek's practical-application cadence makes the inner voice
+# land differently than Sunday's worship register.
+
+join elder_coordinator (neutral) at center
+
+elder_coordinator (neutral): Good evening, brothers and sisters. Tonight we want to think about the return visit — that second knock on a door where, the first time, the householder showed a little interest. The temptation is to overprepare the second visit. To bring a full presentation, three scriptures, the works. You might find that's not what's wanted.
+
+elder_coordinator (neutral): Sister Hadley shared something with me that I thought was lovely. She had a woman accept a magazine three Saturdays ago — just took it, said thank you. Sister Hadley went back the next week with no presentation at all. She just asked, "I left this with you last week — did you have a chance to look at the article on suffering?" That was it. The woman had read it. She had questions. The conversation was twenty minutes long, on the porch, because Sister Hadley let the householder bring the next step instead of bringing it herself.
+
+if DoubtMeter.value >= 40:
+	[i]Let the householder bring the next step. You wonder, briefly, who lets you bring yours.[/i]
+
+elder_coordinator (neutral): So this Saturday, brothers and sisters, if you have a return visit on your list, go light. Bring the magazine. Bring a smile. Bring one question. The conversation belongs to Jehovah; we're only there for it. As Paul wrote to the Corinthians, we plant, we water — God makes it grow. Have a good evening, friends.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]

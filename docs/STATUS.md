@@ -1,34 +1,222 @@
 # STATUS
 
-Last updated: 2026-05-24 (M5.0–M5.2 ship; M5.3 dialogue queue scoped)
+Last updated: 2026-05-25 (M5.3 ship; gate playtest of M5.0–M5.3 pending Andrew)
 
 ## Next session (queued)
 
-**M5.3 — 9-speech dialogue subagent pool.** Replace the three
-`[DRAFT PENDING]` placeholder .dtl files with the full v1 speech
-pool: 3 Public Talk speeches (Coordinator), 3 Lighthouse Study
-speeches (Strict Elder), 3 Midweek Training speeches (Coordinator).
-Plus the 9 hand-authored inner-voice lines that fire on
-`DoubtMeter.value >= 40` (one per .dtl). Per the goop-character
-one-voice-per-session rule, this is ~6–9 subagent sessions
-(Coordinator gets 6 speeches across 2 talk types; one session per
-speech keeps voice fresh, or batch by talk type for tighter
-coherence). Voice-ground in cast.md § 4.1 (Coordinator) and § 4.2
-(Strict Elder); CLAUDE.md legal guardrails (no lifted real-
-publication text, Society-of-the-Truth vocabulary throughout).
-
-After M5.3 lands, three .dtl pools become 3-entry each, and
-`MeetingManager.pick_speech_for()` last-played exclusion starts
-producing observable variety — confirm consecutive Sundays don't
-repeat verbatim. Also rewrite the 6 placeholder social-moment
-prompt strings in `MeetingManager.SOCIAL_MOMENT_OPTIONS` per the
-neighbor identities (Service Partner, Sister Who Talks, Strict
-Elder's wife, Lonely Elderly, Parent in the Truth, sit-alone) —
-v1 ships authored-by-Claude placeholder copy that should be
-sharpened in M5.3 alongside the elder speeches.
+**M5.0–M5.3 gate playtest (Andrew).** With M5.3 content now landed,
+the M5.0–M5.2 11-item checklist (see "Phase 3 gate playtest" below)
+finally has real text to read at every step. Two added items for
+M5.3 specifically: (1) attend three consecutive Sundays and confirm
+the PT pool rotates (last-played exclusion produces observable
+variety); (2) push doubt ≥ 40 via debug, attend a meeting of each
+type, and confirm the italic inner-voice line lands at the page-2
+beat (Coordinator soft, Strict Elder sharper per cast.md § 4.1 vs
+§ 4.2). Subagent's content concerns to evaluate during playtest are
+listed in the M5.3 ship section below.
 
 **M4.4 — Hostile + Gentle Apostate variants.** Still deferred
-below M5.3 per user direction (carry forward).
+below M5 gate playtest per user direction (carry forward).
+
+## M5.3 — 9-speech v1 dialogue pool + social-moment rewrites: complete (headless boot clean; gate playtest pending Andrew)
+
+Single-pass content milestone. Three `placeholder_*_v1.dtl` files
+renamed to speaker-prefixed slugs, six new `_v2` / `_v3` entries
+written for the same pools, and a single dialogue subagent session
+authored all 9 speeches plus the 6 `SOCIAL_MOMENT_OPTIONS` prompt +
+choice strings. M5.0–M5.2 scaffolding (page count, inner-voice
+gate, signal/end_timeline terminators, project.godot autoload
+order, MeetingManager taxonomy) is unchanged. Three-entry pools per
+talk type mean `MeetingManager.pick_speech_for()` last-played
+exclusion now produces observable variety — consecutive same-type
+meetings no longer repeat the same .dtl.
+
+**Phase 1 decisions locked (this session):**
+- **Q1.naming** — Speaker-prefixed rename. `git mv placeholder_pt_v1
+  → coordinator_pt_v1`, plus `strict_ls_v1` and `coordinator_mw_v1`.
+  Each pool grows from 1 entry to 3 entries (`_v1` / `_v2` / `_v3`).
+  Matches STATUS L13-15 expansion plan from M5.0; speaker visible
+  at the path level (useful when M5.4+ adds a visiting-speaker
+  variant in the PT pool — keeps the slug discoverable).
+- **Q1.repository** — One .dtl per speech. Matches the M4.6 per-
+  house .dtl pattern; `MeetingManager.pick_speech_for` last-played
+  exclusion stays slug-keyed.
+- **Q1.sessions** — Single subagent session for all 9 speeches. Soft
+  variance from the goop-character one-voice-per-session rule
+  (skill anti-pattern), accepted by user. The subagent kept the two
+  speakers' registers cleanly separate; Coordinator inner-voices
+  land soft and lonely, Strict Elder inner-voices catch on a
+  specific emphasized word.
+- **Q1.social** — Inline rewrite of `SOCIAL_MOMENT_OPTIONS` this
+  session, same subagent pass as the speeches (voice-grounding
+  loaded once).
+
+**Files renamed (6, via `git mv` to preserve history):**
+- `data/dialogues/meetings/placeholder_pt_v1.dtl` →
+  `coordinator_pt_v1.dtl` (+ `.uid`)
+- `data/dialogues/meetings/placeholder_ls_v1.dtl` →
+  `strict_ls_v1.dtl` (+ `.uid`)
+- `data/dialogues/meetings/placeholder_mw_v1.dtl` →
+  `coordinator_mw_v1.dtl` (+ `.uid`)
+
+**Files created (6):**
+- `coordinator_pt_v2.dtl`, `coordinator_pt_v3.dtl` — Public Talk
+  pool entries 2 and 3 (Coordinator).
+- `strict_ls_v2.dtl`, `strict_ls_v3.dtl` — Lighthouse Study pool
+  entries 2 and 3 (Strict Elder).
+- `coordinator_mw_v2.dtl`, `coordinator_mw_v3.dtl` — Midweek
+  Training pool entries 2 and 3 (Coordinator).
+
+**Files modified (2):**
+- `project.godot` — `dtl_directory`: removed 3 `placeholder_*`
+  entries, added 9 speaker-prefixed entries (alphabetized within
+  the meetings/ subdirectory).
+- `scripts/systems/meeting_manager.gd` — `TALK_TYPE_TO_SPEECH_POOL`
+  expanded from 1 entry per pool to 3; comment updated. 6
+  `SOCIAL_MOMENT_OPTIONS` `prompt` + `choices.label` strings
+  rewritten in neighbor-voice per cast.md (§§ 3.1, 4.4, 4.5, 6.3;
+  Strict Elder's wife inferred from § 4.2 orbit; sit-alone written
+  as environmental texture).
+
+**Files unchanged by intent (asserted):**
+- Structural scaffolding inside every .dtl: `join`, page count,
+  `if DoubtMeter.value >= 40:` block with tab-indented `[i]...[/i]`,
+  `[signal arg="TALK_COMPLETED"]`, `[end_timeline]`. Subagent did
+  not modify any of these.
+- `(neutral)` portrait expression on every elder line. The
+  placeholder portrait script (`_shared_placeholder/placeholder_portrait.gd`)
+  ships `EXPRESSION_BRIGHTNESS` covering only `neutral` for the
+  elders; adding expressions would have required script extension.
+- `SOCIAL_MOMENT_OPTIONS` dict shape: keys, `standing_type` values,
+  `standing_delta` integers. Only `prompt` and `choices.label`
+  strings changed.
+- `MeetingManager` resolution logic (`resolve_talk_completed`,
+  `resolve_meeting_completed`, `resolve_meeting_skipped`,
+  `pick_speech_for`). Pool expansion is data-only.
+- `meeting_hall.gd`, `signal_bus.gd`, `week_view.gd`,
+  `time_manager.gd`, `resource_manager.gd`, `doubt_meter.gd`,
+  `territory_manager.gd` — no edits.
+- Speaker .tres, .dch files — no edits. Coordinator's warm-gold
+  and Strict Elder's slate-grey tint colors carry M5.0 values.
+
+**Theme picks per speech pool (subagent):**
+- **Public Talks (Coordinator, Sunday morning gathering register):**
+  - v1 — love among the brotherhood (Sister Marin / three brothers
+    in her driveway illustration; John 13:35 + Hebrews encouragement-
+    close)
+  - v2 — enduring through the last days (Brother Halloran "the wait
+    has been the gift"; 2 Timothy 3 + Romans 8:25)
+  - v3 — making the truth your own (born-in to personal-conviction
+    handover; Romans 12:2 + Joshua "choose for yourselves")
+- **Lighthouse Studies (Strict Elder, clipped-doctrinal register):**
+  - v1 — spiritual cleanliness / separateness from the world
+    (1 Peter 1:15, 2 Cor 6:17, Psalm 101:3)
+  - v2 — submission to theocratic arrangement (Hebrews 13:17,
+    Numbers 12 Miriam)
+  - v3 — faithful endurance under trial (James 1:12, Job,
+    1 Corinthians 10:13)
+- **Midweek Trainings (Coordinator, ministry-training register):**
+  - v1 — handling a busy householder (Brother Adesina + woman with
+    baby; the thirty-second presentation as kindness)
+  - v2 — following up a return visit (Sister Hadley letting the
+    householder bring the next step; Paul "plant, water, increase")
+  - v3 — starting a Bible study from a magazine call (Brother Wen
+    at Cedar #28; "small ask = easy yes")
+
+**Inner-voice approach (subagent):** Coordinator inner-voices land
+soft and lonely — the warmth has already done its work and the
+inner thought lands as a quiet echo ("you wonder who would be in
+yours"; "Brother Halloran died last spring. He didn't see it";
+"you aren't sure when yours happened, or if it has"). Strict Elder
+inner-voices catch on a specific word the elder has just
+emphasized — the inner voice converts the elder's pressure into
+something the player can't unhear ("'When you happen to agree.'
+You catch on the word. The paragraph does not let you keep it";
+"'Did not understand' is the same as 'was not told'"). Midweek
+inner-voices land between worlds: practical-cadence outside, a
+small unsettling reframe inside ("you wonder, briefly, who lets
+you bring yours"; "You wonder which of your yeses were like
+that"). All 9 stay ambiguous and mundane per `internals/reveal_40
+.dtl`'s "a second on the porch you don't remember" register — no
+soapbox, observations not verdicts.
+
+**Subagent-flagged concerns to evaluate at gate playtest:**
+1. **`*Lighthouse*` asterisks in `coordinator_mw_v3.dtl` page 2.**
+   The subagent leaned on the dialogue-context.md / cast.md style
+   convention of italicizing publication names. Dialogic's BBCode
+   parser uses `[i]...[/i]`, not markdown asterisks, so the literal
+   `*Lighthouse*` may render as text rather than italics. Defect or
+   intentional emphasis — Andrew to confirm at playtest. Trivial
+   fix if it reads wrong: swap to `[i]Lighthouse[/i]` or drop the
+   emphasis entirely.
+2. **"Brother Phillips" name collision.** The Sister Who Talks
+   social-moment prompt uses "did you hear about Brother Phillips?"
+   as her gossip target; `coordinator_mw_v1.dtl` page 3 names
+   "Brother Phillips' at eight-thirty" as the Saturday service-
+   group host; and cast.md § 3.1 + the M5.0 STATUS playtest text
+   already use "Brother Phillips" as the Coordinator's first name.
+   Acceptable in-fiction (the Sister gossips about everyone, the
+   Coordinator hosts the group, the Coordinator's surname is
+   Phillips per existing canon). Flag in case Andrew wants the
+   Sister's gossip-target to be a non-elder name. Swap is a
+   one-line change to `SOCIAL_MOMENT_OPTIONS[&"sister_who_talks"]
+   .prompt`.
+3. **"Sister Whitcomb" naming consistency.** The Strict Elder's
+   wife social-moment names "Sister Whitcomb"; M5.0 STATUS gate
+   playtest text already uses "Brother Whitcomb" as the Strict
+   Elder. Pairing is intentional and reads cleanly; no fix needed.
+4. **Inner-voice click-through vs auto-fade overlay.** Subagent
+   wrote inner-voice lines at click-through cadence (the known v1
+   limitation from M5.0-M5.2 STATUS L224-229). If M5.4+ swaps to
+   the auto-fade overlay approach, the 9 inner-voice lines should
+   still land, but some may need to be ~5 words shorter for a
+   ~2-second fade.
+5. **No `# UNSURE` markers.** The subagent's quality bar held —
+   every line uses established Society-of-the-Truth vocabulary,
+   real Bible-book citations only (no real-WT publication
+   quotations), and cast.md-grounded register. If a playtest beat
+   feels off, the diff is small enough to surgically replace.
+6. **`tr()` localization not applied.** The 6 `SOCIAL_MOMENT_OPTIONS`
+   strings are inline string literals, matching the M5.0 scaffold.
+   CLAUDE.md convention is `tr()` wrapping for user-facing strings.
+   Out of M5.3 scope; should land in a future i18n pass when
+   localization is on the table.
+
+**Headless boot: clean.** `godot --headless --quit-after 4
+res://scenes/main_menu.tscn` exits at 0 with only the standard
+`--quit-after` cleanup warnings (ObjectDB leaked / 26 resources in
+use). Autoload chain clean; new dtl_directory entries register
+without parse error; MeetingManager pool dicts load. Note: .dtl
+content parse is lazy (deferred to `Dialogic.start()` at meeting-
+attend time) — boot check covers autoload registration only. Full
+content-parse validation happens at the gate playtest's first
+ATTEND THE MEETING click.
+
+**Phase 0 silent-decisions audit:** No undiscovered silent
+decisions surfaced from M5.0–M5.2. The "Single session for 9
+speeches across 2 voices" Phase 1 lock was flagged as a soft
+variance from the goop-character one-voice-per-session rule and
+proceeded under user direction; subagent's quality bar held.
+
+**Open unknowns surfaced for future milestones:**
+- **Speech-pool growth past v3.** With 3 entries per pool, last-
+  played exclusion produces 50% variety (next pick is one of the
+  two unplayed entries, uniform). Adding _v4 / _v5 increases
+  variety asymptotically. Cost-benefit revisit after M5 gate
+  playtest.
+- **Visiting-speaker pattern (GDD canon for PT variety).** Current
+  M5.3 pool has all 3 PT speeches delivered by the Coordinator. A
+  visiting-speaker .tres + .dch + .dtl triplet would naturally land
+  as a 4th PT entry; voice-anchor needs a cast.md addition (§ 1.x
+  expansion suggested in M5.0 STATUS).
+- **Per-meeting standing display.** The Standing-Family / Standing-
+  Congregation / Standing-Elders banner shows aggregate state.
+  Per-meeting feedback ("you gained +1 with the elders this
+  meeting") isn't surfaced; playtest may want a brief banner ping.
+- **Energy refill mid-meeting-day.** STATUS L227-235 already calls
+  this out; M5.3 doesn't change the mechanic. If playtest reads
+  that the meeting -1 should carry forward, that's the
+  `ResourceManager._on_day_advanced` change point.
 
 ## M5 — Hall of Witness meeting scenes: M5.0–M5.2 complete (headless boot clean; gate playtest pending Andrew)
 

@@ -47,18 +47,24 @@ directories/dch_directory={
 }
 directories/dtl_directory={
 "apostate_wounded_v1": "res://data/dialogues/apostate_wounded_v1.dtl",
+"coordinator_mw_v1": "res://data/dialogues/meetings/coordinator_mw_v1.dtl",
+"coordinator_mw_v2": "res://data/dialogues/meetings/coordinator_mw_v2.dtl",
+"coordinator_mw_v3": "res://data/dialogues/meetings/coordinator_mw_v3.dtl",
+"coordinator_pt_v1": "res://data/dialogues/meetings/coordinator_pt_v1.dtl",
+"coordinator_pt_v2": "res://data/dialogues/meetings/coordinator_pt_v2.dtl",
+"coordinator_pt_v3": "res://data/dialogues/meetings/coordinator_pt_v3.dtl",
 "curious_seeker_house04_grief_v1": "res://data/dialogues/curious_seeker_house04_grief_v1.dtl",
 "curious_seeker_house09_inquisitive_v1": "res://data/dialogues/curious_seeker_house09_inquisitive_v1.dtl",
-"placeholder_ls_v1": "res://data/dialogues/meetings/placeholder_ls_v1.dtl",
-"placeholder_mw_v1": "res://data/dialogues/meetings/placeholder_mw_v1.dtl",
-"placeholder_pt_v1": "res://data/dialogues/meetings/placeholder_pt_v1.dtl",
 "polite_refuser_house01_atheist_v1": "res://data/dialogues/polite_refuser_house01_atheist_v1.dtl",
 "polite_refuser_house03_jewish_v1": "res://data/dialogues/polite_refuser_house03_jewish_v1.dtl",
 "polite_refuser_house05_catholic_v1": "res://data/dialogues/polite_refuser_house05_catholic_v1.dtl",
 "polite_refuser_house08_gay_couple_v1": "res://data/dialogues/polite_refuser_house08_gay_couple_v1.dtl",
 "polite_refuser_house10_episcopalian_v1": "res://data/dialogues/polite_refuser_house10_episcopalian_v1.dtl",
 "polite_refuser_house12_atheist_v1": "res://data/dialogues/polite_refuser_house12_atheist_v1.dtl",
-"reveal_40": "res://data/dialogues/internals/reveal_40.dtl"
+"reveal_40": "res://data/dialogues/internals/reveal_40.dtl",
+"strict_ls_v1": "res://data/dialogues/meetings/strict_ls_v1.dtl",
+"strict_ls_v2": "res://data/dialogues/meetings/strict_ls_v2.dtl",
+"strict_ls_v3": "res://data/dialogues/meetings/strict_ls_v3.dtl"
 }
 layout/style_directory={}
 

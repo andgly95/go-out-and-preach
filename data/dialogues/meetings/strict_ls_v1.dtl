@@ -1,0 +1,31 @@
+# Lighthouse Study — strict v1 (M5.3, pool entry 1 of 3).
+#
+# Speaker: elder_strict (cast.md § 4.2, Strict Elder). Voice is paragraph-
+# by-paragraph rigorous, scripture-with-citations, no small talk.
+# Per-talk effects fire on [signal arg="TALK_COMPLETED"] via meeting_hall.gd
+# → MeetingManager.resolve_talk_completed(&"lighthouse_study", &"strict_ls_v1").
+#
+# Pool: one of three Lighthouse Study speeches in
+# MeetingManager.TALK_TYPE_TO_SPEECH_POOL[&"lighthouse_study"]. Last-played
+# exclusion picks among the three; see _v2 / _v3 for the other entries.
+# The Strict Elder's clipped-doctrinal register holds across all three;
+# the paragraph topic varies.
+#
+# Inner-voice gate (M5 Phase 1 Decision B): direct-read
+# DoubtMeter.value >= 40 inline conditional. One italic line at a hand-
+# authored beat between paragraph callouts. The Strict Elder's register
+# tends to provoke sharper inner monologue than the Coordinator's warmth.
+
+join elder_strict (neutral) at center
+
+elder_strict (neutral): Paragraph one. The question reads: "Why does Jehovah require that his people remain spiritually clean?" The answer is in the paragraph. Because the God we worship is himself clean, and a clean God does not dwell with a defiled people. Read 1 Peter 1:15. "Become holy yourselves in all your conduct."
+
+elder_strict (neutral): Paragraph two. Notice the brothers do not say "mostly clean." They say clean. The world around us makes a kind of peace with what is unclean — its entertainment, its conversation, its habits. The friends in the Truth cannot make that peace. As it says at 2 Corinthians 6:17, "Get out from among them and separate yourselves." The separation is not partial. It cannot be.
+
+if DoubtMeter.value >= 40:
+	[i]The separation is not partial. You count, quickly, the small things you have not gotten out from among.[/i]
+
+elder_strict (neutral): Paragraph three. The application is for each of us. Examine your music. Examine your friendships. Examine what you watch when no one is watching with you. Consider the principle at Psalm 101:3 — "I will not set before my eyes anything worthless." That is the standard. That has always been the standard. We do not lower it because the system grows louder. We hold it.
+
+[signal arg="TALK_COMPLETED"]
+[end_timeline]
