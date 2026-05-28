@@ -1,0 +1,45 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.62, 0.7, 0.58, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "warm",
+&"description": "Apostate (Gentle variant). M4.4 structural placeholder — warm-careful, congregation-loss, highest doubt-impact. Sage-pale tint via shared placeholder. The only Apostate variant that can reach RV_SCHEDULED. Dialogue subagent fills line text in a separate session.",
+&"display_name": "Householder",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"careful": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"knowing": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"releasing": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"seeing": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"warm": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}

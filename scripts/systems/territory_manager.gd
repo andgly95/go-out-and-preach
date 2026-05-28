@@ -41,9 +41,13 @@ const HOUSEHOLDER_PATHS: Dictionary = {
 	# pinned to its own character + voice sub-type per cast.md § 6.2.x.
 	&"curious_seeker_house04_grief":        "res://data/householders/curious_seeker_house04_grief.tres",
 	&"curious_seeker_house09_inquisitive":  "res://data/householders/curious_seeker_house09_inquisitive.tres",
-	# Hostile Slammer + Apostate — still shared template per archetype.
+	# Hostile Slammer — still shared template per archetype.
 	&"hostile_slammer":                     "res://data/householders/hostile_slammer.tres",
+	# Apostate — three variants (M4.4). House #7 sub-rolls between these
+	# on each knock via APOSTATE_SUB_WEIGHTS / APOSTATE_SUBTYPE_PATHS.
 	&"apostate_wounded":                    "res://data/householders/apostate_wounded.tres",
+	&"apostate_hostile":                    "res://data/householders/apostate_hostile.tres",
+	&"apostate_gentle":                     "res://data/householders/apostate_gentle.tres",
 }
 
 # Fixed layout for Maple Street. 4×3 grid, indexed left-to-right then
@@ -77,10 +81,10 @@ const FALLBACK_ARCHETYPE: StringName = &"polite_refuser_house05_catholic"
 const P_ANSWERED: float = 0.265
 
 # §4 Apostate sub-roll weights. Per encounter-distribution.md §4. Weights
-# sum to 1.0. v1 only ships the Wounded variant; the sub-roll is
-# scaffolding for M4.4 — all three variants map to apostate_wounded.tres
-# in APOSTATE_SUBTYPE_PATHS so observable behavior is "always Wounded"
-# until M4.4 swaps in real Hostile + Gentle resources.
+# sum to 1.0. M4.4 lands all three variants — House #7 sub-rolls Hostile
+# (40%), Wounded (35%), or Gentle (25%) on every knock. Per-knock variety
+# is the M4.4 calibration lock (the single Apostate house cycles across
+# variants; the M4.5 sub-roll mechanic does this each knock).
 const APOSTATE_SUB_WEIGHTS: Dictionary = {
 	&"hostile": 0.40,
 	&"wounded": 0.35,
@@ -88,9 +92,9 @@ const APOSTATE_SUB_WEIGHTS: Dictionary = {
 }
 
 const APOSTATE_SUBTYPE_PATHS: Dictionary = {
-	&"hostile": "res://data/householders/apostate_wounded.tres",  # M4.4 swap point
+	&"hostile": "res://data/householders/apostate_hostile.tres",
 	&"wounded": "res://data/householders/apostate_wounded.tres",
-	&"gentle":  "res://data/householders/apostate_wounded.tres",  # M4.4 swap point
+	&"gentle":  "res://data/householders/apostate_gentle.tres",
 }
 
 # Archetypes that trigger the §4 sub-roll on an answered door. Checked

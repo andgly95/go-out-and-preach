@@ -1,0 +1,203 @@
+# Apostate (Hostile variant) — door-knock conversation, v1 (M4.4 structural
+# placeholder). Branching, portraits, and outcome signals locked in this
+# session per the goop-character skill; line text is [DRAFT PENDING] until
+# the dialogue subagent runs in a separate session.
+#
+# INTERPRETATION (orchestrator, M4.4):
+#   The Hostile Apostate is a former member who is prepared for this
+#   conversation. The publishers are recognized immediately and the
+#   householder is direct about it — no warmth, no grief in the throat;
+#   confrontational, ready to push back. They are not cruel. They are
+#   tired of being approached by people who used to be their family
+#   and they have learned to stop the interaction quickly. Per cast.md
+#   § 6.6.1 Hostile variant.
+#
+# BRANCH TOPOLOGY (locked; line text DRAFT PENDING) — mirrors Wounded:
+#   E1   Publisher pitch (anonymous) → Hostile appears (alert)
+#   E2   Hostile names the recognition (direct, prepared)
+#   E3   Hostile names what happened (anger — disfellowshipped sibling)
+#          Choice 1 — "We're sorry to bother you."     → E4a REFUSED (de-escalate)
+#          Choice 2 — "Would you like a magazine?"     → E4b TRACT_LEFT (press)
+#          Choice 3 — "We — we don't have to."         → E4c REFUSED (off-script)
+#                     | [if DoubtMeter.value >= 30]
+#   E4a  Hostile (closing) — sharp brief close → [signal arg="REFUSED"]
+#   E4b  Hostile (dismissive) — accepts the tract dismissively → [signal arg="TRACT_LEFT"]
+#   E4c  Hostile (prepared) — deepest line in the timeline → [signal arg="REFUSED"]
+#
+# OUTCOMES emitted via [signal arg="..."]:
+#   REFUSED, TRACT_LEFT
+# door_knock.gd::_on_dialogic_signal maps these to House.State. No RV_SCHED
+# or BIBLE_STUDY from this door — Hostile gives no ground.
+#
+# DOUBT MECHANIC — Hostile is the sharpest per-outcome doubt spike of the
+# trio. doubt_delta_overrides (apostate_hostile.tres):
+#     REFUSED:    +5   (vs global +1)
+#     TRACT_LEFT: +3   (vs global -1 — net swing of +4)
+#   Off-script choice (E3 Choice 3) fires +3 via the per-choice delta
+#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS.
+#   Exposure ceiling per encounter: +8 (off-script + REFUSED).
+#
+# CHOICE 3 (off-script) is doubt-gated at ≥30 — lower than Wounded's ≥35 and
+# Gentle's ≥40. Hostile is the most-confrontational variant; the off-script
+# beat is the publisher *not* engaging the fight, which is reachable at
+# slightly lower doubt because it reads as the trained "de-escalate" reflex
+# turning into something honest. (Wounded's off-script is recognition of
+# grief, Gentle's is recognition of warmth — both require deeper doubt
+# to take.)
+#
+# COORDINATION (M4.4):
+#   The off-script choice text "We — we don't have to." must be
+#   registered in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 3.
+#
+# REVEAL-40 chain: standard generic chain. Same handling as Wounded.
+#
+# Mid-conversation exit (ESC / Walk-away button) is handled in door_knock.gd,
+# not here — it terminates the timeline and resolves REFUSED with the T2
+# walk-away delta only (does NOT apply the +5 REFUSED override).
+#
+# Publisher lines intentionally anonymous: scene is householder POV.
+#
+# arc_state branching is NOT wired into this .dtl — the per-knock sub-roll
+# (territory_manager APOSTATE_SUB_WEIGHTS) means House #7 may roll a
+# different variant on each knock, so "returning Hostile" is not a reliable
+# context. Single-content per variant matches Wounded's M4.3 pattern.
+
+join apostate_hostile (alert) at center
+
+# E1 — Publisher pitch. Anonymous publisher line, then the householder
+# answers. The "alert" portrait holds; Hostile sees the publishers and
+# is already on it.
+Good morning. We're sharing a brief encouraging message from the Bible today.
+apostate_hostile (alert): I'll save you the speech. I know who you are.
+# UNSURE: opens with the cast.md § 6.6.1 sample phrase verbatim ("I'll
+# save you the speech") because it's the cleanest first-beat tell — it
+# lands as *challenge* (not grief, not warmth) and is recognition without
+# yet naming the org. The follow-up "I know who you are" closes the
+# stutter that an "alert" portrait might otherwise allow; Hostile does
+# not stumble. Andrew to verify the verbatim lift from cast.md doesn't
+# read as too tidy — a slightly less stock version ("Save the speech.
+# I know what this is.") sits in reserve.
+
+# E2 — Hostile names the recognition. The "tell" — confrontational but
+# precise. The Hostile variant's tell lands as a challenge rather than
+# Wounded's grief or Gentle's care: "I know what you're going to say,"
+# "I used to be one of you, don't waste your time." Per cast.md § 6.6.1.
+update apostate_hostile (confrontational)
+apostate_hostile (confrontational): The Lighthouse, the bag, the partner two feet behind you. I used to be one of you. Don't waste your time on me.
+# UNSURE: stacks three concrete tells (publication name, the field-service
+# bag, the silent-partner posture from dialogue-context.md § 10) before
+# the cast.md sample phrase. The risk is that *three* items reads as a
+# list — Hostile measures in events, not inventories — but each item is
+# a thing only a former publisher notices, and stacking them is the
+# *prepared* texture (she has seen this configuration on her own porch
+# before and recognized it instantly). If it reads as showing off,
+# trim to two: "The Lighthouse and the partner two feet behind you."
+
+# E3 — Hostile names what happened. Per cast.md § 6.6.1 Hostile variant:
+# the named loss is a sibling who was disfellowshipped or who shunned
+# them. Concrete, specific. Anger drives the line — not raw rage, but
+# the prepared edge of someone who has rehearsed this in their head.
+update apostate_hostile (confrontational)
+apostate_hostile (confrontational): My sister walked past me at the grocery store last week. She has not looked at me since they appointed the elders who took her in. So no. No magazine, no study, no nothing.
+# UNSURE: sister, not brother. The grocery-store walk-past is lifted
+# straight from dialogue-context.md § 10 "Leaving" texture ("Someone you
+# considered close walks past you at a grocery store"); using it for a
+# sibling rather than a generic friend keeps Hostile's loss *named*. The
+# time-marker "since they appointed the elders who took her in" is an
+# *event*, not a duration — that's the Hostile/Wounded differentiator
+# per cast.md § 6.6.1 ("two years, since the assembly, since they
+# appointed the elders that took her in"). The closing "no magazine,
+# no study, no nothing" pre-empts all three publisher pitches in one
+# line — she has done this before. Risk: the triple-no reads as
+# rehearsed-to-camera. Counter-read: it *is* rehearsed; that's the
+# Hostile profile.
+# UNSURE: "the elders who took her in" assumes the player follows that
+# this means the elder body received the sister into the congregation
+# after the speaker left (or in connection with a disfellowshipping
+# committee). If the line reads ambiguous at playtest, swap to "since
+# the committee" or "since they took her side."
+
+# Publisher choice. Three options. Choice 3 is doubt-gated at ≥30.
+- We're sorry to bother you.
+	# E4a — De-escalation branch. The publisher backs off cleanly.
+	# Hostile's response is a sharp, brief close — not relief, not
+	# warmth. The conversation is ending on her terms.
+	# Routes to REFUSED. doubt_delta_overrides applies +5.
+	update apostate_hostile (closing)
+	apostate_hostile (closing): Good. Then go.
+	# UNSURE: two complete sentences, both terminal. "Good" reads as
+	# acknowledgment that the publisher backed down — not warmth, not
+	# relief. "Then go" is the half-turn from cast.md § 6.6.1 made
+	# verbal. Risk: lands as theater-villain curt. If so, soften to
+	# "Right. Go on." (tireder, less imperative) — but the imperative
+	# *is* the Hostile profile and that's why she's the +5 doubt
+	# variant: walking away from this knowing you were dismissed is
+	# the sharpest beat of the trio.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- Would you like a magazine?
+	# E4b — Tract branch. The publisher presses for the trained outcome.
+	# Hostile accepts dismissively — not the wound-in-acceptance Wounded
+	# does ("you can leave it"), but a curt "fine, leave it, now go."
+	# The wound is that the publisher doesn't see the dismissal for
+	# what it is — they record TRACT_LEFT and feel good about it.
+	# Routes to TRACT_LEFT. doubt_delta_overrides applies +3.
+	update apostate_hostile (dismissive)
+	apostate_hostile (dismissive): Fine. Hand it over. Now we're done.
+	# UNSURE: three sentences, each complete, each shorter than the
+	# last. "Fine" registers that the acceptance is concession, not
+	# kindness — Wounded's "you can leave it" is permission *extended*;
+	# Hostile's "Hand it over" is permission *demanded*. "Now we're
+	# done" stamps the close — the publisher does not get to leave on
+	# their own terms. Risk: "hand it over" lands as too physical /
+	# almost confrontational, when Hostile's anger is supposed to live
+	# in pace, not gesture. Alternative: "Fine. Leave it. We're done."
+	# (flatter, less imperative-physical, but loses the curtness).
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- We — we don't have to. | [if DoubtMeter.value >= 30] [else=disable alt_text=""]
+	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 30 (Hostile is the
+	# lowest gate of the trio because the off-script line here is
+	# de-escalation, not recognition of grief or warmth — easier to
+	# reach with less doubt accumulated).
+	#
+	# Per dialogue-context.md § 7, off-script lines should sound less
+	# polished and more present. "We — we don't have to" is the
+	# publisher catching herself in the trained pitch and stepping out
+	# of it. The trained de-escalation is "We're sorry to bother you"
+	# (Choice 1); the off-script version is shorter, more honest, more
+	# disarmed.
+	#
+	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
+	# against OFFSCRIPT_CHOICE_TEXTS. This choice fires +3. Off-script
+	# collapses to REFUSED — no tract is being offered, the moment is
+	# the publisher dropping the pitch.
+	#
+	# Hostile's response is the deepest line in the timeline. The anger
+	# may soften here or it may sharpen — subagent's call. Per
+	# dialogue-context.md § 8 "trust the player to notice" the line
+	# should not editorialize.
+	update apostate_hostile (prepared)
+	apostate_hostile (prepared): Don't do that. Don't come up here and feel something at me. Finish your route.
+	# UNSURE: deepest line. Picked read (b) from cast.md § 6.6.1 — the
+	# anger *sharpens* rather than softens. The publisher stepped out
+	# of script and what Hostile registers is that the publisher is
+	# being *moved by her*, which is exactly what she did not want.
+	# Read (a), the softening, was the easier choice — and the easier
+	# choice for an off-script Apostate beat lands as "wounded teacher
+	# of the player," which cast.md § 6.6 explicitly flags as wrong.
+	# Sharpening is the harder, more honest reading: she came to the
+	# door prepared to *end* the conversation, and the publisher
+	# attempting tenderness puts her exactly back in the position she
+	# left the org to escape (being the thing other people work on).
+	# "Feel something at me" is the load-bearing phrase — it names the
+	# transaction Hostile is refusing without sounding like a thesis
+	# statement. "Finish your route" returns the publisher to the
+	# mundane — go knock the next door, do your hours, leave me alone.
+	# Risk: "Feel something at me" reads as too articulate, too
+	# essay-like. Hostile *is* articulate, and she has had this
+	# thought before; but if it lands literary at playtest, trim to
+	# "Don't do that. Just finish your route." (loses the diagnostic
+	# but keeps the dismissal).
+	[signal arg="REFUSED"]
+	[end_timeline]

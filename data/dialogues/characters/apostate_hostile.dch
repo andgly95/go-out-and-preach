@@ -1,0 +1,45 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.55, 0.38, 0.35, 1),
+&"custom_info": {
+"sound_mood_default": "",
+"sound_moods": {},
+"style": ""
+},
+&"default_portrait": "alert",
+&"description": "Apostate (Hostile variant). M4.4 structural placeholder — confrontational, prepared, sibling-loss. Slate-warm tint via shared placeholder. Dialogue subagent fills line text in a separate session.",
+&"display_name": "Householder",
+&"mirror": false,
+&"nicknames": [],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"alert": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"closing": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"confrontational": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"dismissive": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+},
+"prepared": {
+"image": "",
+"offset": Vector2(0, 0),
+"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+}
+},
+&"scale": 1.0
+}

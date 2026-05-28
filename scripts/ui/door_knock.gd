@@ -47,6 +47,8 @@ const OFFSCRIPT_CHOICE_TEXTS: Dictionary = {
 	"Why is that for you?":              3,  # polite_refuser_v1.dtl E3d
 	"I don't know. Honestly.":           3,  # curious_seeker_v1.dtl E3d (M4.2)
 	"I'm sorry that happened to you.":   2,  # apostate_wounded_v1.dtl E4c (M4.3)
+	"We — we don't have to.":            3,  # apostate_hostile_v1.dtl E4c (M4.4)
+	"How are you doing?":                4,  # apostate_gentle_v1.dtl E4d (M4.4) — highest off-script delta in the game
 }
 
 const HOSTILE_SLAMMER_ARCHETYPE: StringName = &"hostile_slammer"

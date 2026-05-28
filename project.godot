@@ -33,6 +33,8 @@ PlayerState="*res://scripts/entities/player_state.gd"
 [dialogic]
 
 directories/dch_directory={
+"apostate_gentle": "res://data/dialogues/characters/apostate_gentle.dch",
+"apostate_hostile": "res://data/dialogues/characters/apostate_hostile.dch",
 "apostate_wounded": "res://data/dialogues/characters/apostate_wounded.dch",
 "curious_seeker_house04_grief": "res://data/dialogues/characters/curious_seeker_house04_grief.dch",
 "curious_seeker_house09_inquisitive": "res://data/dialogues/characters/curious_seeker_house09_inquisitive.dch",
@@ -46,6 +48,8 @@ directories/dch_directory={
 "polite_refuser_house12_atheist": "res://data/dialogues/characters/polite_refuser_house12_atheist.dch"
 }
 directories/dtl_directory={
+"apostate_gentle_v1": "res://data/dialogues/apostate_gentle_v1.dtl",
+"apostate_hostile_v1": "res://data/dialogues/apostate_hostile_v1.dtl",
 "apostate_wounded_v1": "res://data/dialogues/apostate_wounded_v1.dtl",
 "coordinator_mw_v1": "res://data/dialogues/meetings/coordinator_mw_v1.dtl",
 "coordinator_mw_v2": "res://data/dialogues/meetings/coordinator_mw_v2.dtl",

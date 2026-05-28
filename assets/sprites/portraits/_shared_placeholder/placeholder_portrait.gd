@@ -26,6 +26,18 @@ const EXPRESSION_BRIGHTNESS: Dictionary = {
 	"genuine_question":   0.95,
 	"considering":        0.88,
 	"warm_thank_you":     1.10,
+	# Apostate (Hostile variant) expression set (M4.4).
+	"alert":            1.10,
+	"confrontational":  1.18,
+	"dismissive":       0.78,
+	"prepared":         0.92,
+	"closing":          0.70,
+	# Apostate (Gentle variant) expression set (M4.4).
+	"warm":             1.10,
+	"seeing":           1.05,
+	"careful":          0.95,
+	"releasing":        1.08,
+	"knowing":          0.88,
 }
 
 @onready var _rect: ColorRect = $Rect

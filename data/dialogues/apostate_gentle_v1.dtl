@@ -1,0 +1,272 @@
+# Apostate (Gentle variant) — door-knock conversation, v1 (M4.4 structural
+# placeholder). Branching, portraits, and outcome signals locked in this
+# session per the goop-character skill; line text is [DRAFT PENDING] until
+# the dialogue subagent runs in a separate session.
+#
+# INTERPRETATION (orchestrator, M4.4):
+#   The Gentle Apostate is a former member who has been where the player
+#   is and is choosing not to weaponize it. Per cast.md § 6.6 / § 6.6.3:
+#   "the most dangerous archetype to the player's doubt meter." Warmth,
+#   care, patience. She lets the publishers leave when they want to.
+#   She offers water sometimes. She does not try to convert anyone back.
+#   The named loss is diffuse — not one person, but the whole congregation
+#   she grew up in. The cost is named without dramatization; the warmth
+#   is the wound.
+#
+# BRANCH TOPOLOGY (locked; line text DRAFT PENDING) — extends Wounded:
+#   E1   Publisher pitch (anonymous) → Gentle appears (warm)
+#   E2   Gentle names the recognition (warm, careful)
+#   E3   Gentle names what happened (congregation — the whole group)
+#          Choice 1 — "We're sorry to bother you."     → E4a REFUSED (de-escalate)
+#          Choice 2 — "Would you like a magazine?"     → E4b TRACT_LEFT (press)
+#          Choice 3 — "Could I come back another time?" → E4c RV_SCHEDULED (Gentle-only)
+#          Choice 4 — "How are you doing?"             → E4d REFUSED (off-script)
+#                     | [if DoubtMeter.value >= 40]
+#   E4a  Gentle (releasing) — soft close → [signal arg="REFUSED"]
+#   E4b  Gentle (careful) — accepts the tract carefully → [signal arg="TRACT_LEFT"]
+#   E4c  Gentle (seeing) — agrees to a return visit → [signal arg="RETURN_VISIT_SCHEDULED"]
+#   E4d  Gentle (knowing) — deepest line in the timeline → [signal arg="REFUSED"]
+#
+# OUTCOMES emitted via [signal arg="..."]:
+#   REFUSED, TRACT_LEFT, RETURN_VISIT_SCHEDULED
+# door_knock.gd::_on_dialogic_signal maps these to House.State. Gentle is
+# the only Apostate variant that can reach RV_SCHEDULED — per the M4.4
+# calibration lock, Gentle gives ground in a way the trio's other two
+# do not. BIBLE_STUDY_STARTED still out of reach (Gentle is too
+# disillusioned to start a study, even gently).
+#
+# DOUBT MECHANIC — Gentle is the lowest doubt spike on REFUSED but the
+# highest cost on the positive outcomes. doubt_delta_overrides
+# (apostate_gentle.tres):
+#     REFUSED:               +2   (vs global +1 — the gentlest cost on refusal)
+#     TRACT_LEFT:            +4   (vs global -1 — net swing of +5; the gift stings)
+#     RETURN_VISIT_SCHEDULED: +5  (vs global -2 — net swing of +7; the deepest cost)
+#   Off-script choice (E3 Choice 4) fires +4 via the per-choice delta
+#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS.
+#   Exposure ceiling per encounter: +9 (off-script + RV_SCHEDULED).
+#
+# CHOICE 4 (off-script) is doubt-gated at ≥40 — the highest of the trio,
+# matching cast.md "most dangerous archetype" framing. The player has to
+# be deepest into doubt to recognize and take the moment with the Gentle
+# Apostate; the line is the publisher turning the question back, which
+# is a deeper break from script than de-escalation or grief-acknowledgement.
+#
+# COORDINATION (M4.4):
+#   The off-script choice text "How are you doing?" must be registered
+#   in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 4.
+#
+# REVEAL-40 chain: standard generic chain. Same handling as Wounded.
+#
+# Mid-conversation exit (ESC / Walk-away button) is handled in door_knock.gd,
+# not here — it terminates the timeline and resolves REFUSED with the T2
+# walk-away delta only (does NOT apply the +2 REFUSED override).
+#
+# Publisher lines intentionally anonymous: scene is householder POV.
+#
+# arc_state branching is NOT wired into this .dtl — the per-knock sub-roll
+# (territory_manager APOSTATE_SUB_WEIGHTS) means House #7 may roll a
+# different variant on each knock, so "returning Gentle" is not a reliable
+# context. Single-content per variant matches Wounded's M4.3 pattern.
+
+join apostate_gentle (warm) at center
+
+# E1 — Publisher pitch. Anonymous publisher line, then the householder
+# answers. The "warm" portrait holds; Gentle's warmth is present from the
+# first beat, before recognition lands.
+Good morning. We're sharing a brief encouraging message from the Bible today.
+apostate_gentle (warm): Good morning. Come on up out of the sun a second — you've been walking a while.
+# UNSURE: the "come up out of the sun" is the texture-beat cast.md § 6.6.3
+# notes ("sometimes offers water"). Putting it in E1 before recognition
+# lands establishes the warmth as her baseline state — not a response to
+# who they are. If the porch art doesn't carry visible sun/shade, drop to
+# "Good morning. You've been at this a while, haven't you." Andrew to
+# verify against door_knock background when art lands.
+
+# E2 — Gentle names the recognition. The "tell" — quiet, careful. The
+# Gentle variant's tell lands as awareness without confrontation: "I
+# used to do this too," or a specific piece of vocabulary used the way
+# only a former member uses it. The warmth doesn't disappear when
+# recognition lands; it deepens. Per cast.md § 6.6.3.
+update apostate_gentle (seeing)
+apostate_gentle (seeing): Oh. — You're out in service today. I used to do Saturdays too.
+# UNSURE: "out in service" is the tell — the org-internal phrasing for
+# field service, used the way only someone who lived it would use it
+# ("service" as a noun without modifier, no "the field ministry" or
+# "your work today"). Pairing it with "I used to do Saturdays too" is
+# the awareness beat — past tense, specific weekday, no announcement,
+# no theology. Cast.md § 6.6.3: "the tell lands as awareness, not
+# announcement." The "Oh" is recognition arriving for HER (she just
+# saw who they were), not announced to them. Andrew: if "out in service"
+# reads too inside-baseball for the player, swap to "You're working
+# a territory today" — also tracks but slightly less specific.
+
+# E3 — Gentle names what happened. Per cast.md § 6.6.3 Gentle variant:
+# the named loss is the congregation as a whole — not one person but
+# the entire social world she grew up in. Diffuse, all-encompassing.
+# Mother also gone; siblings also gone; the neighborhood she used to
+# walk with publishers also gone. Per the M4.4 calibration: "the whole
+# congregation she grew up in" is the differentiator from Wounded's
+# named mother and Hostile's named sibling. The line should NOT name
+# multiple specific relations — it should land as the singular fact
+# of "everyone."
+update apostate_gentle (careful)
+apostate_gentle (careful): I had a whole congregation once. There's nobody from that life who'll pick up the phone now. Not one.
+# UNSURE: the named-loss phrasing — Andrew flagged this as the biggest call.
+# Picked "a whole congregation" as the singular-fact framing (cast.md § 6.6.3:
+# "everyone, named as a unit"). The closing "Not one" is the specificity-of-
+# scope anchor — does the work that "almost five years" does for Wounded
+# (precision that lands as fact rather than appeal). Deliberately did NOT
+# enumerate mother/siblings/friends — they are all inside "a whole
+# congregation" and inside "nobody." The phone is a concrete texture
+# anchor (dialogue-context.md § 10 "fading: the phone stops ringing
+# within a few weeks") without being a list. UNSURE specifically: "once"
+# is doing a lot of work — it carries the time-since (years out, processed)
+# without naming a number. If "once" reads archival rather than processed-
+# present, swap to "I had a whole congregation. Nobody from that life
+# picks up anymore. Not one." (drops "once," changes tense). Andrew to
+# verify in playtest against the deepest read.
+
+# Publisher choice. Four options. Choice 4 is doubt-gated at ≥40.
+# Gentle-only: Choice 3 (RV) is the only RV-reachable Apostate path.
+- We're sorry to bother you.
+	# E4a — De-escalation branch. The publisher backs off cleanly.
+	# Gentle's response is a soft release — she was always going to
+	# let them go; she releases them with care. The cost (+2 doubt)
+	# is the LOWEST of the trio on REFUSED, because Gentle gives the
+	# publishers permission to leave, which is exactly why it lands.
+	# Routes to REFUSED. doubt_delta_overrides applies +2.
+	update apostate_gentle (releasing)
+	apostate_gentle (releasing): No bother. Go on — there's water in the cooler on the porch if you need it before the next one.
+	# UNSURE: the warmth-on-release is the most-likely-to-tip-into-
+	# performance beat in the variant. Built it around a concrete object
+	# (cooler on the porch) so the kindness is something specific she is
+	# doing for them, not a generic blessing. "Go on" is the release —
+	# permission, not dismissal. "Before the next one" is the awareness
+	# beat: she knows they're not done for the day. If "cooler on the
+	# porch" reads too specific without a porch-prop visible in art,
+	# swap to "I left water out front. Take some if you need it."
+	# Andrew to verify against scene art.
+	[signal arg="REFUSED"]
+	[end_timeline]
+- Would you like a magazine?
+	# E4b — Tract branch. The publisher presses for the trained outcome.
+	# Gentle accepts carefully — not Wounded's permission-to-the-publisher
+	# ("you can leave it"), not Hostile's dismissive "fine, leave it" —
+	# but a small kindness done deliberately. She takes the magazine
+	# knowing exactly what she's holding and what it will go to in her
+	# kitchen. The cost (+4 doubt) is HIGHER than refusing because the
+	# gift is the wound — the publishers walk away thinking they did
+	# something, and the player meter records what it cost.
+	# Routes to TRACT_LEFT. doubt_delta_overrides applies +4.
+	update apostate_gentle (careful)
+	apostate_gentle (careful): Sure, I'll take it. The Lighthouse — I always liked the cover art on the public ones.
+	# UNSURE: "I always liked the cover art on the public ones" is the
+	# quiet-evidence-of-recognition beat (cast.md § 6.6.3 "may name the
+	# publication ... as quiet evidence of recognition"). She names the
+	# magazine AND the public-vs-study distinction in the same breath —
+	# the publishers register both. No "thank you," no warmth-up. The
+	# tense "always liked" carries the years-out processed quality (cast.md
+	# § 6.6.3 "the calm is processed"). UNSURE on "cover art" specifically
+	# — picked it because it's a real thing a member would remember
+	# without quoting any real publication content (legal guardrails).
+	# If the player misreads "always liked the cover art" as a soft jab,
+	# swap to "Sure. The Lighthouse. I'll put it inside." which loses the
+	# warmth but holds the recognition. Andrew to verify register at
+	# playtest.
+	[signal arg="TRACT_LEFT"]
+	[end_timeline]
+- Could I come back another time?
+	# E4c — RETURN VISIT branch. Gentle-only — Wounded and Hostile
+	# do not surface this path. Gentle says yes, gently. The cost
+	# (+5 doubt) is the HIGHEST single beat in the entire trio,
+	# matching cast.md "the most dangerous archetype to the player's
+	# doubt meter." The publisher commits to coming back to her,
+	# and "back to her" is a person who has been where the player
+	# is, who recognizes the script, who will be warm to them the
+	# next time too — and the next, and the next.
+	# Routes to RETURN_VISIT_SCHEDULED. doubt_delta_overrides applies +5.
+	update apostate_gentle (seeing)
+	apostate_gentle (seeing): If you want to. I'm usually home Tuesday afternoons. I won't argue with you.
+	# UNSURE: this is the deepest single beat in the trio per the doubt
+	# table (+5 RV), and the hardest to land without slipping into the
+	# "Gentle teacher" mode cast.md § 6.6.3 explicitly forbids. The phrase
+	# "If you want to" is the permission-not-invitation hinge — she is
+	# not asking them to come, she is removing the obstacle if they do.
+	# "I won't argue with you" is the awareness beat — she knows what
+	# return visits are, she knows the publishers expect resistance, and
+	# she is removing that lever in advance. That removal IS the wound:
+	# the publisher commits to coming back to someone who has already
+	# given them the script and chosen not to use it. Tuesday afternoons
+	# is texture (the days a member-out-of-the-org would have free that
+	# a current member would not — Tuesday evening is meeting night for
+	# many service groups). UNSURE: "I won't argue with you" risks reading
+	# as preemptive — like she's preparing for combat. The intended read
+	# is *defusing* — she's giving them nothing to push against, which is
+	# exactly why this costs +5. If it reads combative, swap to "I'm
+	# usually home Tuesday afternoons. You can come by." which is plainer.
+	[signal arg="RETURN_VISIT_SCHEDULED"]
+	[end_timeline]
+- How are you doing? | [if DoubtMeter.value >= 40] [else=disable alt_text=""]
+	# E4d — OFF-SCRIPT choice. Gated at doubt ≥ 40 — the HIGHEST gate
+	# of the trio, matching cast.md "most dangerous archetype" framing.
+	# The off-script line here is the publisher turning Gentle's
+	# question (cast.md § 6.6 "Are you doing okay?") back. The player
+	# has to be deep into doubt to recognize that Gentle has been
+	# asking them, and to ask in return.
+	#
+	# Per dialogue-context.md § 7, off-script lines should sound less
+	# polished and more present. The italicized "you" in the choice
+	# label ("How are *you* doing?") is the moment of inversion — the
+	# publisher catches that Gentle has been carrying the conversation
+	# and turns it. Note: Dialogic strips BBCode markup in choice
+	# labels; the italicization lives in the player's read of the line,
+	# not in rendering. (See M5.3 subagent flag re: *Lighthouse* asterisks
+	# in coordinator_mw_v3 — same surface; emphasis is for the writer's
+	# read, not Dialogic's render.)
+	#
+	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
+	# against OFFSCRIPT_CHOICE_TEXTS. This choice fires +4 (the highest
+	# off-script delta in the game). Off-script collapses to REFUSED —
+	# the conversation cannot continue past this beat.
+	#
+	# Gentle's response is the deepest line in the timeline. Per
+	# dialogue-context.md § 8 "trust the player to notice" — the line
+	# should land without dramatization. She may answer truthfully.
+	# She may not answer at all. Subagent's call.
+	update apostate_gentle (knowing)
+	apostate_gentle (knowing): Some days. Today's a Saturday, so — quieter than most. You should keep going. They'll be waiting on you at the car.
+	# UNSURE: picked read (a) — she answers the question truthfully. Read
+	# (b) ("she says something else that registers the moment") was tempting
+	# because it could carry more weight in fewer words, but it risks
+	# tipping into the "Gentle teacher" mode cast.md § 6.6.3 explicitly
+	# forbids ("she is not delivering wisdom"). The inversion only lands
+	# if she actually RECEIVES the question — anything else turns her
+	# back into the one carrying the moment, which undoes what the
+	# publisher just did. So: she answers. "Some days" is the plain truth
+	# — neither happy nor unhappy, just the fact (cast.md § 6.6.3 "the
+	# truth is plain"). "Today's a Saturday, so — quieter than most" is
+	# the texture: Saturday is the heaviest day for current publishers
+	# (service mornings, then often the meeting Saturday evening for
+	# some service groups), and for her, an ex-member, it is quieter
+	# because the social world that used to fill it is gone. The line
+	# does not announce this. She just names what Saturday is for her now.
+	# "You should keep going. They'll be waiting on you at the car." is
+	# the release — she ends the moment because the publisher cannot.
+	# She returns the conversation to them by telling them where to go
+	# next. Per cast.md § 6.6.3 "lets the publishers leave when they
+	# want to" — except here, the publisher has frozen the script, so
+	# she releases them. UNSURE specifically: "They'll be waiting on you
+	# at the car" assumes the silent partner is present and the publishers
+	# walk back to a parked car (dialogue-context.md § 10 "Cars parked
+	# one or two streets over from the assigned territory"). If door_knock
+	# scene-staging shows partner-on-the-walk rather than partner-at-the-
+	# car, swap "at the car" to "on the sidewalk." Either lands. Andrew
+	# to verify against the door_knock partner positioning.
+	# UNSURE (broader): no "thank you for asking" — cast.md § 6.6.3
+	# specifically forbids this as a caricature. No tears. No warmth-
+	# uptick (the "knowing" portrait does the work; her voice stays
+	# level). If playtest reads the line as too plain (i.e., she should
+	# *feel* something more here), the right move is to deepen the
+	# portrait, not the words.
+	[signal arg="REFUSED"]
+	[end_timeline]

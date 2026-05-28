@@ -1,24 +1,351 @@
 # STATUS
 
-Last updated: 2026-05-25 (M5.3 ship; gate playtest of M5.0–M5.3 pending Andrew)
+Last updated: 2026-05-27 (M4.4 ship — Hostile + Gentle Apostate variants; gate playtest of trio pending Andrew)
+
+## M4.4 — Hostile + Gentle Apostate variants: complete (headless boot clean; gate playtest pending Andrew)
+
+GDD § 13 canonical milestone shipped end-to-end this session
+(2026-05-27). Two new triplets (`apostate_hostile.{tres,dch,dtl}` +
+`apostate_gentle.{tres,dch,dtl}`) drop into the M4.5-prepared
+integration point; `APOSTATE_SUBTYPE_PATHS` in `territory_manager.gd`
+flipped two path values, no call-site changes needed.
+`resolve_householder_for_pending_house` already does the per-knock
+40/35/25 sub-roll at every knock on House #7 — observable behavior
+flips from "always Wounded" to "all three variants" with no scene-
+or signal-layer changes. The 4 calibration questions carried
+forward from M4.5 all locked this session.
+
+**Phase 1 calibration locks (this session, via AskUserQuestion):**
+- **Q1.variety** — Per-knock sub-roll at 40/35/25 (Hostile / Wounded /
+  Gentle). House #7 cycles between all three on re-knocks. Single-
+  house texture-rich; the player meets all three over a few visits.
+- **Q1.reach** — Gentle can reach `RETURN_VISIT_SCHEDULED`;
+  `BIBLE_STUDY_STARTED` stays out of reach (matches Wounded on
+  Study). Wounded and Hostile reach only REFUSED and TRACT_LEFT.
+- **Q1.deltas** — Per-outcome doubt deltas locked. Hostile {REFUSED:
+  +5, TRACT_LEFT: +3}; Wounded {REFUSED: +3, TRACT_LEFT: +2}
+  (unchanged from M4.3); Gentle {REFUSED: +2, TRACT_LEFT: +4,
+  RETURN_VISIT_SCHEDULED: +5}. Gentle's RV beat (+5 doubt vs the
+  global −2) is the heaviest single beat in the trio — matches
+  cast.md "most dangerous archetype" framing.
+- **Q1.loss** — Hostile names a sibling (anger-driven); Gentle
+  names the congregation as a singular fact ("everyone, named as a
+  unit"); Wounded keeps the mother (M4.3 canonical, unchanged).
+  Three distinct archetypes of loss; the variety lives in *what*
+  is named, not in *how many* losses are named.
+
+**Phase 0 silent-decisions audit:** Surfaced + resolved this
+session — (M0) doubt-delta semantics ambiguity in the original
+AskUserQuestion framing (I had described "+5/+3" as
+doubt/conviction, but Wounded's existing schema is per-outcome
+doubt only; Andrew confirmed the re-interpretation). (M1)
+Off-script choice text + gate per variant — Hostile `"We — we
+don't have to."` at ≥30, Gentle `"How are you doing?"` at ≥40
+(highest gate in the game). (M2) Both variants use the M4.6
+shared-placeholder portrait pattern (single .tscn driven by .dch
+color tint); Wounded's M4.3 per-character portrait dir is
+unchanged for now (deferred cleanup). (M3) Topology — Hostile
+matches Wounded's 4-exchange / 3-choice shape; Gentle extends to
+4 choices (the RV path is Gentle-only). No arc_state branching in
+either new .dtl — the per-knock sub-roll means "returning Hostile"
+or "returning Gentle" is not a reliable context (House #7 may
+roll a different variant next knock).
+
+**Files created (6):**
+- `data/householders/apostate_hostile.tres` — Householder resource,
+  `doubt_delta_overrides = {REFUSED: 5, TRACT_LEFT: 3}`,
+  `voice_subtype = &"hostile"`.
+- `data/householders/apostate_gentle.tres` — Householder resource,
+  `doubt_delta_overrides = {REFUSED: 2, TRACT_LEFT: 4,
+  RETURN_VISIT_SCHEDULED: 5}`, `voice_subtype = &"gentle"`.
+- `data/dialogues/characters/apostate_hostile.dch` — Dialogic
+  Character, color slate-warm `Color(0.55, 0.38, 0.35, 1)`, 5
+  portraits (`alert` / `confrontational` / `dismissive` /
+  `prepared` / `closing`).
+- `data/dialogues/characters/apostate_gentle.dch` — Dialogic
+  Character, color sage-pale `Color(0.62, 0.7, 0.58, 1)`, 5
+  portraits (`warm` / `seeing` / `careful` / `releasing` /
+  `knowing`).
+- `data/dialogues/apostate_hostile_v1.dtl` — full timeline with
+  hand-authored content from the Hostile dialogue subagent pass.
+  4-exchange / 3-choice topology mirrors Wounded. Off-script gate
+  at ≥30, fires +3 on selection.
+- `data/dialogues/apostate_gentle_v1.dtl` — full timeline with
+  hand-authored content from the Gentle dialogue subagent pass.
+  4-exchange / 4-choice topology (RV path is Gentle-only). Off-
+  script gate at ≥40, fires +4 on selection.
+
+**Files modified (5):**
+- `scripts/systems/territory_manager.gd` — `HOUSEHOLDER_PATHS`:
+  added `apostate_hostile` + `apostate_gentle` entries; comments
+  clarified that the Apostate keys cover the trio.
+  `APOSTATE_SUBTYPE_PATHS`: hostile/gentle paths flipped from the
+  M4.4-swap-point placeholder to the real `.tres` paths.
+- `project.godot` — `dch_directory` gains `apostate_hostile` +
+  `apostate_gentle` entries; `dtl_directory` gains
+  `apostate_hostile_v1` + `apostate_gentle_v1` entries
+  (alphabetized within their sections).
+- `scripts/ui/door_knock.gd` — `OFFSCRIPT_CHOICE_TEXTS` gains two
+  new entries: `"We — we don't have to."` → 3 (Hostile);
+  `"How are you doing?"` → 4 (Gentle, highest off-script delta in
+  the game).
+- `assets/sprites/portraits/_shared_placeholder/placeholder_portrait.gd`
+  — `EXPRESSION_BRIGHTNESS` extended with 10 new keys (5 Hostile +
+  5 Gentle expressions) so the shared portrait .tscn renders each
+  variant's expression beats at distinct brightness multipliers
+  layered over the .dch color tint.
+- `docs/design/cast.md` — § 6.6 restructured from a single section
+  with bullet-pointed flavors into a parent + 3 numbered subsections
+  (§ 6.6.1 Hostile, § 6.6.2 Wounded, § 6.6.3 Gentle) mirroring the
+  § 6.0 PR pattern. Each subsection: Profile, Voice, Common
+  openings, Behavior, Named loss, Doubt mechanic, Off-script
+  response, What lands wrong. § 7 quick-reference table gained 2
+  rows (Hostile and Wounded; Gentle already present).
+
+**Files unchanged by intent (asserted):**
+- `data/dialogues/apostate_wounded_v1.dtl` — M4.3 canonical content
+  preserved verbatim. Wounded's content is the trio's register
+  anchor; both new subagents read it as a reference but did not
+  modify it.
+- `data/householders/apostate_wounded.tres` and
+  `data/dialogues/characters/apostate_wounded.dch` — M4.3 values
+  preserved.
+- `assets/sprites/portraits/apostate_wounded/` — Wounded's
+  per-character placeholder portrait dir untouched. Wounded
+  doesn't yet use the shared-placeholder pattern; consolidating
+  it is a future cleanup pass (Hostile and Gentle DO use the
+  shared placeholder).
+- `scripts/systems/doubt_meter.gd`,
+  `scripts/systems/resource_manager.gd`,
+  `scripts/systems/time_manager.gd`,
+  `scripts/entities/house.gd`,
+  `scripts/entities/householder.gd` — no schema changes.
+- `scripts/ui/territory_map.gd` — orthogonal; the per-knock
+  sub-roll happens in `territory_manager.gd` before the scene
+  change, so the map slot rendering is unaffected.
+- All M5/M5.3/M5.3+ meeting-flow code — orthogonal to door-knock
+  variants.
+
+**Subagent-flagged concerns to evaluate at gate playtest:**
+
+The Hostile and Gentle subagents each surfaced ~7-8 UNSURE
+annotations inline. Key calls (full set in the .dtl files):
+
+*Hostile (`apostate_hostile_v1.dtl`):*
+1. E1 opener verbatim-lifts the cast.md sample phrase "I'll save
+   you the speech." Risk: reads too tidy. Fallback in subagent
+   note: "Save the speech. I know what this is."
+2. E2 stacks three concrete tells (the Lighthouse, the field-
+   service bag, the silent partner). Risk: reads as inventory.
+   Fallback: trim to two ("The Lighthouse and the partner two
+   feet behind you.").
+3. E3 named-loss uses *sister* (subagent chose sister over brother
+   for tonal differentiation). Grocery-store walk-past is lifted
+   from dialogue-context.md § 10 "Leaving" texture and used for
+   the sibling specifically.
+4. E3 time-marker "since they appointed the elders who took her
+   in" — event-marker per cast.md § 6.6.1, but may read ambiguous
+   (subagent's fallback: "since the committee," "since they took
+   her side").
+5. E3 triple-no pre-empt ("no magazine, no study, no nothing")
+   may read as rehearsed-to-camera. Subagent counter-read: it
+   *is* rehearsed; that's the Hostile profile.
+6. E4a "Good. Then go." — risks theater-villain register.
+7. E4c off-script response: subagent picked the *anger-sharpens*
+   read (read b) over the *anger-softens* read (read a). The line
+   "feel something at me" risks reading literary.
+
+*Gentle (`apostate_gentle_v1.dtl`):*
+1. E1 "Come on up out of the sun" — depends on porch art carrying
+   sun/shade. Fallback: "Good morning. You've been at this a while,
+   haven't you."
+2. E2 tell "out in service" — org-internal phrasing, may read
+   too inside-baseball. Fallback: "You're working a territory."
+3. E3 named-loss "I had a whole congregation once. There's nobody
+   from that life who'll pick up the phone now. Not one." — the
+   biggest call in the file. Singular-fact framing per cast.md
+   § 6.6.3; "Not one" is the precision anchor. UNSURE: "once" is
+   doing a lot of work; if it reads archival rather than
+   processed-present, fallback drops "once."
+4. E4a "cooler on the porch" — depends on porch-prop visibility.
+5. E4b "I always liked the cover art on the public ones." — risk
+   of reading as a soft jab.
+6. E4c RV agreement "I won't argue with you" — defusing read
+   intended; risk of reading combative.
+7. E4d off-script response: subagent picked **read (a) — she
+   answers truthfully** ("Some days") over read (b) (saying
+   something else that registers the moment). Rationale: read (b)
+   risks tipping into "Gentle teacher" mode, which cast.md § 6.6.3
+   explicitly forbids.
+8. Broader on E4d — no thanks, no tears, no warmth-uptick per
+   cast.md; if playtest reads too plain, deepen the portrait, not
+   the words.
+
+**Headless boot: clean.** Both `--headless --import` (one-time, to
+register the new triplets) and `--headless --quit-after 4
+res://scenes/territory_map.tscn` exit at 0 with only the standard
+`--quit-after` cleanup warnings (ObjectDB leaked / 26 resources in
+use). Autoload chain clean; new dtl/dch_directory entries register;
+APOSTATE_SUBTYPE_PATHS flipped paths resolve. .dtl content parse
+is lazy (deferred to `Dialogic.start()` at door-knock time) — full
+parse validation happens at the gate playtest's first knock on
+House #7 that sub-rolls Hostile or Gentle.
+
+**Phase 3 gate playtest (Andrew) — 8-item checklist:**
+- [ ] **Per-knock variety.** Knock House #7 ~10 times. Confirm
+      all three variants surface across the rolls (Hostile most-
+      often, Wounded second, Gentle least). No two consecutive
+      knocks should *always* be the same character — variety is
+      observable.
+- [ ] **Hostile flow.** When Hostile rolls: E1 alert →
+      E2 confrontational → E3 confrontational (sister named) →
+      3 choices. Click Choice 1 → REFUSED → banner doubt +5.
+      Re-knock until Hostile rolls again, click Choice 2 →
+      TRACT_LEFT → banner doubt +3.
+- [ ] **Wounded flow (regression).** When Wounded rolls: M4.3-
+      canonical text plays unchanged. Banner doubt deltas +3 /
+      +2 on REFUSED / TRACT_LEFT. No content drift from M4.3.
+- [ ] **Gentle flow.** When Gentle rolls: E1 warm → E2 seeing →
+      E3 careful (congregation named) → **4 choices** (Hostile
+      and Wounded have 3). Click Choice 1 → REFUSED → banner
+      doubt +2 (lowest of the trio). Re-knock, click Choice 2
+      → TRACT_LEFT → +4. Re-knock, click Choice 3 → RV_SCHEDULED
+      → +5 (the deepest single beat in the trio).
+- [ ] **Off-script gates.** Use debug panel (F9 → Shift+↑) to
+      push doubt past each gate. At doubt 30 the Hostile off-
+      script `"We — we don't have to."` should surface (and not
+      before 30). At doubt 35 Wounded's `"I'm sorry that happened
+      to you."` surfaces (M4.3 regression). At doubt 40 Gentle's
+      `"How are you doing?"` surfaces. Fire each — confirm
+      doubt deltas +3 / +2 / +4 respectively from
+      `OFFSCRIPT_CHOICE_TEXTS`.
+- [ ] **Portrait tints.** Hostile renders slate-warm, Gentle
+      renders sage-pale, Wounded renders slate-blue-grey. All
+      three visually distinct at the door. Expression swaps
+      within each variant produce visible brightness change via
+      the shared placeholder script.
+- [ ] **No regression — other houses.** PR houses (#1/3/5/8/10/12)
+      still play their per-house characters; CS houses (#4/9)
+      still play their per-house characters; Slammer houses
+      (#2/6/11) still play the no-Dialogic scene. Meeting flow
+      (M5/M5.3/M5.3+) unaffected.
+- [ ] **UNSURE evaluation.** Walk both Hostile and Gentle through
+      their deepest beats (E4c off-script for Hostile; E4d off-
+      script + E4c RV for Gentle). Read with a former-publisher
+      ear; flag any line that reads wrong. The diff is small
+      enough to surgically replace any specific .dtl line without
+      re-running a subagent.
+
+**Open unknowns surfaced for future milestones:**
+- **Per-knock variety vs canonical pinning.** Per-knock sub-roll
+  is M4.4-locked. If playtest reads as "House #7 has multiple
+  personality disorder," fold into a future milestone — pin one
+  variant per game session (deterministic from the first roll)
+  rather than re-rolling per knock. Mechanically a 1-line change
+  in `territory_manager.gd::resolve_householder_for_pending_house`.
+- **Apostate-trio expansion.** v1 has one Apostate house (#7).
+  A second Apostate house in a future territory could pin one
+  variant for the whole game (e.g. House #X always plays Gentle)
+  while #7 keeps the per-knock variety. Cast.md § 6.6 trio
+  already supports this — no schema work needed.
+- **Wounded portrait-dir consolidation.** Wounded still uses its
+  M4.3 per-character placeholder dir (`assets/sprites/portraits/
+  apostate_wounded/`) while Hostile and Gentle use the shared
+  placeholder. Consolidating Wounded to the shared pattern is a
+  one-file edit on the .dch and a 5-key add to EXPRESSION_BRIGHTNESS;
+  deferred to a future cleanup pass.
+- **arc_state branching for Apostate.** Currently not wired (per-
+  knock sub-roll makes "returning Hostile" unreliable). If a
+  future milestone introduces *per-house pinning* for a second
+  Apostate house, arc_state branching becomes meaningful for
+  that house and is a structural extension of the existing .dtl
+  pattern (the if/else+jump/label wrapper M4.6 uses for PR/CS).
+- **Off-script delta inflation.** Gentle's off-script fires +4,
+  the highest in the game. If playtest reads as too-heavy a
+  single doubt beat, tighten to +3 (matches Hostile / PR / CS).
+  Trade-off: weakens the "most dangerous archetype" framing.
+- **Conviction-on-door-knock.** During Phase 0 audit, my initial
+  AskUserQuestion accidentally framed the per-outcome deltas as
+  doubt/conviction. The re-interpretation matched Wounded's
+  existing per-outcome-doubt schema. If a future milestone wants
+  conviction effects on door-knock outcomes (currently conviction
+  only fires from meetings), schema extension on Householder
+  resource needed — `conviction_delta_overrides` field mirroring
+  `doubt_delta_overrides`.
+
+## M5.3+ — Intermission song scaffold: complete (headless boot clean)
+
+Single-song scaffold inserted into the Sunday meeting flow between Public
+Talk and Lighthouse Study, matching real Sunday-meeting cadence. v1 ships
+one placeholder original (Song 47 — "Faithful in the Hall," 4 lines,
+original lyric per CLAUDE.md legal guardrails — no lifted Kingdom Melody
+text). New phase `Phase.SONG` between SOCIAL_MOMENT and TALK in the
+meeting_hall state machine; click-through Continue button advances into LS.
+
+**Files modified (2):**
+- `scripts/systems/meeting_manager.gd` — added `SONGS` const dict (one
+  entry: number/title/opening_lines), `SONGS_BEFORE_TALK` map
+  (`&"lighthouse_study"` → `&"song_47_placeholder"`), and helpers
+  `song_before_talk(talk_type)` + `get_song(song_slug)`.
+- `scripts/ui/meeting_hall.gd` — added `Phase.SONG` enum value, split
+  `_start_next_talk()` into a song-check + `_enter_talk_phase()` helper,
+  added `_show_song()` (phase card with centered lyric label + Continue
+  button) and `_on_song_continue_pressed()`. `_advance_after_talk()` skips
+  the 0.5s "A short pause" beat when the next talk has a song-before — the
+  song itself is the transition.
+
+**Files unchanged by intent:**
+- No new `.tres` / `.dch` / `.dtl` files — song is inline const data, not
+  a Resource. Promotion to a Song Resource subclass is a backlog item once
+  the song pool grows past 1.
+- `project.godot` — no autoload, dch_directory, or dtl_directory edits.
+- `signal_bus.gd` — no `song_started` / `song_finished` signals; no
+  current consumer needs them. Add when needed.
+- All M5.3 speech .dtl files, `MeetingManager.SOCIAL_MOMENT_OPTIONS`, the
+  6-seat layout, per-talk effect deltas — untouched.
+
+**Flow change (Sunday only):**
+- Before: Seat → Social moment → PT → 0.5s pause → LS → resolve
+- After:  Seat → Social moment → PT → Song 47 (click Continue) → LS → resolve
+
+Tuesday's Midweek flow is unchanged (no song mapped to `midweek_training`).
+
+**Backlog follow-on tracked in `docs/BACKLOG.md`:** song pool expansion
+with last-played exclusion mirroring the speech pools, Song promoted to a
+`Resource` subclass, small social-moment opportunities during the song
+(turning the page for a neighbor, standing-up shuffle).
+
+**Headless boot:** clean on `main_menu.tscn` — only the standard
+`--quit-after` cleanup warnings (ObjectDB leaked / 26 resources in use).
 
 ## Next session (queued)
 
-**M5.0–M5.3 gate playtest (Andrew).** With M5.3 content now landed,
-the M5.0–M5.2 11-item checklist (see "Phase 3 gate playtest" below)
-finally has real text to read at every step. Two added items for
-M5.3 specifically: (1) attend three consecutive Sundays and confirm
-the PT pool rotates (last-played exclusion produces observable
-variety); (2) push doubt ≥ 40 via debug, attend a meeting of each
-type, and confirm the italic inner-voice line lands at the page-2
-beat (Coordinator soft, Strict Elder sharper per cast.md § 4.1 vs
-§ 4.2). Subagent's content concerns to evaluate during playtest are
-listed in the M5.3 ship section below.
+**M4.4 gate playtest (Andrew).** Knock House #7 ~10 times to
+trigger all three variants via the 40/35/25 sub-roll; walk each
+variant's E3 choices to verify per-outcome doubt deltas land at
+the banner (Hostile +5/+3 on REFUSED/TRACT_LEFT; Wounded +3/+2
+unchanged; Gentle +2/+4/+5 on REFUSED/TRACT_LEFT/RV_SCHEDULED).
+Push doubt past each variant's off-script gate (30 / 35 / 40) and
+confirm the gated fourth choice surfaces. Two subagent-flagged
+UNSURE bundles to evaluate during playtest — see "Subagent-flagged
+concerns" inside the M4.4 ship section below (Hostile: 7 inline
+UNSUREs around sister-loss framing + "elders who took her in" +
+the triple-no pre-empt; Gentle: 8 inline UNSUREs around "out in
+service" tell + "I had a whole congregation once" named-loss
+phrasing + answer-truthfully read on E4d).
 
-**M4.4 — Hostile + Gentle Apostate variants.** Still deferred
-below M5 gate playtest per user direction (carry forward).
+**M6 — Family & Home (next major milestone).** GDD § 13 canonical
+next. M5 (meeting scenes) is shipped through M5.3+ (intermission
+song scaffold landed same session); M5.4+ polish candidates
+(visiting speaker, per-meeting standing display, energy refill
+mid-meeting-day, per-meeting-skip vs per-talk-skip) are deferred
+to a polish bucket. M6 introduces Parent in the Truth + Sibling
+Drifting + Grandparent home scenes per cast.md §§ 3.1–3.3, the
+family-worship loop, and the doubt-trigger family conflict scenes.
+Likely 1–2 sessions plus dialogue subagent queue (3 family member
+voice profiles).
 
-## M5.3 — 9-speech v1 dialogue pool + social-moment rewrites: complete (headless boot clean; gate playtest pending Andrew)
+## M5.3 — 9-speech v1 dialogue pool + social-moment rewrites: complete (headless boot clean; gate playtest passed 2026-05-25)
 
 Single-pass content milestone. Three `placeholder_*_v1.dtl` files
 renamed to speaker-prefixed slugs, six new `_v2` / `_v3` entries
@@ -218,7 +545,7 @@ proceeded under user direction; subagent's quality bar held.
   that the meeting -1 should carry forward, that's the
   `ResourceManager._on_day_advanced` change point.
 
-## M5 — Hall of Witness meeting scenes: M5.0–M5.2 complete (headless boot clean; gate playtest pending Andrew)
+## M5 — Hall of Witness meeting scenes: M5.0–M5.2 complete (headless boot clean; gate playtest passed 2026-05-25)
 
 GDD § 13 canonical milestone shipped through scaffold + wiring.
 Sunday and Tuesday now route through the new meeting flow when the

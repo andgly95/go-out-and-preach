@@ -60,6 +60,24 @@ const MEETING_TYPE_TO_TALKS: Dictionary = {
 	&"tuesday_meeting": [&"midweek_training"],
 }
 
+# Songs sung between talks. v1 ships one placeholder original; CLAUDE.md
+# legal guardrails forbid lifting real Kingdom Melodies. Future work expands
+# the pool and can promote Song to a Resource type — see docs/BACKLOG.md.
+const SONGS: Dictionary = {
+	&"song_47_placeholder": {
+		"number": 47,
+		"title": "Faithful in the Hall",
+		"opening_lines": "Brothers gather, sisters meet,\nSongbooks open at our seat.\nThrough the days that close us in,\nFaithful still, we sing again.",
+	},
+}
+
+# Talk type → song slug that plays just before the talk. Sunday's cadence is
+# PT → song → LS, matching the real Sunday-meeting flow. Absent key means
+# no song before that talk.
+const SONGS_BEFORE_TALK: Dictionary = {
+	&"lighthouse_study": &"song_47_placeholder",
+}
+
 const MEETING_DAY_ENERGY_COST: int = 1
 const SKIP_DOUBT_DELTA: int = 1
 const SKIP_STANDING_DELTA: int = -2
@@ -255,6 +273,14 @@ func meeting_type_for_phase(phase: int) -> StringName:
 
 func talks_for_meeting(meeting_type: StringName) -> Array:
 	return MEETING_TYPE_TO_TALKS.get(meeting_type, [])
+
+
+func song_before_talk(talk_type: StringName) -> StringName:
+	return SONGS_BEFORE_TALK.get(talk_type, &"")
+
+
+func get_song(song_slug: StringName) -> Dictionary:
+	return SONGS.get(song_slug, {})
 
 
 func is_meeting_day(phase: int) -> bool:

@@ -27,6 +27,7 @@ const INTER_TALK_BEAT_SECONDS: float = 0.5
 enum Phase {
 	SEAT_PICKER,
 	SOCIAL_MOMENT,
+	SONG,
 	TALK,
 	RESOLVE,
 }
@@ -167,18 +168,57 @@ func _start_next_talk() -> void:
 	if _talks_remaining.is_empty():
 		_resolve_meeting()
 		return
-	_phase = Phase.TALK
-	# Hide the phase card while Dialogic owns the screen. Dialogic instantiates
-	# its own text pane + portrait layer on Dialogic.start().
-	_phase_card.visible = false
 	_current_talk = _talks_remaining.pop_front()
 	_current_speech_slug = MeetingManager.pick_speech_for(_current_talk)
 	if _current_speech_slug == &"":
 		push_warning("[meeting_hall] No speech available for %s; skipping talk." % _current_talk)
 		_advance_after_talk()
 		return
+	var song_slug: StringName = MeetingManager.song_before_talk(_current_talk)
+	if song_slug != &"":
+		_show_song(song_slug)
+		return
+	_enter_talk_phase()
+
+
+func _enter_talk_phase() -> void:
+	_phase = Phase.TALK
+	# Hide the phase card while Dialogic owns the screen. Dialogic instantiates
+	# its own text pane + portrait layer on Dialogic.start().
+	_phase_card.visible = false
 	var timeline_path: String = MeetingManager.get_speech_path(_current_speech_slug)
 	Dialogic.start(timeline_path)
+
+
+# --- Phase: song ------------------------------------------------------------
+
+func _show_song(song_slug: StringName) -> void:
+	_phase = Phase.SONG
+	_phase_card.visible = true
+	var song: Dictionary = MeetingManager.get_song(song_slug)
+	var number: int = int(song.get("number", 0))
+	var title: String = String(song.get("title", ""))
+	_phase_title.text = tr("Song %d") % number
+	_phase_flavor.text = tr(title)
+	_clear_phase_content()
+	var lyric: Label = Label.new()
+	lyric.text = tr(String(song.get("opening_lines", "")))
+	lyric.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lyric.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lyric.add_theme_font_size_override("font_size", 16)
+	_phase_content.add_child(lyric)
+	var continue_button: Button = Button.new()
+	continue_button.text = tr("Continue")
+	continue_button.custom_minimum_size = Vector2(220, 44)
+	continue_button.add_theme_font_size_override("font_size", 15)
+	continue_button.pressed.connect(_on_song_continue_pressed)
+	_phase_content.add_child(continue_button)
+
+
+func _on_song_continue_pressed() -> void:
+	if _phase != Phase.SONG:
+		return
+	_enter_talk_phase()
 
 
 func _on_dialogic_signal(arg: Variant) -> void:
@@ -209,9 +249,13 @@ func _advance_after_talk() -> void:
 	if _talks_remaining.is_empty():
 		_resolve_meeting()
 		return
-	# Brief beat between talks so the per-talk effects landing reads distinct
-	# from the next talk's opening. Show the phase card during the beat with
-	# a quiet "intermission" copy line so the screen isn't empty.
+	# If the next talk has a song before it, the song itself is the transition —
+	# skip the "short pause" beat. Otherwise show the phase card during a brief
+	# beat so the screen isn't empty between talks.
+	var next_talk: StringName = _talks_remaining[0]
+	if MeetingManager.song_before_talk(next_talk) != &"":
+		_start_next_talk()
+		return
 	_phase_card.visible = true
 	_phase_title.text = tr("A short pause")
 	_phase_flavor.text = tr("The hall settles. The next speaker takes the platform.")

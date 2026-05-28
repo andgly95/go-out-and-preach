@@ -698,39 +698,154 @@ The dialogue subagent does not need to author new first-visit content for House 
 
 ### 6.6 The Apostate
 
-**Profile.** Former member. Recognizes the publishers immediately. Says something the publishers register as inside knowledge — a phrase, a critique, a name, a piece of organizational vocabulary used correctly. The publishers know within ten seconds.
+The rarest *answered-door* outcome on Maple Street. House #7 is the only Apostate house in v1 territory. Per-knock variant pinning is M4.4 locked: each knock on House #7 sub-rolls between Hostile (40%), Wounded (35%), or Gentle (25%) per `territory_manager.gd::APOSTATE_SUB_WEIGHTS`. The same player can meet all three over the course of a few visits, never the same one twice in a row.
 
-**The only archetype where the doubt meter increments even on a positive (REFUSED) outcome.** Walking away from an Apostate without engaging still costs.
+**Profile (shared across all variants).** Former member. Recognizes the publishers immediately. Says something the publishers register as inside knowledge — a phrase, a critique, a name, a piece of organizational vocabulary used correctly. The publishers know within ten seconds.
 
-**Three flavors of Apostate by encounter:**
+**The only archetype where the doubt meter increments even on a positive (REFUSED) outcome.** Walking away from an Apostate without engaging still costs. Per-variant doubt deltas locked in M4.4 (see sub-sections).
 
-**The Hostile One**
-- Voice: confrontational, prepared for this conversation
-- Common openings: "You don't have to do this," "I used to be one of you. Don't waste your time on me," "I'll save you the speech: I know what you're going to say"
-- Behavior: blocks the doorway, refuses the tract, sometimes follows the publishers down the walk
-- Doubt increment: moderate
-
-**The Wounded One**
-- Voice: tired, grief in the throat
-- Common openings: "I lost everything when I left. They still won't talk to me," "My mother won't speak to me. Did you know that's what they do?", "I'm not — I'm not okay"
-- Behavior: still in the doorway, voice cracks, may cry
-- Doubt increment: high (this is the kind that lingers)
-
-**The Gentle One**
-- Voice: warm, careful, the voice of someone who has been where the player is and is choosing not to weaponize it
-- Common openings: "Are you doing okay? You can talk to me, you know. I won't tell anyone," "It's a hard life, isn't it? The work, the meetings, the reports," "I'm not going to argue with you. I just wanted to say I see you"
-- Behavior: stands in the doorway calmly, sometimes offers water, lets the publishers leave when they want to
-- Doubt increment: highest. This is the most dangerous archetype to the player's doubt meter.
-
-**What they won't do.**
+**What no Apostate variant will do.**
 - Try to convert the player back
 - Be casual about the encounter
 - Pretend not to recognize the publishers
+- Quote real Watchtower publications or name real-org leaders (in-fiction the org is the Society of the Truth; the magazine is the Lighthouse; the meeting space is the Hall of Witness — see `CLAUDE.md` legal guardrails)
 
-**What lands wrong.**
-- Making them a strawman for the Witnesses' "apostate" framing
+**What lands wrong for any variant.**
+- Making them a strawman for the org's "apostate" framing
 - Making them the wise teacher of the player
 - Making them happy and free in a way that flattens the cost of leaving
+
+**Sub-type variant table** (per-knock sub-roll, House #7):
+
+| Variant | Weight | Named loss | REFUSED doubt | TRACT_LEFT doubt | RV doubt | Off-script gate |
+|---|---|---|---|---|---|---|
+| Hostile | 40% | Sibling | +5 | +3 | (unreachable) | ≥30 |
+| Wounded | 35% | Mother | +3 | +2 | (unreachable) | ≥35 |
+| Gentle | 25% | Congregation | +2 | +4 | +5 | ≥40 |
+
+The columns describe per-outcome doubt deltas (vs. global +1/-1/-2). Off-script gate is the `DoubtMeter.value >= N` minimum to surface the fourth choice in each variant's E3.
+
+---
+
+#### 6.6.1 The Hostile One (40% — anger-driven)
+
+The variant prepared for this conversation. The publishers are recognized in E1; the householder is direct about it. No grief in the throat; no warmth; the door interaction is *short* on purpose — she has done this before and learned to end it fast.
+
+**Profile.** Former member, probably disfellowshipped (not voluntarily-faded). The cost named in E3 is a sibling — a brother or sister who shunned them, or who was disfellowshipped at the same time and is now also lost to them. The loss has been processed into anger that sits *under* the dialogue rather than on top of it; she is not screaming. She is *prepared*.
+
+**Voice.**
+- Confrontational without being cruel
+- Direct, no stutter; sentences land complete
+- The "tell" lands as a *challenge*: "I'll save you the speech," "I used to be one of you, don't waste your time"
+- Body language closing: hand on doorframe, half-turned already
+- Anger lives in *pace and brevity*, not volume — she is not yelling, she is *done*
+
+**Common openings.**
+- "You don't have to do this."
+- "I used to be one of you. Don't waste your time on me."
+- "I'll save you the speech: I know what you're going to say."
+
+**Behavior.**
+- Blocks the doorway, refuses to engage on theology
+- May follow the publishers a step or two down the walk to make the end of the interaction unambiguous
+- Accepts the tract dismissively (the magazine ends up in a recycling bin within the hour); does NOT accept return visits
+
+**Named loss — sibling.** Specific, named in the dialogue: a brother or sister, named or unnamed. Subagent picks. The texture is *measured time* — "two years," "since the assembly," "since they appointed the elders that took her in." The loss is *recent enough to be raw* but processed enough to come out as anger rather than tears.
+
+**Doubt mechanic.**
+- REFUSED: +5 (vs. global +1) — sharpest doubt spike on the player meter; the publisher walks away from this door knowing they were *prepared for*, which feels different than being refused
+- TRACT_LEFT: +3 — accepting the tract dismissively still costs; the publisher records a positive outcome but the dismissal landed
+- RV / Study: unreachable (Hostile gives no ground)
+- Off-script line: `"We — we don't have to."` gated at ≥30 doubt; fires +3 via `OFFSCRIPT_CHOICE_TEXTS`. Routes to REFUSED. Lower gate than Wounded/Gentle because the off-script beat here is the publisher *stepping out of the trained de-escalation*, which is reachable with less doubt accumulated than recognition of grief or warmth.
+
+**Off-script response (deepest beat).** When the publisher steps out of script, Hostile's anger may *soften for one beat into something tireder*, OR it may *sharpen* because she sees what's happening (the publisher is being moved by her, which is exactly what she didn't want). Subagent picks. Either lands without underlining.
+
+**What lands wrong (Hostile-specific).**
+- Caricature of the "angry ex-cult member" — she is not a meme
+- Cruelty toward the publishers — she is *done*, not *hostile-to-individuals*
+- Rage as the main register — anger is the *driver*, not the surface
+
+---
+
+#### 6.6.2 The Wounded One (35% — grief-driven, M4.3 canonical)
+
+The variant still in the doorway when the publishers arrive. Tired. The grief about leaving is named, but not weaponized.
+
+**Profile.** Former member, almost five years out by the time the publishers find her at this door. The cost named in E3 is her mother, who hasn't spoken to her since she left. The named-relation specificity is the texture; the time-since is the differentiator from Hostile (Wounded measures in years; Hostile measures in events). The grief is named *as fact*, not as appeal. "Did you know that's what they do?" is *the* line — not a question waiting for an answer, an *observation* the publishers can't unhear.
+
+**Voice.**
+- Tired, grief in the throat
+- Sentences trail; stutter present (the trauma is *active*, not processed)
+- The "tell" lands precisely (the *public* Lighthouse — distinguishing public from study edition is something only a former member tracks)
+- Voice may crack on the named-loss line
+
+**Common openings.**
+- "Oh — hi. Sorry, I was… yeah. Hi."
+- "I lost everything when I left."
+- "My mother won't speak to me. Did you know that's what they do?"
+
+**Behavior.**
+- Still in the doorway when the publishers find her — doesn't close, doesn't escalate
+- Voice cracks on the named-loss line; may cry
+- Accepts the tract as a kindness extended *to the publishers*, not as gratitude
+
+**Named loss — mother.** Specific. Almost five years out. The time-marker is precise because it lands as *fact* (not a fresh wound, not an archival memory). The mother is the most-likely-canonical because *parental shunning* is the M4.3-validated archetype of cost.
+
+**Doubt mechanic** (M4.3-locked, M4.4 unchanged).
+- REFUSED: +3 (vs. global +1)
+- TRACT_LEFT: +2 (vs. global -1 — net swing of +3; the gift-of-kindness costs)
+- RV / Study: unreachable
+- Off-script line: `"I'm sorry that happened to you."` gated at ≥35 doubt; fires +2.
+
+**Off-script response (deepest beat).** "Oh. — …Thank you. I — yeah. Thank you." (M4.3 subagent canonical, flagged UNSURE at ship — the doubled thank-you reads as broken-receipt rather than performed-gratitude.)
+
+**What lands wrong (Wounded-specific).**
+- "Wounded teacher of the player" — she is not delivering wisdom, she is being seen at her own doorstep
+- Tears as performance — the cry is *if it happens*, not the centerpiece
+- Resolution — there is no closure in this conversation, only the moment of being seen
+
+---
+
+#### 6.6.3 The Gentle One (25% — most dangerous archetype)
+
+The variant who has been where the player is and is *choosing not to weaponize it*. The most-doubt-impact archetype in the game, per the cast-bible canonical framing. The warmth is the wound.
+
+**Profile.** Former member, years out, processed. The cost named in E3 is *the congregation as a whole* — not one person but the entire social world she grew up in. Mother also gone; siblings also gone; the neighborhood she used to walk with publishers also gone — but the *named* loss is the diffuse fact of "everyone." This is the M4.4 differentiator: Wounded names one person, Hostile names one sibling, Gentle names *all of it*. The line should land as singular fact (one statement about "the whole congregation"), not as a list.
+
+**Voice.**
+- Warm, careful, patient
+- Full sentences without stutter; the calm is processed
+- The "tell" lands as *awareness*: "I used to do this too," a piece of vocabulary used the way a former member uses it
+- The warmth doesn't disappear when recognition lands — it *deepens*
+- The voice of someone who has been where the publishers are and is *choosing* the warmth
+
+**Common openings.**
+- "Are you doing okay? You can talk to me, you know. I won't tell anyone."
+- "It's a hard life, isn't it? The work, the meetings, the reports."
+- "I'm not going to argue with you. I just wanted to say I see you."
+
+**Behavior.**
+- Stands in the doorway calmly; never closes during the interaction
+- Sometimes offers water (texture beat — not in dialogue, but in scene-note)
+- Lets the publishers leave when they want to — she does not hold them
+- Accepts the tract carefully (knows exactly what she's holding); may name the publication ("the Lighthouse") as quiet evidence of recognition
+- Will accept a return visit gently — does not invite it, *permits* it
+
+**Named loss — the congregation.** All of it. Mother gone, siblings gone, the friends she used to ride to assemblies with, gone. The line in E3 should not enumerate — it should sit as singular fact. "I had a whole congregation. I haven't been welcome anywhere since." Subagent picks the exact phrasing; the *shape* is "everyone, named as a unit."
+
+**Doubt mechanic.**
+- REFUSED: +2 (vs. global +1) — the *lowest* doubt spike of the trio on refusal; she lets the publishers go and that permission is exactly why it lands gently
+- TRACT_LEFT: +4 (vs. global -1 — net swing of +5) — the gift is the wound; accepting the magazine from a person who has been where the player is *costs more than refusing*
+- RV_SCHEDULED: +5 (vs. global -2 — net swing of +7) — the *deepest* single beat in the trio; the player has committed to coming back to her, and *coming back to her* is coming back to someone who recognizes the script
+- Off-script line: `"How are you doing?"` gated at ≥40 doubt (highest gate in the game); fires +4. Routes to REFUSED. The off-script beat is the publisher *turning the question back* — Gentle has been asking, and the player has to be deep into doubt to *ask in return*.
+
+**Off-script response (deepest beat).** The publisher just inverted the conversation. Gentle has been seen back. Subagent picks the read: (a) she answers the question truthfully — quiet, no flourish, just the fact; (b) she does not answer the question, she says something else that registers the moment. No tears, no warmth-uptick, no "thank you for asking" — those are caricatures of what this moment is. The truth is plain.
+
+**What lands wrong (Gentle-specific).**
+- "Gentle teacher of the player" — she is *not delivering wisdom*; the warmth is the *texture*, not the message
+- Happy-and-free framing — she is not happier than the publishers; she carries her loss visibly
+- Performed warmth — the warmth is a *choice she is making* in this specific moment, not an unconditional disposition
+- "I see you" stated *directly* — this is a *behavior*, not a line; the seeing-back lives in the dialogue cadence, not in the words "I see you"
 
 ---
 
@@ -754,6 +869,8 @@ The dialogue subagent does not need to author new first-visit content for House 
 | Lonely Elderly | Meandering | "Now what was I saying?" | Slow |
 | Disillusioned Catholic | Searching | "I have some issues with..." | Thoughtful |
 | Hostile Christian | Confident-confrontational | "Actually, the Bible says..." | Assertive |
+| The Apostate (Hostile) | Confrontational-prepared | "I'll save you the speech." | Short |
+| The Apostate (Wounded) | Tired-grieving | "My mother won't speak to me." | Trailing |
 | The Apostate (Gentle) | Warm-careful | "Are you doing okay?" | Patient |
 
 ---
