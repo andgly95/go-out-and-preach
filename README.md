@@ -88,7 +88,7 @@ v1 archetypes shipping:
 - **Polite Refuser** — six per-house characters with distinct voices (atheist, Jewish, Catholic, gay couple, Episcopalian, second atheist)
 - **Curious Seeker** — two per-house characters (grief, inquisitive)
 - **Hostile Slammer** — inline no-Dialogic scene, slam line pool
-- **The Apostate** — former member, knows the rebuttals (lingering doubt effect)
+- **The Apostate** — House #7; sub-rolls three variants on every knock (40 % Hostile / 35 % Wounded / 25 % Gentle). Each variant has distinct doubt deltas and an off-script gate (Hostile ≥30 / Wounded ≥35 / Gentle ≥40). Gentle is the only variant that can reach RV_SCHEDULED. Named loss differentiators distinguish each voice.
 
 Doubt deltas fire on outcome plus off-script choice text — see `OUTCOME_DOUBT_DELTAS` and `OFFSCRIPT_CHOICE_TEXTS` in `door_knock.gd`.
 
@@ -98,9 +98,9 @@ Doubt deltas fire on outcome plus off-script choice text — see `OUTCOME_DOUBT_
 
 <img align="right" src="docs/design/mockups/parked_car.png" alt="Parked outside before the meeting" width="280">
 
-M5 Hall of Witness scenes. Sunday routes Public Talk → Lighthouse Study back-to-back; Tuesday runs Midweek Training alone. Flow: seat picker (2×3 grid, six pinned neighbors) → social moment → talk(s) → resolve. Per-talk effects (Conviction, Standing-Elders) fire on completion; meeting-level Energy fires once at close. Skipping fires inline penalties (Standing-Elders -2, doubt +1) and phase-advances without entering the scene.
+M5 Hall of Witness scenes. Sunday routes Public Talk → Lighthouse Study back-to-back (with an intermission Phase.SONG between them); Tuesday runs Midweek Training alone. Flow: seat picker (2×3 grid, six pinned neighbors) → social moment → talk(s) → resolve. Per-talk effects (Conviction, Standing-Elders) fire on completion; meeting-level Energy fires once at close. Skipping fires inline penalties (Standing-Elders -2, doubt +1) and phase-advances without entering the scene.
 
-Speech pool is picker-based with last-played exclusion; the M5.3 expansion to three speeches per talk type is in flight.
+Speech pool ships three speeches per talk type (coordinator_pt / strict_ls / coordinator_mw, _v1–_v3). Picker-based with last-played exclusion. Social moment options are written in neighbor voice (Service Partner, Sister Who Talks, Strict Elder's wife, Lonely Elderly, Parent in the Truth, sit-alone). Inner-voice lines in each speech are gated at DoubtMeter ≥ 40.
 
 <br clear="right">
 
@@ -174,6 +174,8 @@ res://
     territories/, npcs/,
     events/                  Stubs for later milestones
   assets/
+    backgrounds/             Full-screen scene backgrounds
+                             (hall_of_witness.png wired into meeting_hall.tscn)
     sprites/portraits/       Placeholder portraits (color-tinted via .dch
                              color field — real art is a later polish pass)
     sprites/{menu,
@@ -189,6 +191,7 @@ res://
     design/encounter-distribution.md
     design/mockups/
     STATUS.md                Current milestone, open work, next-session entry
+    BACKLOG.md               Unscheduled feature ideas (not on the milestone path)
   tools/                     One-shot maintenance scripts (Dialogic bootstrap)
   CLAUDE.md                  Working agreement for Claude Code sessions
 ```
@@ -227,8 +230,8 @@ The project is built in milestones M0 – M8 (full spec in `docs/design/gdd.md` 
 | M1 | Time + resources + HUD | ✓ Shipped |
 | M2 | Territory + door-knock shell | ✓ Shipped |
 | M3 | Dialogue system (Dialogic) | ✓ Shipped |
-| M4 | Doubt mechanic | ✓ Shipped (M4.1–M4.6 follow-ons in tree) |
-| M5 | Meeting scenes | ► M5.0–M5.2 shipped; M5.3 dialogue pool in flight |
+| M4 | Doubt mechanic | ✓ Shipped (M4.1–M4.6 + M4.4 Apostate variants shipped) |
+| M5 | Meeting scenes | ✓ M5.0–M5.3 shipped |
 | M6 | Family & home | — Not started |
 | M7 | Save/load + polish | — Not started |
 | M8 | v0.1 lock + tester build | — Not started |
