@@ -118,6 +118,11 @@ const HOUSE_PORTRAIT_PATHS: Dictionary = {
 	5: "res://assets/sprites/portraits/houses/house_05.png",
 	6: "res://assets/sprites/portraits/houses/house_06.png",
 	7: "res://assets/sprites/portraits/houses/house_07.png",
+	8: "res://assets/sprites/portraits/houses/house_08.png",
+	9: "res://assets/sprites/portraits/houses/house_09.png",
+	10: "res://assets/sprites/portraits/houses/house_10.png",
+	11: "res://assets/sprites/portraits/houses/house_11.png",
+	12: "res://assets/sprites/portraits/houses/house_12.png",
 }
 
 

@@ -372,3 +372,190 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_endbtn_hover")
 theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
 theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
 text = "END FIELD SERVICE  ▸"
+
+[node name="AfterServiceDim" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+mouse_filter = 1
+
+[node name="AfterServiceCard" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -280.0
+offset_right = 320.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="Margin" type="MarginContainer" parent="AfterServiceCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="AfterServiceCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Eyebrow" type="Label" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
+theme_override_font_sizes/font_size = 12
+text = "✦ AFTER SERVICE ✦"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 26
+text = "The Report"
+horizontal_alignment = 1
+
+[node name="DividerTop" type="Label" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.7)
+theme_override_font_sizes/font_size = 14
+text = "──────  ◇  ──────"
+horizontal_alignment = 1
+
+[node name="StatsGrid" type="GridContainer" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="HoursLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Hours preached"
+
+[node name="HoursValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0.0"
+horizontal_alignment = 2
+
+[node name="TractLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Tracts placed"
+
+[node name="TractValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0"
+horizontal_alignment = 2
+
+[node name="ReturnLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Return visits scheduled"
+
+[node name="ReturnValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0"
+horizontal_alignment = 2
+
+[node name="StudyLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Studies started"
+
+[node name="StudyValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0"
+horizontal_alignment = 2
+
+[node name="RefusedLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Refused"
+
+[node name="RefusedValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0"
+horizontal_alignment = 2
+
+[node name="NotHomeLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
+theme_override_font_sizes/font_size = 13
+text = "Not home"
+
+[node name="NotHomeValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "0"
+horizontal_alignment = 2
+
+[node name="DividerMid" type="Label" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.7)
+theme_override_font_sizes/font_size = 14
+text = "──────  ◇  ──────"
+horizontal_alignment = 1
+
+[node name="Debrief" type="Label" parent="AfterServiceCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
+theme_override_font_sizes/font_size = 13
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="InnerVoice" type="RichTextLabel" parent="AfterServiceCard/Margin/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_colors/default_color = Color(0.74, 0.66, 0.5, 0.92)
+theme_override_font_sizes/normal_font_size = 12
+text = ""
+
+[node name="SubmitButton" type="Button" parent="AfterServiceCard/Margin/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_endbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_endbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_endbtn_hover")
+theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
+theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
+text = "TURN IN YOUR HOURS  ▸"

@@ -65,6 +65,18 @@ const SCRIPTURE_REF:   String = "— MATTHEW 5:16"
 
 @onready var _detail_header:  Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/HouseHeader
 @onready var _detail_polaroid: TextureRect = $MainRow/RightDetailPanel/RightMargin/RightVBox/Polaroid/Image
+
+@onready var _report_dim:    ColorRect      = $AfterServiceDim
+@onready var _report_card:   PanelContainer = $AfterServiceCard
+@onready var _report_hours:   Label = $AfterServiceCard/Margin/VBox/StatsGrid/HoursValue
+@onready var _report_tracts:  Label = $AfterServiceCard/Margin/VBox/StatsGrid/TractValue
+@onready var _report_returns: Label = $AfterServiceCard/Margin/VBox/StatsGrid/ReturnValue
+@onready var _report_studies: Label = $AfterServiceCard/Margin/VBox/StatsGrid/StudyValue
+@onready var _report_refused: Label = $AfterServiceCard/Margin/VBox/StatsGrid/RefusedValue
+@onready var _report_nothome: Label = $AfterServiceCard/Margin/VBox/StatsGrid/NotHomeValue
+@onready var _report_debrief: Label = $AfterServiceCard/Margin/VBox/Debrief
+@onready var _report_inner:   RichTextLabel = $AfterServiceCard/Margin/VBox/InnerVoice
+@onready var _report_submit:  Button = $AfterServiceCard/Margin/VBox/SubmitButton
 @onready var _detail_caption: Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/StateCaption
 @onready var _detail_body:    Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/BodyText
 @onready var _legend_rows:    VBoxContainer = $MainRow/RightDetailPanel/RightMargin/RightVBox/LegendRows
@@ -84,6 +96,17 @@ var _hover_house_id:    StringName = &""
 var _tract_left_count: int = 0
 var _return_visit_count: int = 0
 var _studies_started_count: int = 0
+var _refused_count: int = 0
+var _not_home_count: int = 0
+var _apostate_visited_today: bool = false
+
+# Hours-this-month is tracked on ResourceManager; we capture the value at
+# scene entry so the after-service report can show *this session's* hours.
+var _session_start_hours: float = 0.0
+
+# Inner-voice gate for the after-service report (matches meeting-hall page-2
+# beat at threshold 40).
+const REPORT_INNER_VOICE_DOUBT: int = 40
 
 # M4.5 — gate further clicks during the ~1s NOT_HOME beat so racing clicks
 # don't stack tweens. Cleared by the tween.finished callback.
@@ -95,6 +118,8 @@ func _ready() -> void:
 	_scripture_ref_label.text = tr(SCRIPTURE_REF)
 	_territory_title.text = TerritoryManager.current_territory.display_name
 	_default_polaroid_texture = _detail_polaroid.texture
+	_session_start_hours = ResourceManager.field_service_hours
+	_report_submit.pressed.connect(_on_report_submit_pressed)
 	_build_legend()
 	_build_slots()
 	# CenterMap doesn't get its final rect until after the first layout pass.
@@ -523,6 +548,9 @@ func _refresh_progress() -> void:
 	_tract_left_count = 0
 	_return_visit_count = 0
 	_studies_started_count = 0
+	_refused_count = 0
+	_not_home_count = 0
+	_apostate_visited_today = false
 	for house in TerritoryManager.current_territory.houses:
 		match house.state:
 			House.State.TRACT_LEFT:
@@ -531,6 +559,14 @@ func _refresh_progress() -> void:
 				_return_visit_count += 1
 			House.State.BIBLE_STUDY_STARTED:
 				_studies_started_count += 1
+			House.State.REFUSED:
+				_refused_count += 1
+			House.State.NOT_HOME:
+				_not_home_count += 1
+		if house.state != House.State.NOT_VISITED \
+				and house.householder != null \
+				and TerritoryManager.APOSTATE_ARCHETYPES.has(house.householder.archetype):
+			_apostate_visited_today = true
 	_tract_value.text = str(_tract_left_count)
 	_return_value.text = str(_return_visit_count)
 	_study_value.text = str(_studies_started_count)
@@ -588,8 +624,62 @@ func _on_house_visited(house_id: StringName, _outcome: int) -> void:
 
 
 func _on_end_pressed() -> void:
+	_populate_after_service_report()
+	_report_dim.visible = true
+	_report_card.visible = true
+
+
+func _on_report_submit_pressed() -> void:
 	TimeManager.advance_phase()
 	get_tree().change_scene_to_file("res://scenes/week_view.tscn")
+
+
+# --- After-service report ----------------------------------------------------
+
+func _populate_after_service_report() -> void:
+	var hours_today: float = maxf(ResourceManager.field_service_hours - _session_start_hours, 0.0)
+	_report_hours.text = "%.1f" % hours_today
+	_report_tracts.text = str(_tract_left_count)
+	_report_returns.text = str(_return_visit_count)
+	_report_studies.text = str(_studies_started_count)
+	_report_refused.text = str(_refused_count)
+	_report_nothome.text = str(_not_home_count)
+	_report_debrief.text = tr(_pick_debrief_line())
+	if DoubtMeter.value >= REPORT_INNER_VOICE_DOUBT:
+		_report_inner.text = "[center]%s[/center]" % tr(_pick_inner_voice_line())
+		_report_inner.visible = true
+	else:
+		_report_inner.visible = false
+
+
+func _pick_debrief_line() -> String:
+	# Tier from best-outcome of the morning. Apostate-visit overrides into its
+	# own beat (the Apostate encounter colors the whole walk back to the car).
+	if _apostate_visited_today:
+		return "You sit in the car a minute before turning the key. Brother Phillips lets the silence sit."
+	if _studies_started_count > 0:
+		return "A study, by the end. Brother Phillips lifts his coffee. \"That's what we're out here for,\" he says — like he believes it again."
+	if _return_visit_count > 0:
+		return "An appointment in your notebook, your own handwriting. You'll read it twice before you go."
+	if _tract_left_count > 0:
+		return "A few tracts placed. \"It's the witness that matters,\" Brother Phillips says. \"You bring them what you can.\""
+	if _refused_count + _not_home_count > 0:
+		return "Long morning. The houses didn't open. Brother Phillips claps your shoulder anyway — \"Same time Saturday.\""
+	return "You didn't make it to a door. The bag is still zipped. Brother Phillips says nothing about it."
+
+
+func _pick_inner_voice_line() -> String:
+	# Italic-register inner voice at doubt >= 40. Mirrors the meeting-hall
+	# page-2 beat — observation, not verdict.
+	if _studies_started_count > 0:
+		return "[i]You wrote down the hours. The hours don't say what happened.[/i]"
+	if _return_visit_count > 0:
+		return "[i]Tuesday at ten. You wonder what you'll bring back to her.[/i]"
+	if _tract_left_count > 0:
+		return "[i]A few tracts placed. The number is correct.[/i]"
+	if _refused_count + _not_home_count > 0:
+		return "[i]The numbers add up. They always do.[/i]"
+	return "[i]You didn't go to a door today. The hours are still zero.[/i]"
 
 
 func _on_back_pressed() -> void:
