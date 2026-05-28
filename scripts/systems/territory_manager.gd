@@ -107,6 +107,36 @@ const APOSTATE_ARCHETYPES: Array[StringName] = [
 	&"apostate_gentle",
 ]
 
+# Per-house portrait images. Shared between territory_map (right detail panel
+# polaroid on hover) and door_knock (full-screen background when the player
+# enters the porch). House numbers without an entry fall back to a placeholder
+# at the call site. Add new entries as art lands per house.
+const HOUSE_PORTRAIT_PATHS: Dictionary = {
+	2: "res://assets/sprites/portraits/houses/house_02.png",
+	3: "res://assets/sprites/portraits/houses/house_03.png",
+	4: "res://assets/sprites/portraits/houses/house_04.png",
+	5: "res://assets/sprites/portraits/houses/house_05.png",
+	6: "res://assets/sprites/portraits/houses/house_06.png",
+	7: "res://assets/sprites/portraits/houses/house_07.png",
+}
+
+
+func get_house_portrait(number: int) -> Texture2D:
+	if not HOUSE_PORTRAIT_PATHS.has(number):
+		return null
+	var path: String = HOUSE_PORTRAIT_PATHS[number]
+	var tex: Texture2D = load(path)
+	if tex == null:
+		push_warning("[TerritoryManager] House #%d portrait failed to load at %s" % [number, path])
+		return null
+	return tex
+
+
+func house_number_for(house: House) -> int:
+	if house == null:
+		return 0
+	return house.grid_position.y * GRID_COLS + house.grid_position.x + 1
+
 var current_territory: Territory
 var _pending_house_id: StringName = &""
 

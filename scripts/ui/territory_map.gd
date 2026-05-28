@@ -64,9 +64,16 @@ const SCRIPTURE_REF:   String = "— MATTHEW 5:16"
 @onready var _scripture_ref_label:   Label = $MainRow/LeftInfoCard/LeftMargin/LeftVBox/ScriptureRef
 
 @onready var _detail_header:  Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/HouseHeader
+@onready var _detail_polaroid: TextureRect = $MainRow/RightDetailPanel/RightMargin/RightVBox/Polaroid/Image
 @onready var _detail_caption: Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/StateCaption
 @onready var _detail_body:    Label = $MainRow/RightDetailPanel/RightMargin/RightVBox/BodyText
 @onready var _legend_rows:    VBoxContainer = $MainRow/RightDetailPanel/RightMargin/RightVBox/LegendRows
+
+# Per-house portrait paths live on TerritoryManager and are shared with
+# door_knock (full-screen porch BG). Houses without art fall back to the
+# scene's default Polaroid texture (house_painting.png placeholder).
+
+var _default_polaroid_texture: Texture2D = null
 
 var _house_slots: Dictionary = {}                # house_id -> Control (slot root)
 var _selected_house_id: StringName = &""
@@ -87,6 +94,7 @@ func _ready() -> void:
 	_scripture_quote_label.text = tr(SCRIPTURE_QUOTE)
 	_scripture_ref_label.text = tr(SCRIPTURE_REF)
 	_territory_title.text = TerritoryManager.current_territory.display_name
+	_default_polaroid_texture = _detail_polaroid.texture
 	_build_legend()
 	_build_slots()
 	# CenterMap doesn't get its final rect until after the first layout pass.
@@ -457,6 +465,7 @@ func _resolve_not_home(house_id: StringName) -> void:
 
 func _show_default_detail() -> void:
 	_detail_header.text = tr("✦ HOUSE #—— ✦")
+	_detail_polaroid.texture = _default_polaroid_texture
 	_detail_caption.text = tr("Hover a house to inspect.")
 	_detail_body.text = tr("Move over a slot in the territory grid to see what's known about that household.")
 
@@ -464,8 +473,16 @@ func _show_default_detail() -> void:
 func _populate_detail(house: House) -> void:
 	var number: int = house.grid_position.y * TerritoryManager.GRID_COLS + house.grid_position.x + 1
 	_detail_header.text = tr("✦ HOUSE #%d ✦") % number
+	_detail_polaroid.texture = _portrait_for_house_number(number)
 	_detail_caption.text = tr(_caption_for_state(house.state))
 	_detail_body.text = tr(_body_for_state(house.state))
+
+
+func _portrait_for_house_number(number: int) -> Texture2D:
+	var tex: Texture2D = TerritoryManager.get_house_portrait(number)
+	if tex == null:
+		return _default_polaroid_texture
+	return tex
 
 
 func _caption_for_state(state: int) -> String:

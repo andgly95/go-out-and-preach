@@ -73,6 +73,7 @@ const SLAMMER_BEAT_POST: float = 0.4
 
 @onready var _house_badge: Label = $HouseBadge
 @onready var _leave_button: Button = $LeaveButton
+@onready var _house_portrait: TextureRect = $HousePortrait
 
 var _pending_house: House = null
 var _dialogue_id: String = ""
@@ -85,6 +86,7 @@ var _slammer_active: bool = false
 func _ready() -> void:
 	_pending_house = TerritoryManager.get_pending_house()
 	_refresh_house_badge()
+	_refresh_house_portrait()
 	_leave_button.pressed.connect(_on_walk_away_pressed)
 	Dialogic.signal_event.connect(_on_dialogic_signal)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
@@ -116,6 +118,15 @@ func _refresh_house_badge() -> void:
 		_house_badge.text = tr("(no house)")
 		return
 	_house_badge.text = tr("House %s") % str(_pending_house.id).trim_prefix("house_")
+
+
+func _refresh_house_portrait() -> void:
+	if _pending_house == null:
+		return
+	var number: int = TerritoryManager.house_number_for(_pending_house)
+	var tex: Texture2D = TerritoryManager.get_house_portrait(number)
+	if tex != null:
+		_house_portrait.texture = tex
 
 
 func _start_dialogue_for_pending_house() -> void:

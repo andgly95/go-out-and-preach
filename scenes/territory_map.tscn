@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgp0m2terr001"]
+[gd_scene load_steps=11 format=3 uid="uid://bgp0m2terr001"]
 
 [ext_resource type="Script" path="res://scripts/ui/territory_map.gd" id="1_territory_map"]
 [ext_resource type="Texture2D" path="res://assets/sprites/territory/background.png" id="2_bg"]
@@ -8,6 +8,18 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
 bg_color = Color(0.18, 0.16, 0.13, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_polaroid"]
+bg_color = Color(0.96, 0.94, 0.88, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.5, 0.27, 0.45)
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 bg_color = Color(0.11, 0.13, 0.19, 0.94)
@@ -273,8 +285,12 @@ theme_override_font_sizes/font_size = 12
 text = "✦ HOUSE #—— ✦"
 horizontal_alignment = 1
 
-[node name="Polaroid" type="TextureRect" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
-custom_minimum_size = Vector2(0, 180)
+[node name="Polaroid" type="PanelContainer" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_polaroid")
+
+[node name="Image" type="TextureRect" parent="MainRow/RightDetailPanel/RightMargin/RightVBox/Polaroid"]
 layout_mode = 2
 texture = ExtResource("3_house")
 expand_mode = 1
