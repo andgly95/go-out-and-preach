@@ -203,7 +203,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_secondary")
 theme_override_styles/hover = SubResource("StyleBoxFlat_secondary")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_secondary")
 theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-text = "ADVANCE TO NEXT PHASE"
+text = "GO TO BED"
 
 [node name="ScheduleCard" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(300, 0)

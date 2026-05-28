@@ -1,6 +1,93 @@
 # STATUS
 
-Last updated: 2026-05-27 (M4.4 ship — Hostile + Gentle Apostate variants; gate playtest of trio pending Andrew)
+Last updated: 2026-05-28 (post-M4.4 polish — per-house portraits, polaroid frame, door-knock BG, "Go to Bed" rename, endings + personal-study added to BACKLOG)
+
+## Post-M4.4 polish — per-house portraits, polaroid frame, door-knock BG, button rename (this session)
+
+Small polish bundle landed in commit `3dd0d11` after the M4.4 ship,
+plus a one-line button rename. Surfaces visually at the territory
+map (right detail panel) and at the porch (door_knock background).
+
+**Per-house portraits (houses 2–7):** Andrew supplied real art for
+six of the twelve houses this session. Portraits copied into
+`assets/sprites/portraits/houses/house_0{2..7}.png` and wired to two
+consumers via a shared `HOUSE_PORTRAIT_PATHS` const on
+`TerritoryManager` plus two helper functions
+(`get_house_portrait(number) -> Texture2D`,
+`house_number_for(house) -> int`). Houses 1 + 8–12 fall back to the
+existing `house_painting.png` placeholder in both consumers.
+
+**Consumer 1 — territory_map right detail panel.** The existing
+`Polaroid` node (previously a bare `TextureRect`) is now a
+`PanelContainer` with a cream-white StyleBoxFlat (gold-tinted
+border, content margins 6/6/6/14 for the classic polaroid bottom
+edge) wrapping a child `Image` TextureRect. Uniform white frame
+across every portrait — masks any per-PNG transparency and reads as
+a printed photo. `territory_map.gd::_portrait_for_house_number`
+delegates to `TerritoryManager.get_house_portrait`;
+`_show_default_detail` restores the placeholder.
+
+**Consumer 2 — door_knock full-screen BG.** New `HousePortrait`
+TextureRect anchored full-screen behind the existing `Background`
+ColorRect in `door_knock.tscn`, with `KEEP_ASPECT_COVERED` stretch
+and `MOUSE_FILTER_IGNORE` (clicks pass through to Dialogic). The
+underlying Background ColorRect was darkened to deep-sepia
+`Color(0.07, 0.06, 0.05, 1)` to match the MeetingHall convention so
+houses without art fall through to a near-black frame rather than
+the previous flat blue. `door_knock.gd::_refresh_house_portrait()`
+runs on `_ready` and sets the texture from
+`TerritoryManager.get_house_portrait`.
+
+**Territory background swap (Andrew, prior to this session).** The
+service / territory_map background was sneakily replaced with a
+houses-instead-of-empty-plots variant (committed in `3dd0d11`); the
+prior file was kept at `backgroundold.png` in the working tree and
+deleted at user request after the commit landed.
+
+**Button rename — "GO TO BED".** `scenes/week_view.tscn`'s
+`AdvanceButton` text was `"ADVANCE TO NEXT PHASE"`; renamed to
+`"GO TO BED"`. Each `TimeManager.Phase` step advances one full day
+(SUN → MON etc.), so the in-world phrasing works at every phase —
+no phase-conditional logic needed.
+
+**BACKLOG additions (this session, separate from STATUS):**
+- **Endings section** in `docs/BACKLOG.md` — 6 ending categories:
+  Elder/Bethelite (doubling-down), Bitter Atheist (loss-of-faith
+  inverted), Hasidic Convert (structured-but-different),
+  Quiet Fade (most common real outcome), Disfellowshipping Crisis
+  (accidental one-way door), In-Fold Quiet Life (conviction holds,
+  ordinary Witness life). Each with tone notes + red lines. Plus 4
+  open ending-system questions (state machine, HoN-as-modifier-vs-
+  ending, multi-ending policy, Ending Resource subclass).
+- **Personal-study minigame** added to Systems — third pillar
+  alongside door-knock and meeting. Click-through Lighthouse article
+  with paragraph questions; conviction-default with doubt-gated
+  inner-voice beats at threshold 40; deeper-doubt branch opens
+  scripture cross-references that can surface inconsistencies.
+  Pairs naturally with M6 family-worship work.
+
+**Files modified/created this polish bundle:**
+- `assets/sprites/portraits/houses/house_0{2..7}.png(+.import)` (new)
+- `assets/sprites/territory/background.png` (Andrew's swap)
+- `scenes/territory_map.tscn` — Polaroid node restructured + new
+  `StyleBoxFlat_polaroid` sub-resource
+- `scenes/door_knock.tscn` — new `HousePortrait` TextureRect +
+  darkened Background color
+- `scenes/week_view.tscn` — AdvanceButton text rename
+- `scripts/systems/territory_manager.gd` —
+  `HOUSE_PORTRAIT_PATHS` + 2 helpers
+- `scripts/ui/territory_map.gd` — Polaroid path + delegation
+- `scripts/ui/door_knock.gd` — `_house_portrait` @onready +
+  `_refresh_house_portrait()`
+- `docs/BACKLOG.md` — Endings section + personal-study system
+
+Headless boot clean on both `territory_map.tscn` and
+`door_knock.tscn` (door_knock's "no pending house → REFUSED" early-
+exit warning when booted directly is expected; not a regression).
+
+Both polish commits pushed to origin: `3dd0d11` (portraits +
+polaroid + door_knock BG + BACKLOG) plus the not-yet-committed
+"GO TO BED" rename pending in working tree.
 
 ## M4.4 — Hostile + Gentle Apostate variants: complete (headless boot clean; gate playtest pending Andrew)
 
