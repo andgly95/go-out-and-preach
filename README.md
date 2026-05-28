@@ -2,6 +2,10 @@
 
 A narrative simulation about belief, belonging, and the quiet erosion of certainty inside a high-control millenarian Christian sect. Built in Godot 4.x.
 
+<p align="center">
+  <img src="docs/design/mockups/territory_map_v1.png" alt="Saturday field service — Maple Street territory" width="860">
+</p>
+
 You play a 22-year-old publisher in **The Society of the Truth** — a fictional global sect awaiting the end of the world system. You knock doors, attend meetings at the **Hall of Witness**, manage your standing with the elders, navigate family expectations, and try to keep your faith intact as small doubts accumulate beneath the surface. Over two in-game years, a thousand small decisions quietly determine who you become.
 
 Tone reference: *Disco Elysium* and *Pathologic*. Not satire, not horror — a slow, observational character study.
@@ -23,6 +27,17 @@ Tone reference: *Disco Elysium* and *Pathologic*. Not satire, not horror — a s
 ## Core Loop
 
 The time unit is **the week**. Each week cycles through fixed phases:
+
+```mermaid
+flowchart LR
+    Sun["Sunday\nPublic Talk\n+ Study"] --> Mon["Monday\nPersonal Time"]
+    Mon --> Tue["Tuesday\nMidweek\nMeeting"]
+    Tue --> Wed["Wednesday\nPersonal Time"]
+    Wed --> Thu["Thursday\nService Prep"]
+    Thu --> Fri["Friday\nPersonal Time"]
+    Fri --> Sat["Saturday\nField Service"]
+    Sat -.->|week advances| Sun
+```
 
 | Day | Phase |
 |---|---|
@@ -49,13 +64,23 @@ Each phase advances three things: resource meters, relationship states, and hidd
 
 ### Hidden doubt (`scripts/systems/doubt_meter.gd`)
 
-A separate 0–100 meter. Not shown in UI until threshold **40**, when a faint ambiguous indicator appears (the M4 reveal). Fully visible at **70** (deferred to a later milestone). Dialogue options exist that the player cannot select below certain thresholds — they appear greyed-out so the player knows they're missing something.
+A separate 0–100 meter with three stages of visibility:
+
+```
+ 0 ──────────────────── 40 ────────── 70 ──── 100
+ [  completely hidden  ] [ ambiguous ] [ visible ]
+                          (M4 reveal)
+```
+
+Not shown in UI until threshold **40**, when a faint ambiguous indicator appears. Fully visible at **70** (deferred to a later milestone). Dialogue options exist that the player cannot select below certain thresholds — they appear greyed-out so the player knows they're missing something.
 
 ### Time (`scripts/systems/time_manager.gd`)
 
 A simple phase enum that advances Sunday → Saturday and rolls the week counter. All systems listen via `SignalBus` (`day_advanced`, `week_advanced`, `phase_changed`).
 
 ### Door-knock (`scenes/door_knock.tscn` + `scripts/ui/door_knock.gd`)
+
+<img align="right" src="docs/design/mockups/house_painting.png" alt="A door waiting to be knocked" width="320">
 
 The signature moment-to-moment gameplay. From the territory map's 4×3 grid of houses, the player picks a door, plays a short Dialogic timeline against an archetype householder, and resolves to one of: Refused / Tract Left / Return Visit / Bible Study Started / Not Home.
 
@@ -67,11 +92,17 @@ v1 archetypes shipping:
 
 Doubt deltas fire on outcome plus off-script choice text — see `OUTCOME_DOUBT_DELTAS` and `OFFSCRIPT_CHOICE_TEXTS` in `door_knock.gd`.
 
+<br clear="right">
+
 ### Meetings (`scenes/meeting_hall.tscn` + `scripts/systems/meeting_manager.gd`)
+
+<img align="right" src="docs/design/mockups/parked_car.png" alt="Parked outside before the meeting" width="280">
 
 M5 Hall of Witness scenes. Sunday routes Public Talk → Lighthouse Study back-to-back; Tuesday runs Midweek Training alone. Flow: seat picker (2×3 grid, six pinned neighbors) → social moment → talk(s) → resolve. Per-talk effects (Conviction, Standing-Elders) fire on completion; meeting-level Energy fires once at close. Skipping fires inline penalties (Standing-Elders -2, doubt +1) and phase-advances without entering the scene.
 
 Speech pool is picker-based with last-played exclusion; the M5.3 expansion to three speeches per talk type is in flight.
+
+<br clear="right">
 
 ### Global signal bus (`scripts/systems/signal_bus.gd`)
 
@@ -87,6 +118,22 @@ Systems emit and listen through `SignalBus` rather than calling each other direc
 - **Save format:** Godot resource serialization at week boundaries (M7, not yet shipped)
 - **Resolution:** 1920×1080 native
 - **Localization:** English only for v1; all user-facing strings wrapped in `tr()`
+
+### System architecture
+
+```mermaid
+graph TD
+    TM[TimeManager] -->|day_advanced\nweek_advanced\nphase_changed| SB((SignalBus))
+    SB --> RM[ResourceManager]
+    SB --> DM[DoubtMeter]
+    SB --> MM[MeetingManager]
+    SB --> TrM[TerritoryManager]
+    DM -->|doubt_threshold_crossed| SB
+    MM -->|talk_completed| SB
+    PS[PlayerState] -.->|future| SB
+    D[Dialogic] --> TrM
+    D --> MM
+```
 
 ### Autoloads (`project.godot`)
 
@@ -176,15 +223,15 @@ The project is built in milestones M0 – M8 (full spec in `docs/design/gdd.md` 
 
 | Milestone | Scope | State |
 |---|---|---|
-| M0 | Scaffold + main menu | Shipped |
-| M1 | Time + resources + HUD | Shipped |
-| M2 | Territory + door-knock shell | Shipped |
-| M3 | Dialogue system (Dialogic) | Shipped |
-| M4 | Doubt mechanic | Shipped (M4.1–M4.6 follow-ons in tree) |
-| M5 | Meeting scenes | M5.0–M5.2 shipped; M5.3 dialogue pool in flight |
-| M6 | Family & home | Not started |
-| M7 | Save/load + polish | Not started |
-| M8 | v0.1 lock + tester build | Not started |
+| M0 | Scaffold + main menu | ✓ Shipped |
+| M1 | Time + resources + HUD | ✓ Shipped |
+| M2 | Territory + door-knock shell | ✓ Shipped |
+| M3 | Dialogue system (Dialogic) | ✓ Shipped |
+| M4 | Doubt mechanic | ✓ Shipped (M4.1–M4.6 follow-ons in tree) |
+| M5 | Meeting scenes | ► M5.0–M5.2 shipped; M5.3 dialogue pool in flight |
+| M6 | Family & home | — Not started |
+| M7 | Save/load + polish | — Not started |
+| M8 | v0.1 lock + tester build | — Not started |
 
 **Core-loop gate (M3).** The door-knock minigame is a real validation gate. If it doesn't feel emotionally compelling in playtest, the design is wrong before any further content lands.
 
