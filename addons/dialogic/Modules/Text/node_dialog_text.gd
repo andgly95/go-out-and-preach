@@ -45,13 +45,13 @@ func _ready() -> void:
 	meta_clicked.connect(_on_meta_clicked)
 	gui_input.connect(on_gui_input)
 	bbcode_enabled = true
-	# Project-local mod (Go Out and Preach): autoscroll for overflowing
-	# dialogue text. `scroll_active` + `scroll_following` keep the latest
-	# revealed characters visible during the reveal; `reveal_text` resets
-	# scroll to 0 on new lines so they start at the top of the container
-	# rather than stuck at the bottom from the previous overflow.
+	# Project-local mod (Go Out and Preach): signal-driven autoscroll.
+	# On each new line: reset scroll to 0 (deferred so layout is ready).
+	# As characters reveal: scroll proportionally toward the bottom so the
+	# currently-revealing region of overflowing text stays in view.
 	scroll_active = true
-	scroll_following = true
+	started_revealing_text.connect(_goop_on_started_revealing)
+	continued_revealing_text.connect(_goop_on_continued_revealing)
 	if textbox_root == null:
 		textbox_root = self
 
@@ -84,11 +84,6 @@ func reveal_text(_text: String, keep_previous:=false) -> void:
 		elif alignment == Alignment.RIGHT:
 			text = '[right]'+text
 		visible_characters = 0
-		# Project-local mod (Go Out and Preach): reset scroll to top on
-		# every new dialogue line. Paired with scroll_following=true set in
-		# _ready(), this gives "auto-scroll down as text reveals, scroll
-		# back up on next click." See _ready() for context.
-		scroll_to_line(0)
 
 	else:
 		base_visible_characters = len(text)
@@ -200,3 +195,49 @@ func custom_fx_skip() -> void:
 	for effect in custom_effects:
 		if effect.has_method("skip"):
 			effect.skip()
+
+
+# --- Project-local mod (Go Out and Preach): autoscroll handlers -------------
+# Goal: dialogue lines that overflow the text container should (a) start at
+# the top of the container on every new line, and (b) auto-scroll downward
+# as new characters are revealed so the currently-revealing region stays
+# visible. Both fire from Dialogic's existing reveal-text signal pipeline.
+
+func _goop_on_started_revealing() -> void:
+	# Reset to top on each new line. Deferred so RichTextLabel finishes its
+	# layout pass for the new text before the scrollbar value is read/set;
+	# without the defer, get_v_scroll_bar().max_value is often still zero.
+	call_deferred("_goop_scroll_to_top")
+
+
+func _goop_on_continued_revealing(_new_character: String) -> void:
+	# Threshold-based autoscroll: only scroll when the reveal cursor has
+	# moved below the currently visible region. Cursor y is estimated as
+	# content_height × (visible_chars / total_chars) — not perfectly
+	# accurate (line widths vary) but close enough; the threshold check
+	# keeps us from over-scrolling between actual line breaks.
+	var bar: VScrollBar = get_v_scroll_bar()
+	if bar == null or bar.max_value <= 0.0:
+		return
+	var total: int = get_total_character_count()
+	if total <= 0:
+		return
+	var content_h: float = float(get_content_height())
+	if content_h <= 0.0:
+		return
+	var p: float = float(visible_characters) / float(total)
+	var cursor_y: float = content_h * p
+	var view_h: float = size.y
+	# Headroom in pixels — keep the cursor a little above the bottom edge
+	# instead of pinned right at the viewport bottom.
+	const HEADROOM: float = 12.0
+	var bottom_of_view: float = bar.value + view_h
+	if cursor_y > bottom_of_view - HEADROOM:
+		var new_scroll: float = cursor_y - view_h + HEADROOM
+		bar.value = clamp(new_scroll, 0.0, bar.max_value)
+
+
+func _goop_scroll_to_top() -> void:
+	var bar: VScrollBar = get_v_scroll_bar()
+	if bar != null:
+		bar.value = 0.0
