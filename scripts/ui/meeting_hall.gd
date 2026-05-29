@@ -36,6 +36,17 @@ enum Phase {
 @onready var _phase_flavor: Label = $PhaseCard/PhaseMargin/PhaseVBox/PhaseFlavor
 @onready var _phase_content: VBoxContainer = $PhaseCard/PhaseMargin/PhaseVBox/PhaseContent
 @onready var _phase_card: PanelContainer = $PhaseCard
+@onready var _hall_background: TextureRect = $HallBackground
+
+# Per-speaker stage BG paths. The default hall_of_witness.png (set in
+# meeting_hall.tscn) is used outside the TALK phase and as a fallback for
+# any speaker without a stage shot. Speaker .id is the lookup key — matches
+# Speaker.id in data/speakers/*.tres.
+const STAGE_BG_PATHS: Dictionary = {
+	&"elder_coordinator": "res://assets/backgrounds/coordinator_stage.png",
+	&"elder_strict":      "res://assets/backgrounds/strict_stage.png",
+}
+const DEFAULT_HALL_BG_PATH: String = "res://assets/backgrounds/hall_of_witness.png"
 
 var _meeting_type: StringName = &""
 var _talks_remaining: Array = []
@@ -186,8 +197,31 @@ func _enter_talk_phase() -> void:
 	# Hide the phase card while Dialogic owns the screen. Dialogic instantiates
 	# its own text pane + portrait layer on Dialogic.start().
 	_phase_card.visible = false
+	_apply_stage_background_for_current_talk()
 	var timeline_path: String = MeetingManager.get_speech_path(_current_speech_slug)
 	Dialogic.start(timeline_path)
+
+
+func _apply_stage_background_for_current_talk() -> void:
+	var speaker: Speaker = MeetingManager.get_speaker_for(_current_talk)
+	if speaker == null:
+		_restore_default_hall_background()
+		return
+	var path: String = STAGE_BG_PATHS.get(speaker.id, "")
+	if path == "" or not ResourceLoader.exists(path):
+		_restore_default_hall_background()
+		return
+	var tex: Texture2D = load(path)
+	if tex != null:
+		_hall_background.texture = tex
+
+
+func _restore_default_hall_background() -> void:
+	if not ResourceLoader.exists(DEFAULT_HALL_BG_PATH):
+		return
+	var tex: Texture2D = load(DEFAULT_HALL_BG_PATH)
+	if tex != null:
+		_hall_background.texture = tex
 
 
 # --- Phase: song ------------------------------------------------------------
@@ -246,6 +280,9 @@ func _on_timeline_ended() -> void:
 func _advance_after_talk() -> void:
 	_current_talk = &""
 	_current_speech_slug = &""
+	# Restore the default Hall BG between talks (and before resolve). The
+	# next talk's _enter_talk_phase will swap to that speaker's stage shot.
+	_restore_default_hall_background()
 	if _talks_remaining.is_empty():
 		_resolve_meeting()
 		return

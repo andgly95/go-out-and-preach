@@ -45,6 +45,13 @@ func _ready() -> void:
 	meta_clicked.connect(_on_meta_clicked)
 	gui_input.connect(on_gui_input)
 	bbcode_enabled = true
+	# Project-local mod (Go Out and Preach): autoscroll for overflowing
+	# dialogue text. `scroll_active` + `scroll_following` keep the latest
+	# revealed characters visible during the reveal; `reveal_text` resets
+	# scroll to 0 on new lines so they start at the top of the container
+	# rather than stuck at the bottom from the previous overflow.
+	scroll_active = true
+	scroll_following = true
 	if textbox_root == null:
 		textbox_root = self
 
@@ -77,6 +84,11 @@ func reveal_text(_text: String, keep_previous:=false) -> void:
 		elif alignment == Alignment.RIGHT:
 			text = '[right]'+text
 		visible_characters = 0
+		# Project-local mod (Go Out and Preach): reset scroll to top on
+		# every new dialogue line. Paired with scroll_following=true set in
+		# _ready(), this gives "auto-scroll down as text reveals, scroll
+		# back up on next click." See _ready() for context.
+		scroll_to_line(0)
 
 	else:
 		base_visible_characters = len(text)

@@ -9,17 +9,17 @@
 "style": ""
 },
 &"default_portrait": "neutral",
-&"description": "M5 — Strict Elder. Delivers Lighthouse Study per Phase 1.5 Q5. Voice profile: cast.md § 4.2. Cool slate-grey color for placeholder portrait tint vs Coordinator's warm gold.",
+&"description": "M5 — Strict Elder. Delivers Lighthouse Study per Phase 1.5 Q5. Voice profile: cast.md § 4.2. Real hall portrait (2026-05-28) replacing the slate-grey placeholder tint.",
 &"display_name": "Brother Whitcomb",
 &"mirror": false,
 &"nicknames": [],
 &"offset": Vector2(0, 0),
 &"portraits": {
 "neutral": {
-"image": "",
+"image": "res://assets/sprites/portraits/elders/strict_hall.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 }
 },
-&"scale": 1.0
+&"scale": 0.35
 }

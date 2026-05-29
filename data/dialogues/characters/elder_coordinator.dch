@@ -9,17 +9,17 @@
 "style": ""
 },
 &"default_portrait": "neutral",
-&"description": "M5 — Coordinator of Elders. Delivers Public Talk + Midweek per Phase 1.5 Q5. Voice profile: cast.md § 4.1. Warm-gold color for placeholder portrait tint vs Strict Elder's cool slate-grey.",
+&"description": "M5 — Coordinator of Elders. Delivers Public Talk + Midweek per Phase 1.5 Q5. Voice profile: cast.md § 4.1. Real hall portrait (2026-05-28) replacing the warm-gold placeholder tint.",
 &"display_name": "Brother Phillips",
 &"mirror": false,
 &"nicknames": [],
 &"offset": Vector2(0, 0),
 &"portraits": {
 "neutral": {
-"image": "",
+"image": "res://assets/sprites/portraits/elders/coordinator_hall.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 }
 },
-&"scale": 1.0
+&"scale": 0.35
 }

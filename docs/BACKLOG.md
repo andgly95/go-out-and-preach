@@ -14,17 +14,19 @@ Format: one bullet per idea. Add a short *why* if the motivation isn't obvious f
 
 ## Content (dialogue, characters, events)
 
-- **Elder archetypes (body of elders variety).** Populate the Hall of Witness elder body with distinct types so meetings, shepherding calls, and judicial situations feel different depending on who's involved:
-  - *The Shepherd* — the one people actually want to talk to; would notice if you'd been quiet for a few weeks.
-  - *The Pharisee* — knows ks10 cold, runs the strict reading, comes alive in judicial committees.
-  - *The Bureaucrat* — loves territory maps and meeting schedules; not there for people but keeps the machine running.
-  - *The Climber* — polished, networked, visibly being groomed for circuit work or a branch invitation.
-  - *The Old Guard* — been in since the 70s, talks about how things used to be stricter, slow on policy shifts.
-  - *The Charmer* — great on the platform, less reliable in the back room.
-  - *The Reluctant* — got appointed because there was a gap, does the minimum, would rather be left alone.
-  - *The Theologian* — deep in prophecy and types/antitypes, occasionally oversteps and gets walked back by the CO.
-  - *The Family Patriarch* — heavy on headship, family worship, traditional roles.
-  - *The Quiet One* — reliable, does the shifts, rarely speaks up in meetings but everyone trusts him.
+- **Elder archetypes (body of elders variety).** Populate the Hall of Witness elder body with distinct types so meetings, shepherding calls, and judicial situations feel different depending on who's involved. **Canonical mapping locked 2026-05-28:** Brother Phillips (cast.md § 4.1) = *The Shepherd*; Brother Whitcomb (cast.md § 4.2) = *The Pharisee*. The two are paradigmatic instances of those archetypes:
+  - *The Shepherd* — **= Brother Phillips (Coordinator of Elders, § 4.1).** The one people actually want to talk to; would notice if you'd been quiet for a few weeks. Locked.
+  - *The Pharisee* — **= Brother Whitcomb (Strict Elder, § 4.2).** Knows ks10 cold, runs the strict reading, comes alive in judicial committees. Locked.
+  - **PENDING — v1 body of elders target adds (3 new cast.md sub-sections § 4.6 / § 4.7 / § 4.8 + corresponding cast-portraits.md entries):**
+    - *The Bureaucrat* — loves territory maps and meeting schedules; not there for people but keeps the machine running. **Why for v1:** mechanically distinct — surfaces when the after-service report (cd8288b) fires monthly hour-tallying; natural Secretary or Service Overseer role. Voice administrative/precise — neither Phillips' warmth nor Whitcomb's doctrinal sharpness.
+    - *The Old Guard* — been in since the 70s, talks about how things used to be stricter, slow on policy shifts. **Why for v1:** foils Whitcomb without overlap — Old Guard remembers when rules were harsher AND when people walked the line and survived. Voice slower, anecdotal. Low writing cost; texture-rich.
+    - *The Reluctant* — got appointed because there was a gap, does the minimum, would rather be left alone. **Why for v1:** realism beat — every body has one. Mechanically a *relief* — he doesn't fire pressure events. Voice vague, minimum-effort. The player notices the body isn't a monolith.
+  - **Defer past v1 (re-rank when their feature ships):**
+    - *The Climber* — polished, networked, visibly being groomed for circuit work or a branch invitation. **Defer:** creates political tension with Phillips (groomed-for-Coordinator); better when there's narrative space for body politics in M7+.
+    - *The Charmer* — great on the platform, less reliable in the back room. **Defer:** better as a *visiting speaker* (one-shot) than a body member; fits the visiting-speaker pattern flagged in M5.4+ candidates.
+    - *The Theologian* — deep in prophecy and types/antitypes, occasionally oversteps and gets walked back by the CO. **Defer:** overlaps Whitcomb's doctrinal sharpness too much in a 5-elder body. Re-consider if you want a doctrinally-rich Lighthouse Study slot distinct from Whitcomb's clipped corrective register.
+    - *The Family Patriarch* — heavy on headship, family worship, traditional roles. **Defer to M6:** surfaces in family-of-three-generations scenes; someone the Parent in the Truth holds in regard.
+    - *The Quiet One* — reliable, does the shifts, rarely speaks up in meetings but everyone trusts him. **Defer:** by design doesn't surface; low ROI for v1. Could be a cheap background named-but-rarely-speaking add if you want a populated-feeling body.
 - **Intermission song scene — pool + social moments (Sunday meeting).** Minimal one-song scaffold landed (single placeholder original between PT and LS). Future work: expand the song pool (multiple originals with last-played exclusion like the speech pools), promote Song to a `Resource` type, add small social-moment opportunities during the song (turning the page for a neighbor, the standing-up shuffle, etc.). Originals only — see CLAUDE.md legal guardrails.
 -
 
