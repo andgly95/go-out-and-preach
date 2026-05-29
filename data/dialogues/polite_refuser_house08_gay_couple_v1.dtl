@@ -44,12 +44,13 @@
 #   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Cast.md § 6.0.4 canonical response
 #   "We're really not looking to get into all that. Thanks though." lands in
 #   the HOUSEHOLDER response at E3d first_visit.
-# - "Have a good day" vs "Have a blessed day" mismatch → lands at E3a
-#   first_visit ONLY. Other relief closes read neutrally ("take care",
-#   "thanks") so the mismatch lands as a deliberate vocab choice, not a tic.
-#   Cast.md § 6.0.4: "May offer 'have a good day' rather than 'have a
-#   blessed day' — a small religious-vocabulary mismatch the publisher's
-#   brain registers."
+# - "Have a good day" close → lands at E3a first_visit ONLY. Per cast.md
+#   § 6.0.4 (2026-05-28 authenticity revision): the couple's "have a good
+#   day" reads as a *bid for finality* against the publisher's tentative
+#   "take care now" / "hope to see you again" — definitive closure vs.
+#   open-ended warmth. Reframed from the previous "blessed day" mismatch,
+#   which was pattern-matched generic Christianity rather than authentic
+#   Witness publisher vocabulary.
 #
 # RED-LINE COMPLIANCE STATEMENT (cast.md § 6.0.4 internalized):
 # Zero "coming out" beats anywhere in this file. Zero "you know we're..."
@@ -90,20 +91,19 @@ polite_refuser_house08_gay_couple (polite_smile): Oh — hi there.
 polite_refuser_house08_gay_couple (polite_smile): We're not interested, but thanks for stopping by.
 
 - Of course, we respect that.
-	# E3a — clean refusal close. Vocab-mismatch beat lands here per Phase 0
-	# resolution: the publisher's implied close would be "Have a blessed day";
-	# the householder offers "Have a good day" instead — a small religious-
-	# vocabulary mismatch the publisher's brain registers as the player hears
-	# the line. Other relief closes (E3b/E3c/E4d-*) read neutrally so the
-	# mismatch lands as a deliberate vocab choice, not a tic.
+	# E3a — clean refusal close. Finality-mismatch beat lands here per the
+	# 2026-05-28 authenticity revision: the publisher's tentative warmth
+	# ("take care now" / "hope to see you again") leaves the door open;
+	# the householder offers "Have a good day" as a *definitive* close.
+	# Different temperature, same exterior politeness — the difference
+	# lives in the implied next-step.
 	update polite_refuser_house08_gay_couple (relief)
-	# UNSURE: vocab-mismatch placement at E3a first_visit ONLY. Risk: one
-	# beat across a single Saturday may be too quiet to register against
-	# the publisher's expected "blessed day" close. If playtest shows the
-	# mismatch is invisible, the next-pass move is to also land it at
-	# returning E3a ("You take care now. Have a good day.") — doubles the
-	# exposure without becoming a tic since the two are separated by at
-	# minimum one week per arc_state binary.
+	# UNSURE: finality-mismatch placement at E3a first_visit ONLY. Risk:
+	# one beat across a single Saturday may be too quiet to register. If
+	# playtest shows the mismatch is invisible, the next-pass move is to
+	# also land it at returning E3a — doubles the exposure without
+	# becoming a tic (the two are separated by at minimum one week per
+	# arc_state binary).
 	polite_refuser_house08_gay_couple (relief): You too. Have a good day.
 	[signal arg="REFUSED"]
 	[end_timeline]

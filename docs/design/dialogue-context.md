@@ -123,7 +123,10 @@ The presentation is trained to be **under thirty seconds** to the magazine offer
 After a refusal:
 - "Of course, we respect that. May we leave this with you anyway?"
 - "Thank you for your time."
-- "Have a blessed day."
+- "Take care now."
+- "Hope to see you again."
+
+Note: Publishers do *not* default to "have a blessed day." That phrase is generic American Evangelical / Pentecostal / Southern Christian — not characteristically Witness. Witness closings at the door are pragmatic and brief: "take care," "hope to see you again," "we'll let you go," "thank you for your time." The reservedness is the tell.
 
 After interest:
 - "Would it be all right if I came back later this week to share more? What's a good time?"
@@ -176,7 +179,7 @@ PUBLISHER: Of course. We just wanted to leave this with you — it talks
 
 HOUSEHOLDER: Sure, yeah, that's — that's fine. Thank you.
 
-PUBLISHER: Thank you. Have a blessed day.
+PUBLISHER: Thank you. Take care now.
 
 HOUSEHOLDER: You too. (Closes door before publisher fully turns.)
 ```

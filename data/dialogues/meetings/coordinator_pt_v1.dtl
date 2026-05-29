@@ -25,7 +25,7 @@ elder_coordinator (neutral): I was thinking this week about Sister Marin — man
 if DoubtMeter.value >= 40:
 	[i]Three brothers in her driveway. You wonder who would be in yours.[/i]
 
-elder_coordinator (neutral): So as you go through your week, brothers and sisters — at work, at school, in the territory — consider how you might be that quiet answer for someone here. A phone call. A ride to the Hall. A note in the mail. These are not small things. As Paul reminded the Hebrews, we are not to forsake the gathering of ourselves together, but to encourage one another, and so much the more as we see the day approaching. Have a blessed Sunday.
+elder_coordinator (neutral): So as you go through your week, brothers and sisters — at work, at school, in the territory — consider how you might be that quiet answer for someone here. A phone call. A ride to the Hall. A note in the mail. These are not small things. As Paul reminded the Hebrews, we are not to forsake the gathering of ourselves together, but to encourage one another, and so much the more as we see the day approaching. — Take care of each other this week. Thank you, brothers and sisters.
 
 [signal arg="TALK_COMPLETED"]
 [end_timeline]

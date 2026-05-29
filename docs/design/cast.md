@@ -507,7 +507,7 @@ The dialogue subagent does not need to author new first-visit content for House 
 **Voice.**
 - The partner who answers is whose voice the player hears. The other partner may be heard from another room — a single offhand line, mundane content
 - Direct, kind, firm: "We're not interested, but thanks for stopping by."
-- May offer "have a good day" rather than "have a blessed day" — a small religious-vocabulary mismatch the publisher's brain registers
+- May close with "have a good day" rather than the publisher's tentative "take care now" or "hope to see you again" — a small bid-for-finality the publisher's brain registers (the couple's signoff is more definitive than the publisher's warmth-with-return-intent)
 - Off-script "Why is that for you?" → "We're really not looking to get into all that. Thanks though."
 
 **Common defenses.**

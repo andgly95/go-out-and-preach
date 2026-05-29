@@ -24,7 +24,7 @@ elder_coordinator (neutral): Now, many of you here today were brought into the T
 if DoubtMeter.value >= 40:
 	[i]A quiet handing-over. You aren't sure when yours happened, or if it has.[/i]
 
-elder_coordinator (neutral): So this week, brothers and sisters, I'd encourage you to ask yourself one small question. Why is this mine? Sit with it. Don't rush the answer. The friends here are not going anywhere; we'll still be in this room next Sunday. And as Joshua said to the people, choose for yourselves whom you will serve. The choosing is the gift. Have a blessed day.
+elder_coordinator (neutral): So this week, brothers and sisters, I'd encourage you to ask yourself one small question. Why is this mine? Sit with it. Don't rush the answer. The friends here are not going anywhere; we'll still be in this room next Sunday. And as Joshua said to the people, choose for yourselves whom you will serve. The choosing is the gift. — Thank you, brothers and sisters.
 
 [signal arg="TALK_COMPLETED"]
 [end_timeline]

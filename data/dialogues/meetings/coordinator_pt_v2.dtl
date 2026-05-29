@@ -25,7 +25,7 @@ elder_coordinator (neutral): I remember a brother in our circuit — many of you
 if DoubtMeter.value >= 40:
 	[i]Brother Halloran died last spring. He didn't see it.[/i]
 
-elder_coordinator (neutral): So when you find yourself weary this week, brothers and sisters — and we all do — go back to the promise. The Great Tribulation is not the end of the story. It's the threshold. Jehovah has not forgotten one of us. As we read at Romans 8:25, if we hope for what we do not see, we keep on waiting for it with endurance. That endurance is yours. Have a blessed day.
+elder_coordinator (neutral): So when you find yourself weary this week, brothers and sisters — and we all do — go back to the promise. The Great Tribulation is not the end of the story. It's the threshold. Jehovah has not forgotten one of us. As we read at Romans 8:25, if we hope for what we do not see, we keep on waiting for it with endurance. That endurance is yours. — Keep close, brothers and sisters. Thank you.
 
 [signal arg="TALK_COMPLETED"]
 [end_timeline]
