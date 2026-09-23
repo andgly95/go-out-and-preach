@@ -38,3 +38,10 @@ enum State {
 # State enum ordering happens to match the positive-outcome ranking
 # (TRACT_LEFT=3 < RV=4 < STUDY=5) so the comparator is monotonic.
 @export var lifetime_best_outcome: int = State.NOT_VISITED
+
+# Conversations that have happened at this door (any answered visit). Drives
+# which beat a returning conversation or study session plays.
+@export var visit_count: int = 0
+
+# Weekly Bible study sessions held here since the study began.
+@export var study_sessions: int = 0

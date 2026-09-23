@@ -58,7 +58,7 @@
 # CHOICE 4 is doubt-gated at DoubtMeter.value >= 25.
 #
 # Off-script choice text "I don't know. Honestly." matches
-# door_knock.gd::OFFSCRIPT_CHOICE_TEXTS for T1 (+3 doubt). Shared with
+# the [signal arg="OFFSCRIPT:n"] on the branch for T1 (+3 doubt). Shared with
 # house09 inquisitive; no registry update needed this session.
 #
 # Phase 1 locks (Andrew, M4.6 Phase 4 session — returning only):
@@ -141,7 +141,8 @@ curious_seeker_house04_grief (genuine_question): Actually — can I ask you some
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
 - I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	[signal arg="OFFSCRIPT:3"]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via the OFFSCRIPT signal on the branch, in
 	# door_knock.gd. The publisher drops the pitch and tells the truth.
 	update curious_seeker_house04_grief (genuine_question)
 	curious_seeker_house04_grief (genuine_question): Oh. Oh — okay. Yeah, I — I don't either. I guess nobody really does, huh.
@@ -238,7 +239,8 @@ curious_seeker_house04_grief (genuine_question): Sorry — it's been a little we
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
 - I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	[signal arg="OFFSCRIPT:3"]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via the OFFSCRIPT signal on the branch, in
 	# door_knock.gd (shared text-key with house09). Direction-A
 	# (she opens further, quietly) chosen over Direction-B (she closes
 	# down because she's embarrassed by her own openness last time) —

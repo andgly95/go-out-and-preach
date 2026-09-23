@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Activity" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/activity.gd" id="1_activity"]
+
+[resource]
+script = ExtResource("1_activity")
+id = &"visit_grandparent"
+title = "Visit {grandparent}"
+description = "Bring the groceries. Stay for an hour."
+icon = "✦"
+days = Array[int]([3])
+order = 30
+energy_cost = 2
+standing_family = 1
+doubt_relief = 1
+result_text = "You put the groceries away where they go. {grandparent} tells you to sit down, you're making the room nervous."

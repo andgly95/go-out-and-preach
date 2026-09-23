@@ -1,10 +1,9 @@
 extends Control
-## Territory map (M4-LF1 visual polish). Renders the painted background +
-## per-slot medallion/badge overlays, drives hover selection into the right-
-## hand detail panel, and aggregates Today's Progress from
-## SignalBus.territory_house_visited. The top banner here replaces the
-## shared hud.tscn for this scene only (week_view and door_knock still use
-## the shared HUD).
+## Territory map: a morning of field service. Renders the painted street
+## with per-house medallions and badges, shows how much of the morning is
+## left, and sends knocks through FieldService (which owns the time budget
+## and the answered-door roll). Appointments — return visits and studies —
+## persist week to week and cost more time but are always home.
 ##
 ## House slot positions are expressed as fractional (x, y, w, h) offsets of
 ## the painted background so the layout tracks viewport stretch. The grid
@@ -100,9 +99,9 @@ var _refused_count: int = 0
 var _not_home_count: int = 0
 var _apostate_visited_today: bool = false
 
-# Hours-this-month is tracked on ResourceManager; we capture the value at
-# scene entry so the after-service report can show *this session's* hours.
-var _session_start_hours: float = 0.0
+var _time_label: Label = null
+var _extend_button: Button = null
+var _notice_label: Label = null
 
 # Inner-voice gate for the after-service report (matches meeting-hall page-2
 # beat at threshold 40).
@@ -118,7 +117,11 @@ func _ready() -> void:
 	_scripture_ref_label.text = tr(SCRIPTURE_REF)
 	_territory_title.text = TerritoryManager.current_territory.display_name
 	_default_polaroid_texture = _detail_polaroid.texture
-	_session_start_hours = ResourceManager.field_service_hours
+	if not FieldService.active:
+		# week_view starts the session (and charges its energy); this covers
+		# booting the scene directly during development.
+		FieldService.start_session()
+	_build_session_panel()
 	_report_submit.pressed.connect(_on_report_submit_pressed)
 	_build_legend()
 	_build_slots()
@@ -131,14 +134,93 @@ func _ready() -> void:
 	_show_default_detail()
 
 	SignalBus.territory_house_visited.connect(_on_house_visited)
+	SignalBus.resource_changed.connect(_on_resource_changed)
 	_end_button.pressed.connect(_on_end_pressed)
 	_back_button.pressed.connect(_on_back_pressed)
+	_back_button.visible = false
 	_map_area.resized.connect(_layout_slots)
+	_refresh_session_panel()
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		_on_back_pressed()
+	if event.is_action_pressed("ui_cancel") and not _report_card.visible:
+		_on_end_pressed()
+
+
+# --- Session panel (time left, keep going) -----------------------------------
+
+func _build_session_panel() -> void:
+	var box: VBoxContainer = VBoxContainer.new()
+	box.add_theme_constant_override("separation", 8)
+	var header: Label = Label.new()
+	header.text = tr("THIS MORNING")
+	header.add_theme_color_override("font_color", Color(0.78, 0.7, 0.52, 0.9))
+	header.add_theme_font_size_override("font_size", 12)
+	box.add_child(header)
+	_time_label = Label.new()
+	_time_label.add_theme_color_override("font_color", CREAM_TEXT)
+	_time_label.add_theme_font_size_override("font_size", 22)
+	box.add_child(_time_label)
+	_extend_button = Button.new()
+	_extend_button.custom_minimum_size = Vector2(0, 40)
+	_extend_button.add_theme_font_size_override("font_size", 13)
+	var button_style: StyleBoxFlat = StyleBoxFlat.new()
+	button_style.bg_color = Color(0.13, 0.16, 0.22, 1)
+	button_style.border_color = Color(0.62, 0.5, 0.27, 0.7)
+	button_style.set_border_width_all(1)
+	button_style.set_corner_radius_all(4)
+	for style in ["normal", "hover", "pressed", "disabled"]:
+		_extend_button.add_theme_stylebox_override(style, button_style)
+	_extend_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	_extend_button.add_theme_color_override("font_color", Color(0.93, 0.86, 0.7, 1))
+	_extend_button.add_theme_color_override("font_disabled_color", Color(0.6, 0.56, 0.48, 1))
+	_extend_button.pressed.connect(_on_extend_pressed)
+	box.add_child(_extend_button)
+	_notice_label = Label.new()
+	_notice_label.add_theme_color_override("font_color", Color(0.82, 0.76, 0.62, 1))
+	_notice_label.add_theme_font_size_override("font_size", 12)
+	_notice_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(_notice_label)
+	var progress_header: Control = $MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressHeader
+	var vbox: Node = progress_header.get_parent()
+	vbox.add_child(box)
+	vbox.move_child(box, progress_header.get_index())
+	var spacer: Control = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 10)
+	vbox.add_child(spacer)
+	vbox.move_child(spacer, progress_header.get_index())
+
+
+@warning_ignore("integer_division")
+func _refresh_session_panel() -> void:
+	if _time_label == null:
+		return
+	var minutes: int = FieldService.minutes_left()
+	if minutes >= 60:
+		_time_label.text = tr("%dh %02dm left") % [minutes / 60, minutes % 60] if minutes % 60 != 0 else tr("%dh left") % (minutes / 60)
+	else:
+		_time_label.text = tr("%dm left") % minutes
+	_extend_button.text = tr("KEEP GOING  +1 hr  ·  −%d energy") % FieldService.EXTENSION_ENERGY_COST
+	_extend_button.disabled = not FieldService.can_extend()
+	if not FieldService.can_extend() and FieldService.active:
+		_extend_button.text = tr("TOO TIRED TO KEEP GOING")
+	if FieldService.stops_left() <= 0:
+		_notice_label.text = tr("The group is heading back to the cars.")
+	elif TimeManager.current_phase != TimeManager.Phase.SATURDAY:
+		_notice_label.text = tr("A weekday morning. Fewer people are home.")
+	else:
+		_notice_label.text = ""
+	for house in TerritoryManager.current_territory.houses:
+		_refresh_slot(house)
+
+
+func _on_extend_pressed() -> void:
+	FieldService.extend()
+	_refresh_session_panel()
+
+
+func _on_resource_changed(_resource_name: String, _value: float) -> void:
+	_refresh_session_panel()
 
 
 # --- Slot construction & layout ----------------------------------------------
@@ -275,6 +357,8 @@ func _refresh_slot(house: House) -> void:
 	var badge: PanelContainer = slot.get_node("Badge")
 	var badge_label: Label = badge.get_node("Label")
 	var info: Dictionary = _badge_info_for_state(house.state)
+	if TerritoryManager.is_appointment(house) and house.householder != null and not house.householder.character_name.is_empty():
+		info["text"] = "%s · %s" % [info["text"], _short_name(house.householder.character_name)]
 	badge.add_theme_stylebox_override("panel", _make_badge_style(info.get("color")))
 	badge_label.text = tr(info.get("text"))
 	badge_label.add_theme_color_override("font_color", info.get("text_color"))
@@ -292,10 +376,21 @@ func _refresh_slot(house: House) -> void:
 	# is locked until the next reset hook fires (next service day for
 	# NOT_HOME, next Sunday rollover for resolved outcomes). Hover-select
 	# still works (detail panel shows what happened).
-	if house.state == House.State.NOT_VISITED:
+	if FieldService.can_visit(house):
 		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		slot.modulate = Color(1, 1, 1, 1)
 	else:
 		slot.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+		# Dim houses there's no time left for, so the choice reads at a glance.
+		var out_of_time: bool = FieldService.is_knockable(house) and not FieldService.can_visit(house)
+		slot.modulate = Color(1, 1, 1, 0.55) if out_of_time else Color(1, 1, 1, 1)
+
+
+func _short_name(full_name: String) -> String:
+	# "The Patel family" stays whole; "Daniel Reyes" → "Daniel".
+	if full_name.begins_with("The "):
+		return full_name
+	return full_name.get_slice(" ", 0)
 
 
 func _pip_color_for_lifetime(lifetime: int) -> Variant:
@@ -329,9 +424,9 @@ func _badge_info_for_state(state: int) -> Dictionary:
 		House.State.TRACT_LEFT:
 			return {"color": BADGE_GREEN, "text": "TRACT LEFT", "text_color": CREAM_TEXT}
 		House.State.BIBLE_STUDY_STARTED:
-			return {"color": BADGE_GREEN, "text": "STUDY STARTED", "text_color": CREAM_TEXT}
+			return {"color": BADGE_GREEN_BRIGHT, "text": "STUDY · 1 HR", "text_color": NAVY_DEEP}
 		House.State.RETURN_VISIT_SCHEDULED:
-			return {"color": BADGE_AMBER, "text": "RETURN VISIT", "text_color": NAVY_DEEP}
+			return {"color": BADGE_AMBER, "text": "RETURN VISIT · 30 MIN", "text_color": NAVY_DEEP}
 		House.State.REFUSED:
 			return {"color": BADGE_RED, "text": "REFUSED", "text_color": CREAM_TEXT}
 		House.State.NOT_HOME:
@@ -406,18 +501,16 @@ func _on_slot_gui_input(event: InputEvent, house_id: StringName) -> void:
 		if event.shift_pressed and OS.is_debug_build():
 			_force_answered_visit(house_id)
 			return
-		# M4.6+ — gate clicks on already-visited houses. A house with
-		# state != NOT_VISITED is locked until the next reset hook fires.
-		# Silent ignore — the cursor shape (set in _refresh_slot) is the
-		# affordance cue, the badge color tells the player what happened.
+		# Visited-today houses and ones there's no time left for don't take
+		# clicks; the cursor and dimming set in _refresh_slot are the cue.
 		var house: House = TerritoryManager.get_house(house_id)
-		if house == null or house.state != House.State.NOT_VISITED:
+		if house == null or not FieldService.can_visit(house):
 			return
 		_commit_visit(house_id)
 
 
 func _force_answered_visit(house_id: StringName) -> void:
-	print_debug("[M4.5 debug] Shift+click bypass: forcing answered for %s" % house_id)
+	print_debug("[debug] Shift+click: forcing an answered door at %s" % house_id)
 	TerritoryManager.set_pending_house(house_id)
 	TerritoryManager.resolve_householder_for_pending_house()
 	get_tree().change_scene_to_file("res://scenes/door_knock.tscn")
@@ -441,25 +534,24 @@ func _select(house_id: StringName) -> void:
 func _commit_visit(house_id: StringName) -> void:
 	if _beat_active:
 		return
-	if TerritoryManager.roll_door_outcome():
-		# §3 answered. §4 Apostate sub-roll (no-op for non-Apostate houses;
-		# v1 maps all sub-types back to Wounded) then existing scene flow.
-		TerritoryManager.set_pending_house(house_id)
+	var house: House = TerritoryManager.get_house(house_id)
+	if FieldService.knock(house):
+		# Someone's home. Apostate houses re-roll which apostate answers.
 		TerritoryManager.resolve_householder_for_pending_house()
 		get_tree().change_scene_to_file("res://scenes/door_knock.tscn")
 		return
 	# Not home. Resolve in-place with a brief on-map beat; no scene change.
-	_resolve_not_home(house_id)
+	_resolve_not_home(house)
 
 
-func _resolve_not_home(house_id: StringName) -> void:
-	# State first: resolve_pending_house ticks hours, flips the badge to
-	# grey "NOT HOME" via the territory_house_visited → _on_house_visited
-	# chain, and updates Today's Progress. The beat label then layers on
-	# top of the already-flipped badge as a "registered" feedback beat.
+func _resolve_not_home(house: House) -> void:
+	# State first: the badge flips to grey "NOT HOME" via the
+	# territory_house_visited → _on_house_visited chain. The beat label then
+	# layers on top as a "registered" feedback beat.
 	_beat_active = true
-	TerritoryManager.set_pending_house(house_id)
-	TerritoryManager.resolve_pending_house(House.State.NOT_HOME)
+	var house_id: StringName = house.id
+	FieldService.resolve_not_home(house)
+	_refresh_session_panel()
 	var slot: Control = _house_slots.get(house_id)
 	if slot == null:
 		_beat_active = false
@@ -500,7 +592,13 @@ func _populate_detail(house: House) -> void:
 	_detail_header.text = tr("✦ HOUSE #%d ✦") % number
 	_detail_polaroid.texture = _portrait_for_house_number(number)
 	_detail_caption.text = tr(_caption_for_state(house.state))
-	_detail_body.text = tr(_body_for_state(house.state))
+	var body: String = tr(_body_for_state(house.state))
+	var who: String = house.householder.character_name if house.householder != null else ""
+	if house.visit_count > 0 and not who.is_empty():
+		body = "%s\n\n%s" % [who, body]
+	if FieldService.is_knockable(house):
+		body += "\n\n" + tr("Takes about %d minutes.") % (FieldService.stop_cost(house) * 15)
+	_detail_body.text = body
 
 
 func _portrait_for_house_number(number: int) -> Texture2D:
@@ -531,9 +629,9 @@ func _body_for_state(state: int) -> String:
 		House.State.TRACT_LEFT:
 			return "Literature was accepted at the door. Worth a follow-up next Saturday."
 		House.State.BIBLE_STUDY_STARTED:
-			return "A weekly study is on the schedule here. Bring the next lesson."
+			return "A weekly study is on the schedule here. Bring the next lesson. They'll be expecting you."
 		House.State.RETURN_VISIT_SCHEDULED:
-			return "The householder agreed to talk again. Keep the appointment."
+			return "The householder agreed to talk again. They'll be home."
 		House.State.REFUSED:
 			return "The conversation ended without an opening. Leave it for now."
 		House.State.NOT_HOME:
@@ -545,28 +643,15 @@ func _body_for_state(state: int) -> String:
 # --- Today's Progress aggregator --------------------------------------------
 
 func _refresh_progress() -> void:
-	_tract_left_count = 0
-	_return_visit_count = 0
-	_studies_started_count = 0
-	_refused_count = 0
-	_not_home_count = 0
-	_apostate_visited_today = false
-	for house in TerritoryManager.current_territory.houses:
-		match house.state:
-			House.State.TRACT_LEFT:
-				_tract_left_count += 1
-			House.State.RETURN_VISIT_SCHEDULED:
-				_return_visit_count += 1
-			House.State.BIBLE_STUDY_STARTED:
-				_studies_started_count += 1
-			House.State.REFUSED:
-				_refused_count += 1
-			House.State.NOT_HOME:
-				_not_home_count += 1
-		if house.state != House.State.NOT_VISITED \
-				and house.householder != null \
-				and TerritoryManager.APOSTATE_ARCHETYPES.has(house.householder.archetype):
-			_apostate_visited_today = true
+	# This morning's counts come from FieldService's tally; house states
+	# include appointments carried over from earlier weeks.
+	var tally: Dictionary = FieldService.tally
+	_tract_left_count = int(tally.get("tract_left", 0))
+	_return_visit_count = int(tally.get("return_visit_scheduled", 0))
+	_studies_started_count = int(tally.get("bible_study_started", 0)) + int(tally.get("study_continues", 0))
+	_refused_count = int(tally.get("refused", 0))
+	_not_home_count = int(tally.get("not_home", 0))
+	_apostate_visited_today = bool(tally.get("apostate", false))
 	_tract_value.text = str(_tract_left_count)
 	_return_value.text = str(_return_visit_count)
 	_study_value.text = str(_studies_started_count)
@@ -624,21 +709,23 @@ func _on_house_visited(house_id: StringName, _outcome: int) -> void:
 
 
 func _on_end_pressed() -> void:
-	_populate_after_service_report()
+	if _report_card.visible:
+		return
+	var summary: Dictionary = FieldService.end_session()
+	_populate_after_service_report(summary)
 	_report_dim.visible = true
 	_report_card.visible = true
 
 
 func _on_report_submit_pressed() -> void:
-	TimeManager.advance_phase()
-	get_tree().change_scene_to_file("res://scenes/week_view.tscn")
+	get_tree().change_scene_to_file(GameState.end_day())
 
 
 # --- After-service report ----------------------------------------------------
 
-func _populate_after_service_report() -> void:
-	var hours_today: float = maxf(ResourceManager.field_service_hours - _session_start_hours, 0.0)
-	_report_hours.text = "%.1f" % hours_today
+func _populate_after_service_report(summary: Dictionary) -> void:
+	_refresh_progress()
+	_report_hours.text = "%.1f" % float(summary.get("hours", 0.0))
 	_report_tracts.text = str(_tract_left_count)
 	_report_returns.text = str(_return_visit_count)
 	_report_studies.text = str(_studies_started_count)
@@ -648,6 +735,7 @@ func _populate_after_service_report() -> void:
 	if DoubtMeter.value >= REPORT_INNER_VOICE_DOUBT:
 		_report_inner.text = "[center]%s[/center]" % tr(_pick_inner_voice_line())
 		_report_inner.visible = true
+		DoubtMeter.inner_voice()
 	else:
 		_report_inner.visible = false
 

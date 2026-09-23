@@ -3,7 +3,7 @@ extends "res://tools/ci/test_case.gd"
 ## every householder conversation branch resolves to a known outcome.
 
 const OUTCOME_SIGNALS: Array[String] = [
-	"REFUSED", "TRACT_LEFT", "RETURN_VISIT_SCHEDULED", "BIBLE_STUDY_STARTED",
+	"REFUSED", "TRACT_LEFT", "RETURN_VISIT_SCHEDULED", "BIBLE_STUDY_STARTED", "STUDY_CONTINUES",
 ]
 
 
@@ -41,9 +41,12 @@ func test_all_timelines_parse() -> void:
 func test_householder_branches_end_with_outcome() -> void:
 	# Every [end_timeline] in a door conversation must be directly preceded by
 	# an outcome signal, or door_knock falls back to REFUSED with a warning.
-	for path in files_under("res://data/dialogues", "dtl"):
-		if path.contains("/meetings/") or path.contains("/internals/") or path.contains("/scenes/"):
-			continue
+	var door_timelines: Array[String] = []
+	for file in DirAccess.get_files_at("res://data/dialogues"):
+		if file.get_extension() == "dtl":
+			door_timelines.append("res://data/dialogues".path_join(file))
+	door_timelines.append_array(files_under("res://data/dialogues/study", "dtl"))
+	for path in door_timelines:
 		var lines: PackedStringArray = FileAccess.get_file_as_string(path).split("\n")
 		var previous: String = ""
 		for i in lines.size():

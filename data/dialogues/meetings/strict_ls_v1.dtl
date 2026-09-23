@@ -23,6 +23,7 @@ elder_strict (neutral): Paragraph one. The question reads: "Why does Jehovah req
 elder_strict (neutral): Paragraph two. Notice the brothers do not say "mostly clean." They say clean. The world around us makes a kind of peace with what is unclean — its entertainment, its conversation, its habits. The friends in the Truth cannot make that peace. As it says at 2 Corinthians 6:17, "Get out from among them and separate yourselves." The separation is not partial. It cannot be.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]The separation is not partial. You count, quickly, the small things you have not gotten out from among.[/i]
 
 elder_strict (neutral): Paragraph three. The application is for each of us. Examine your music. Examine your friendships. Examine what you watch when no one is watching with you. Consider the principle at Psalm 101:3 — "I will not set before my eyes anything worthless." That is the standard. That has always been the standard. We do not lower it because the system grows louder. We hold it.

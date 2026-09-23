@@ -22,6 +22,7 @@ elder_strict (neutral): Paragraph one. The question reads: "What does faithful e
 elder_strict (neutral): Paragraph two. Read James 1:12. "Happy is the man who keeps on enduring trial, because on becoming approved he will receive the crown of life." Note the word — approved. There is a testing here. The trial is not punishment. The trial is the means by which Jehovah sees who his people are. Job did not understand his trial in the moment. He endured it anyway. That is the example.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]Job did not understand. You wonder if "did not understand" is the same as "was not told."[/i]
 
 elder_strict (neutral): Paragraph three. The application is direct. When a hardship comes — and one is coming for each of us; that is the nature of this system — the question is not whether you feel strong. The question is whether you remain at the meetings, in the ministry, with the friends. Consider the principle at 1 Corinthians 10:13. Jehovah will not let you be tried beyond what you can bear. He will. You can rely on it. The brothers are confident in that.

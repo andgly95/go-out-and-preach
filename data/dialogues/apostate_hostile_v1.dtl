@@ -34,7 +34,7 @@
 #     REFUSED:    +5   (vs global +1)
 #     TRACT_LEFT: +3   (vs global -1 — net swing of +4)
 #   Off-script choice (E3 Choice 3) fires +3 via the per-choice delta
-#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS.
+#   registry in the [signal arg="OFFSCRIPT:n"] on the branch.
 #   Exposure ceiling per encounter: +8 (off-script + REFUSED).
 #
 # CHOICE 3 (off-script) is doubt-gated at ≥30 — lower than Wounded's ≥35 and
@@ -47,7 +47,7 @@
 #
 # COORDINATION (M4.4):
 #   The off-script choice text "We — we don't have to." must be
-#   registered in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 3.
+#   registered in the [signal arg="OFFSCRIPT:n"] on the branch with value 3.
 #
 # REVEAL-40 chain: standard generic chain. Same handling as Wounded.
 #
@@ -156,6 +156,7 @@ apostate_hostile (confrontational): My sister walked past me at the grocery stor
 	[signal arg="TRACT_LEFT"]
 	[end_timeline]
 - We — we don't have to. | [if DoubtMeter.value >= 30] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 30 (Hostile is the
 	# lowest gate of the trio because the off-script line here is
 	# de-escalation, not recognition of grief or warmth — easier to
@@ -169,7 +170,7 @@ apostate_hostile (confrontational): My sister walked past me at the grocery stor
 	# disarmed.
 	#
 	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
-	# against OFFSCRIPT_CHOICE_TEXTS. This choice fires +3. Off-script
+	# against the OFFSCRIPT signal. This choice fires +3. Off-script
 	# collapses to REFUSED — no tract is being offered, the moment is
 	# the publisher dropping the pitch.
 	#

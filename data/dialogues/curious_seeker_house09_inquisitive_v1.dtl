@@ -19,7 +19,7 @@
 # signals identical: TRACT_LEFT, BIBLE_STUDY_STARTED,
 # RETURN_VISIT_SCHEDULED, REFUSED. Mid-conversation exit (ESC /
 # Walk-away) → REFUSED (door-side). Off-script choice text
-# "I don't know. Honestly." matches OFFSCRIPT_CHOICE_TEXTS in
+# "I don't know. Honestly." matches the OFFSCRIPT signal on the branch, in
 # door_knock.gd verbatim (T1 +3). Shared text-key with house04
 # grief; no registry update this session.
 #
@@ -75,7 +75,7 @@
 #   reads as confessing they can't cleanly summarize the org — a
 #   different texture than grief (where it answered the after-death
 #   question) but the same underlying beat: the publisher's training
-#   fails to meet a direct real-world question. OFFSCRIPT_CHOICE_TEXTS
+#   fails to meet a direct real-world question. the OFFSCRIPT signal
 #   unchanged.
 # - BIBLE_STUDY_STARTED reachability is the most realistic of any CS
 #   door per cast.md § 6.2. Skeleton choice text is fixed; the
@@ -169,7 +169,8 @@ curious_seeker_house09_inquisitive (genuine_question): Sure, I have a minute. Wh
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
 - I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# E4-d — OFF-SCRIPT. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in
+	[signal arg="OFFSCRIPT:3"]
+	# E4-d — OFF-SCRIPT. T1 fires +3 via the OFFSCRIPT signal on the branch, in
 	# door_knock.gd. Text-key matches house04 grief's off-script
 	# line exactly (shared); no registry update needed. For
 	# inquisitive specifically, the publisher dropping the pitch
@@ -276,6 +277,7 @@ curious_seeker_house09_inquisitive (genuine_question): Yeah, actually — I've b
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
 - I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	# E4-d — OFF-SCRIPT (returning). Shared text-key with grief and
 	# first_visit (+3). He meets the publisher's honesty with his
 	# own — he's been thinking, has done his own reading (or just

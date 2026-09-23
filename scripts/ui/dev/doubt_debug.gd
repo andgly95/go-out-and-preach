@@ -46,15 +46,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _refresh() -> void:
-	_value_label.text = "Doubt: %d / 100" % DoubtMeter.get_value()
+	_value_label.text = "Doubt: %.1f / 100   (conviction scale ×%.2f)" % [DoubtMeter.exact, DoubtMeter.exposure_scale()]
 	var log: Array = DoubtMeter.get_event_log()
 	var lines: PackedStringArray = PackedStringArray()
 	# Newest entries first so the most recent change is at the top.
 	for i in range(log.size() - 1, -1, -1):
 		var entry: Dictionary = log[i]
-		var delta: int = entry["delta"]
+		var delta: float = entry["delta"]
 		var sign_prefix: String = "+" if delta > 0 else ""
-		lines.append("%s%d  %s  → %d" % [sign_prefix, delta, entry["reason"], entry["value"]])
+		lines.append("%s%.1f  %s  → %.1f" % [sign_prefix, delta, entry["reason"], entry["value"]])
 	if lines.is_empty():
 		_log_label.text = "(no events)"
 	else:

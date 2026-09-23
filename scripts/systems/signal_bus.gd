@@ -41,3 +41,11 @@ signal meeting_attended(meeting_type: StringName)
 signal meeting_skipped(meeting_type: StringName)
 @warning_ignore("unused_signal")
 signal talk_completed(meeting_type: StringName, speech_slug: StringName)
+
+# Run loop
+@warning_ignore("unused_signal")
+signal service_session_ended(summary: Dictionary)
+@warning_ignore("unused_signal")
+signal evening_completed(activity_id: StringName)
+@warning_ignore("unused_signal")
+signal month_closed(record: Dictionary)

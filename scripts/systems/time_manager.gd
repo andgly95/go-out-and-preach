@@ -13,9 +13,37 @@ enum Phase {
 }
 
 const PHASE_COUNT: int = 7
+const WEEKS_PER_MONTH: int = 4
 
 var current_week: int = 1
 var current_phase: Phase = Phase.SUNDAY
+
+
+func reset() -> void:
+	current_week = 1
+	current_phase = Phase.SUNDAY
+
+
+func current_month() -> int:
+	@warning_ignore("integer_division")
+	return (current_week - 1) / WEEKS_PER_MONTH + 1
+
+
+func week_in_month() -> int:
+	return (current_week - 1) % WEEKS_PER_MONTH + 1
+
+
+func is_last_week_of_month() -> bool:
+	return week_in_month() == WEEKS_PER_MONTH
+
+
+func to_save() -> Dictionary:
+	return {"week": current_week, "phase": int(current_phase)}
+
+
+func from_save(data: Dictionary) -> void:
+	current_week = int(data.get("week", 1))
+	current_phase = int(data.get("phase", Phase.SUNDAY)) as Phase
 
 
 func advance_phase() -> void:

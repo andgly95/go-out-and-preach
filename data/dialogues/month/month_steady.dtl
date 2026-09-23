@@ -1,0 +1,14 @@
+# Month end — an ordinary month, no pioneer commitment. Brother Phillips'
+# "I was thinking about you" (cast.md § 7). Warm, brief.
+# TODO: authenticity check — month-end draft.
+
+join elder_coordinator (neutral) at center
+You slide your report slip into the box by the literature counter. Brother Phillips is restocking the magazines.
+elder_coordinator (neutral): {GameState.player_title} {GameState.player_name}. I was thinking about you the other day.
+elder_coordinator (neutral): Nothing in particular. Just glad to see you here. It's good to see the young ones keeping on.
+- "Thank you, Brother Phillips."
+	[signal arg="STANDING:elders:1"]
+	elder_coordinator (neutral): Keep on.
+- Just nod.
+	He nods back, and goes on stacking the magazines, squaring the edges with his palms.
+leave elder_coordinator

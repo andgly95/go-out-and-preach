@@ -1,0 +1,16 @@
+# Month end — auxiliary pioneer target met. Brother Phillips (cast.md § 4.1).
+# The affirmation is real, and it is also a tightening of expectations.
+# TODO: authenticity check — month-end draft.
+
+join elder_coordinator (neutral) at center
+You hand your report slip across the literature counter. Brother Phillips reads it before he folds it into his pocket.
+elder_coordinator (neutral): {GameState.player_title} {GameState.player_name}. Thirty hours.
+elder_coordinator (neutral): That's not nothing. The brothers noticed, you know. I noticed.
+elder_coordinator (neutral): Have you ever thought about making it regular? Not this month. Just something to pray about.
+- "I'd like that."
+	[signal arg="CONVICTION:2"]
+	elder_coordinator (neutral): Good. Good. We'll sit down one of these weeks and look at your schedule together.
+- "I'm pretty tired, honestly."
+	[signal arg="EXPOSE:1"]
+	elder_coordinator (neutral): Of course you are. It's good tired, though. Isn't it?
+leave elder_coordinator

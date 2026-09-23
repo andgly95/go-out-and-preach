@@ -41,7 +41,7 @@
 #   the future audio/portrait pass. A spoken-line scaffold would require a
 #   new speaker slug + Dialogic event blocks — structural, explicitly deferred.
 # - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
-#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Cast.md § 6.0.4 canonical response
+#   the OFFSCRIPT signal dict unchanged. Cast.md § 6.0.4 canonical response
 #   "We're really not looking to get into all that. Thanks though." lands in
 #   the HOUSEHOLDER response at E3d first_visit.
 # - "Have a good day" close → lands at E3a first_visit ONLY. Per cast.md
@@ -136,7 +136,8 @@ polite_refuser_house08_gay_couple (polite_smile): We're not interested, but than
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6
 	# PR characters (registry text-key shared). The gay couple's voice texture
 	# lands in the response line below, per cast.md § 6.0.4 canonical sample.
@@ -207,8 +208,9 @@ polite_refuser_house08_gay_couple (polite_smile): We're still not interested. Th
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT (returning) — same text-key as first_visit so
-	# OFFSCRIPT_CHOICE_TEXTS resolves identically (+3). Householder response
+	# the OFFSCRIPT signal resolves identically (+3). Householder response
 	# is shorter than first_visit per skeleton intent ("still NOT a
 	# confrontation").
 	update polite_refuser_house08_gay_couple (firm_refusal)

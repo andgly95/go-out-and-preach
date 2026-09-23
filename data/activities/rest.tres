@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Activity" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/activity.gd" id="1_activity"]
+
+[resource]
+script = ExtResource("1_activity")
+id = &"rest"
+title = "Rest"
+description = "An early night."
+icon = "☾"
+days = Array[int]([1, 3, 4, 5, 6])
+order = 90
+energy_cost = -2
+result_text = "You're in bed by nine. The house settles around you."

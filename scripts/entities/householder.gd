@@ -13,6 +13,10 @@ class_name Householder
 # Path to the Dialogic timeline (.dtl) for this householder's conversation.
 @export var dialogue_timeline: String = ""
 
+# Timeline for weekly Bible study sessions once a study has started. Empty
+# uses the shared study_session.dtl.
+@export var study_timeline: String = ""
+
 # Dialogic character resource (.dch). Untyped to avoid hard-binding the
 # Householder resource to the Dialogic plugin at load time — if the plugin
 # is uninstalled, the .tres still loads.

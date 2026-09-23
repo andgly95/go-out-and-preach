@@ -48,9 +48,9 @@ const TALK_TYPE_TO_SPEECH_POOL: Dictionary = {
 
 # Per-talk effects fired on talk_completed (Phase 1.5 Q6).
 const TALK_EFFECTS: Dictionary = {
-	&"public_talk":      {"conviction": 2, "standing_elders": 1},
+	&"public_talk":      {"conviction": 1, "standing_elders": 1},
 	&"lighthouse_study": {"conviction": 1, "standing_elders": 1},
-	&"midweek_training": {"conviction": 2, "standing_elders": 2},
+	&"midweek_training": {"conviction": 1, "standing_elders": 1},
 }
 
 # Meeting type → ordered list of talk types it contains. meeting_hall.gd
@@ -78,9 +78,20 @@ const SONGS_BEFORE_TALK: Dictionary = {
 	&"lighthouse_study": &"song_47_placeholder",
 }
 
-const MEETING_DAY_ENERGY_COST: int = 1
-const SKIP_DOUBT_DELTA: int = 1
+# Energy is paid on the way in (docs/design/v01-loop.md). Sunday is the long
+# morning — two talks and the song between.
+const MEETING_ENERGY_COST: Dictionary = {
+	&"sunday_meeting": 3,
+	&"tuesday_meeting": 2,
+}
+const SKIP_EXPOSURE: float = 1.5
 const SKIP_STANDING_DELTA: int = -2
+# A "successful meeting" (GDD § 5.2 decrement): you prepared the Lighthouse
+# article during the week and had an answer when the question came. The
+# personal_study activity sets the flag; the Sunday meeting consumes it.
+const PREPARED_FLAG: String = "prepared_for_sunday"
+const PREPARED_RELIEF: int = 2
+const PREPARED_ELDERS: int = 1
 
 # 6 seats with one pinned neighbor identity each (Phase 1 proposed default).
 # Neighbor slugs feed SOCIAL_MOMENT_OPTIONS below so the social moment varies
@@ -152,6 +163,34 @@ var _last_played_per_type: Dictionary = {}
 
 func _ready() -> void:
 	_speaker_cache = _load_speaker_cache()
+
+
+func reset() -> void:
+	pending_meeting_type = &""
+	_last_played_per_type = {}
+
+
+func to_save() -> Dictionary:
+	var last: Dictionary = {}
+	for talk_type in _last_played_per_type:
+		last[String(talk_type)] = String(_last_played_per_type[talk_type])
+	return {"last_played": last}
+
+
+func from_save(data: Dictionary) -> void:
+	reset()
+	var last: Dictionary = data.get("last_played", {})
+	for talk_type in last:
+		_last_played_per_type[StringName(talk_type)] = StringName(last[talk_type])
+
+
+func energy_cost_for(meeting_type: StringName) -> int:
+	return int(MEETING_ENERGY_COST.get(meeting_type, 2))
+
+
+## Pays the meeting's energy on the way in. False if too tired to go.
+func begin_meeting(meeting_type: StringName) -> bool:
+	return ResourceManager.spend_energy(energy_cost_for(meeting_type))
 
 
 # --- Pending-meeting handoff (mirrors TerritoryManager pending pattern) ---
@@ -239,12 +278,11 @@ func resolve_talk_completed(talk_type: StringName, speech_slug: StringName) -> v
 
 
 func resolve_meeting_completed(meeting_type: StringName) -> void:
-	# Per-meeting Energy cost. Sunday's two talks share one Energy hit
-	# (Phase 1.5 Q6). Note: ResourceManager._on_day_advanced refills Energy
-	# to max on every phase change, so this -1 only persists during the
-	# meeting-day phase — known v1 limitation per the plan.
-	if MEETING_DAY_ENERGY_COST != 0:
-		ResourceManager.add_energy(-MEETING_DAY_ENERGY_COST)
+	# Energy was paid in begin_meeting.
+	if meeting_type == &"sunday_meeting" and GameState.flag(PREPARED_FLAG):
+		GameState.set_flag(PREPARED_FLAG, 0)
+		DoubtMeter.apply(-PREPARED_RELIEF, &"meeting_prepared")
+		ResourceManager.add_standing_elders(PREPARED_ELDERS)
 	SignalBus.meeting_attended.emit(meeting_type)
 	clear_pending_meeting()
 
@@ -253,10 +291,8 @@ func resolve_meeting_skipped(meeting_type: StringName) -> void:
 	# Per Decision E: skip fires inline on click. Standing-Elders penalty +
 	# doubt nudge. No Conviction change (Phase 1.5 Q7 — Conviction reflects
 	# faith, not behavior).
-	if SKIP_STANDING_DELTA != 0:
-		ResourceManager.add_standing_elders(SKIP_STANDING_DELTA)
-	if SKIP_DOUBT_DELTA != 0:
-		DoubtMeter.apply(SKIP_DOUBT_DELTA, &"meeting_skipped")
+	ResourceManager.add_standing_elders(SKIP_STANDING_DELTA)
+	DoubtMeter.expose(SKIP_EXPOSURE, &"meeting_skipped")
 	SignalBus.meeting_skipped.emit(meeting_type)
 	clear_pending_meeting()
 

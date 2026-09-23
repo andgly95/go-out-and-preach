@@ -1,0 +1,38 @@
+# Month end — a shepherding talk. Triggered by missed meetings, a month with
+# no field service, or low standing with the elders. Brother Phillips leads;
+# Brother Whitcomb (cast.md § 4.2) sits in. "We love you" lands differently
+# before bad news (dialogue-context.md § 10).
+# The confession branch is doubt-gated: telling the elders you're struggling
+# eases doubt (GDD § 5.2 "confession scenes") but puts it on the record.
+# TODO: authenticity check — month-end draft.
+
+Brother Phillips finds you in the lobby after the meeting. Brother Whitcomb is standing a little behind him.
+join elder_coordinator (neutral) at left
+join elder_strict (neutral) at right
+elder_coordinator (neutral): {GameState.player_title} {GameState.player_name}. Could we take a few minutes in the back? Nothing serious.
+The library room. Brother Whitcomb closes the door all the way.
+elder_coordinator (neutral): We love you. You know that. That's why we wanted to sit down.
+if GameState.family_concern_pending():
+	elder_coordinator (neutral): Your {GameState.parent_role} mentioned they've been a little worried about you. They love you very much.
+if GameState.missed_many_meetings():
+	elder_strict (neutral): We've noticed your seat empty. More than once this month.
+elif GameState.no_service_this_month():
+	elder_strict (neutral): Your report came in without any hours this month.
+else:
+	elder_strict (neutral): It's been a while since we've seen much of you. In the car group, at the meetings.
+elder_strict (neutral): Consider the principle. We don't stop gathering together, especially now, as we see the day drawing close.
+elder_coordinator (neutral): Is there anything going on we should know about? Anything at all.
+- "I've just been busy. I'll be there."
+	[signal arg="STANDING:elders:2"]
+	elder_coordinator (neutral): That's all we wanted to hear.
+	elder_strict (neutral): We'll look for you Sunday.
+- "I've been having a hard time with some things." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="RELIEF:3"]
+	[signal arg="FLAG:confided_in_elders"]
+	elder_coordinator (neutral): Thank you for telling us. That took courage.
+	elder_strict (neutral): What kind of things?
+	You say something about being tired. It's true, and it isn't what you meant.
+	elder_coordinator (neutral): We'll keep you in our prayers. And my door is always open. Always.
+	Brother Whitcomb writes something on the back of an envelope and puts it in his jacket.
+leave elder_coordinator
+leave elder_strict

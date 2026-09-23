@@ -1,61 +1,22 @@
 extends Control
-## Porch view. Runs a Dialogic timeline for the pending house's householder,
-## OR a minimal no-Dialogic scene for the Hostile Slammer archetype.
-## Outcomes are emitted from Dialogic timelines via [signal arg="..."] events
-## and mapped to House.State. Mid-conversation exit (ESC / Walk away button)
-## is treated as REFUSED — true to lived experience and reuses the existing
-## enum without introducing a new state.
+## Porch view. Plays the conversation at the house FieldService just knocked:
+## the householder's timeline (its returning branch on a return visit), a
+## study session for an ongoing Bible study, or a short inline scene for the
+## Hostile Slammer. Timelines report through Dialogic [signal] events and
+## FieldService applies the consequences. Leaving mid-conversation (ESC /
+## Walk away) resolves as REFUSED — true to lived experience.
 ##
-## M4 layers four trigger and two decrement events onto the existing flow.
-## M4.1 adds: per-archetype doubt-delta overrides (Hostile Slammer REFUSED
-## resolves to +0 via this overlay), a Hostile Slammer inline scene that
-## bypasses Dialogic, the BIBLE_STUDY_STARTED outcome for Curious Seeker,
-## and a multi-line off-script choice registry (T1 fires for either the
-## PR or the CS off-script choice text).
-##
-## All doubt firing happens here, the only systems code that knows about
-## both Dialogic and TerritoryManager. doubt_meter.gd stays content-agnostic.
-
-# Map from Dialogic signal_event argument strings to House.State enum values.
-# Strings must exactly match the [signal arg="..."] values in
-# data/dialogues/*.dtl.
-const SIGNAL_OUTCOME_MAP: Dictionary = {
-	"REFUSED": House.State.REFUSED,
-	"TRACT_LEFT": House.State.TRACT_LEFT,
-	"RETURN_VISIT_SCHEDULED": House.State.RETURN_VISIT_SCHEDULED,
-	"BIBLE_STUDY_STARTED": House.State.BIBLE_STUDY_STARTED,
-}
-
-# T3 / D1 / D2 / D3 — outcome-driven doubt deltas keyed by the same signal arg.
-# Walk-away is NOT here; it has its own handler (T2).
-# Per-archetype overrides via Householder.doubt_delta_overrides take precedence
-# (see _resolve_doubt_delta below).
-const OUTCOME_DOUBT_DELTAS: Dictionary = {
-	"REFUSED": 1,                  # T3 polite refusal
-	"TRACT_LEFT": -1,              # D1 low-bar positive
-	"RETURN_VISIT_SCHEDULED": -2,  # D2 gold-star outcome
-	"BIBLE_STUDY_STARTED": -3,     # D3 deepest positive — months of contact
-}
-
-# T1 — off-script choices. Maps choice-text → doubt delta. Multi-timeline
-# registry (M4.1) with per-choice magnitudes (M4.3 — Apostate's off-script
-# fires +2 rather than the PR/CS +3 because the encounter itself carries
-# more weight; see Q5 calibration in plan). Still text-keyed and therefore
-# brittle — STATUS carries the tightening target (replace with a Dialogic
-# choice tag or [signal] shim).
-const OFFSCRIPT_CHOICE_TEXTS: Dictionary = {
-	"Why is that for you?":              3,  # polite_refuser_v1.dtl E3d
-	"I don't know. Honestly.":           3,  # curious_seeker_v1.dtl E3d (M4.2)
-	"I'm sorry that happened to you.":   2,  # apostate_wounded_v1.dtl E4c (M4.3)
-	"We — we don't have to.":            3,  # apostate_hostile_v1.dtl E4c (M4.4)
-	"How are you doing?":                4,  # apostate_gentle_v1.dtl E4d (M4.4) — highest off-script delta in the game
-}
+## Signals understood from timelines:
+##   REFUSED, TRACT_LEFT, RETURN_VISIT_SCHEDULED, BIBLE_STUDY_STARTED,
+##   STUDY_CONTINUES   — terminal outcome (see FieldService.OUTCOME_EFFECTS)
+##   OFFSCRIPT:<weight> — the player broke script; weight is doubt exposure
+##   INNER_VOICE        — an inner-voice line played (see DoubtMeter)
 
 const HOSTILE_SLAMMER_ARCHETYPE: StringName = &"hostile_slammer"
 
-# Slammer line pool (cast.md § 6.1). Empty string = silent slam, door
-# just closes. Profanity options exist in lived experience but are held
-# back from the M4.1 pool — slot-machine random profanity feels off.
+# Slammer line pool (cast.md § 6.1). Empty string = silent slam, door just
+# closes. Profanity exists in lived experience but is held back — slot-machine
+# random profanity feels off.
 const HOSTILE_SLAMMER_LINES: Array[String] = [
 	"No.",
 	"Not interested.",
@@ -64,9 +25,11 @@ const HOSTILE_SLAMMER_LINES: Array[String] = [
 ]
 
 const REVEAL_40_TIMELINE_PATH: String = "res://data/dialogues/internals/reveal_40.dtl"
+const DEFAULT_STUDY_TIMELINE_PATH: String = "res://data/dialogues/study/study_session.dtl"
 const DEBUG_PANEL_SCENE_PATH: String = "res://scenes/dev/doubt_debug.tscn"
+const TERRITORY_SCENE_PATH: String = "res://scenes/territory_map.tscn"
 
-# Slammer-scene timing (seconds). Sum ~1.5s per plan Q4.
+# Slammer-scene timing (seconds), ~1.5s total.
 const SLAMMER_BEAT_PRE: float = 0.4
 const SLAMMER_BEAT_LINE: float = 0.6
 const SLAMMER_BEAT_POST: float = 0.4
@@ -76,10 +39,10 @@ const SLAMMER_BEAT_POST: float = 0.4
 @onready var _house_portrait: TextureRect = $HousePortrait
 
 var _pending_house: House = null
+var _timeline_path: String = ""
 var _dialogue_id: String = ""
 var _resolved: bool = false
 var _reveal_pending: bool = false
-var _slammer_after_reveal: bool = false
 var _slammer_active: bool = false
 
 
@@ -90,15 +53,12 @@ func _ready() -> void:
 	_leave_button.pressed.connect(_on_walk_away_pressed)
 	Dialogic.signal_event.connect(_on_dialogic_signal)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
-	Dialogic.Choices.choice_selected.connect(_on_choice_selected)
 	_maybe_instantiate_debug_panel()
-	_start_dialogue_for_pending_house()
+	_start()
 
 
 func _maybe_instantiate_debug_panel() -> void:
-	if not OS.is_debug_build():
-		return
-	if not ResourceLoader.exists(DEBUG_PANEL_SCENE_PATH):
+	if not OS.is_debug_build() or not ResourceLoader.exists(DEBUG_PANEL_SCENE_PATH):
 		return
 	var packed: PackedScene = load(DEBUG_PANEL_SCENE_PATH)
 	add_child(packed.instantiate())
@@ -106,7 +66,6 @@ func _maybe_instantiate_debug_panel() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _slammer_active:
-		# No walk-away during a 1.5s slammer scene. ESC is swallowed silently.
 		return
 	if event.is_action_pressed("ui_cancel"):
 		_on_walk_away_pressed()
@@ -117,148 +76,116 @@ func _refresh_house_badge() -> void:
 	if _pending_house == null:
 		_house_badge.text = tr("(no house)")
 		return
-	_house_badge.text = tr("House %s") % str(_pending_house.id).trim_prefix("house_")
+	var number: int = TerritoryManager.house_number_for(_pending_house)
+	var name: String = _pending_house.householder.character_name if _pending_house.householder != null else ""
+	if _pending_house.visit_count > 0 and not name.is_empty():
+		_house_badge.text = tr("House %d — %s") % [number, name]
+	else:
+		_house_badge.text = tr("House %d") % number
 
 
 func _refresh_house_portrait() -> void:
 	if _pending_house == null:
 		return
-	var number: int = TerritoryManager.house_number_for(_pending_house)
-	var tex: Texture2D = TerritoryManager.get_house_portrait(number)
+	var tex: Texture2D = TerritoryManager.get_house_portrait(TerritoryManager.house_number_for(_pending_house))
 	if tex != null:
 		_house_portrait.texture = tex
 
 
-func _start_dialogue_for_pending_house() -> void:
+func _start() -> void:
 	if _pending_house == null or _pending_house.householder == null:
-		push_warning("[door_knock] No pending house or householder; treating as REFUSED.")
-		_resolve_with_outcome(House.State.REFUSED)
+		push_warning("[door_knock] No pending house or householder; returning to the map.")
+		_leave_scene()
 		return
-	# Force a fresh scan of .dch/.dtl directories so the character/timeline
-	# identifiers in the .dtl resolve even on a cold headless launch where
-	# the project-settings directories aren't yet populated by the editor.
+	# Cold headless launches may not have the .dch/.dtl directory tables
+	# populated yet; rescan so character and timeline identifiers resolve.
 	DialogicResourceUtil.update_directory(".dch")
 	DialogicResourceUtil.update_directory(".dtl")
-	# Hostile Slammer: no Dialogic timeline. Branch to the inline scene.
-	# If reveal-40 is pending, play the reveal first then chain to the
-	# slammer scene via _on_timeline_ended (Q6).
-	if _pending_house.householder.archetype == HOSTILE_SLAMMER_ARCHETYPE:
-		if DoubtMeter.consume_reveal_40():
-			_reveal_pending = true
-			_slammer_after_reveal = true
-			Dialogic.start(REVEAL_40_TIMELINE_PATH)
-			return
-		_run_hostile_slammer_scene()
+	var householder: Householder = _pending_house.householder
+	if householder.archetype == HOSTILE_SLAMMER_ARCHETYPE:
+		_timeline_path = ""
+	elif _pending_house.state == House.State.BIBLE_STUDY_STARTED:
+		_timeline_path = householder.study_timeline if not householder.study_timeline.is_empty() else DEFAULT_STUDY_TIMELINE_PATH
+	else:
+		_timeline_path = householder.dialogue_timeline
+	if householder.archetype != HOSTILE_SLAMMER_ARCHETYPE and _timeline_path.is_empty():
+		push_warning("[door_knock] Householder has no timeline; resolving as REFUSED.")
+		_resolve("REFUSED")
 		return
-	var timeline_path: String = _pending_house.householder.dialogue_timeline
-	if timeline_path.is_empty():
-		push_warning("[door_knock] Householder has no dialogue_timeline; treating as REFUSED.")
-		_resolve_with_outcome(House.State.REFUSED)
-		return
-	_dialogue_id = timeline_path.get_file().get_basename()
-	SignalBus.dialogue_started.emit(_dialogue_id)
-	# Threshold-40 reveal (one-shot). consume_reveal_40 returns true only on
-	# the first door-knock after doubt crosses 40, and self-clears the flag.
-	# We play the reveal first, then chain into the householder timeline via
-	# _on_timeline_ended.
+	# The threshold-40 reveal plays once, before the next conversation after
+	# doubt first crosses 40, then chains into it via _on_timeline_ended.
 	if DoubtMeter.consume_reveal_40():
 		_reveal_pending = true
 		Dialogic.start(REVEAL_40_TIMELINE_PATH)
 		return
-	Dialogic.start(timeline_path)
+	_start_conversation()
+
+
+func _start_conversation() -> void:
+	if _timeline_path.is_empty():
+		_run_hostile_slammer_scene()
+		return
+	_dialogue_id = _timeline_path.get_file().get_basename()
+	SignalBus.dialogue_started.emit(_dialogue_id)
+	Dialogic.start(_timeline_path)
 
 
 func _on_dialogic_signal(arg: Variant) -> void:
-	if typeof(arg) != TYPE_STRING:
+	if typeof(arg) != TYPE_STRING or _resolved:
 		return
 	var key: String = arg
-	if not SIGNAL_OUTCOME_MAP.has(key):
+	if key.begins_with("OFFSCRIPT:"):
+		FieldService.resolve_offscript(float(key.get_slice(":", 1)))
 		return
-	# T3 / D1 / D2 / D3 — outcome-driven doubt firing. Per-archetype overrides
-	# applied via _resolve_doubt_delta. Walk-away is excluded here (its own
-	# handler fires T2) so we never double-count.
-	var delta: int = _resolve_doubt_delta(key)
-	if delta != 0:
-		DoubtMeter.apply(delta, StringName("outcome_" + key.to_lower()))
-	_resolve_with_outcome(SIGNAL_OUTCOME_MAP[key])
-
-
-func _on_choice_selected(info: Dictionary) -> void:
-	# T1 — off-script choice. Per-choice delta registry (M4.3 refactor —
-	# Apostate's off-script costs +2 while PR/CS stay at +3). Brittle by
-	# design: STATUS flags the text-keyed lookup as a tightening target
-	# (replace with a Dialogic choice tag or metadata once the addon offers
-	# a stable hook).
-	var text: String = String(info.get("text", "")).strip_edges()
-	if OFFSCRIPT_CHOICE_TEXTS.has(text):
-		DoubtMeter.apply(int(OFFSCRIPT_CHOICE_TEXTS[text]), &"offscript_choice")
+	if key == "INNER_VOICE":
+		DoubtMeter.inner_voice()
+		return
+	if FieldService.OUTCOME_EFFECTS.has(key):
+		_resolve(key)
 
 
 func _on_timeline_ended() -> void:
 	if _resolved:
 		return
-	# Reveal-40 just ended — chain into the next scene. Branch on whether
-	# the next scene is Dialogic (standard archetype) or inline (slammer).
 	if _reveal_pending:
 		_reveal_pending = false
-		if _slammer_after_reveal:
-			_slammer_after_reveal = false
-			_run_hostile_slammer_scene()
-			return
-		var timeline_path: String = _pending_house.householder.dialogue_timeline
-		Dialogic.start(timeline_path)
+		_start_conversation()
 		return
-	# Safety net: a householder timeline reached its end without emitting one
-	# of the expected outcome signals. With validated timelines every branch
-	# terminates in [signal arg=...] + [end_timeline], so this only fires on
-	# author error or future timelines that forget.
-	push_warning("[door_knock] Timeline %s ended without emitting an outcome signal. Defaulting to REFUSED." % _dialogue_id)
-	_resolve_with_outcome(House.State.REFUSED)
+	# Every validated branch ends in an outcome signal (tools/ci test_content);
+	# this only fires on author error.
+	push_warning("[door_knock] Timeline %s ended without an outcome signal; resolving as REFUSED." % _dialogue_id)
+	_resolve("REFUSED")
 
 
 func _on_walk_away_pressed() -> void:
-	if _resolved:
+	if _resolved or _slammer_active:
 		return
-	if _slammer_active:
-		# UI guarantees the button is hidden during slammer scenes; this is
-		# defense-in-depth in case a signal sneaks through.
-		return
-	# T2 — walk away. Applied before resolve so the event log records it
-	# before the scene transition tears this scene down. Cancel any pending
-	# reveal → next-scene chain so _on_timeline_ended doesn't try to start
-	# the next scene mid-bail.
-	DoubtMeter.apply(2, &"walked_away")
+	_resolved = true
 	_reveal_pending = false
-	_slammer_after_reveal = false
 	if Dialogic.current_timeline != null:
 		Dialogic.end_timeline()
-	_resolve_with_outcome(House.State.REFUSED)
+	if _pending_house != null:
+		FieldService.resolve_walk_away(_pending_house)
+	_leave_scene()
 
 
 func _run_hostile_slammer_scene() -> void:
-	# Inline ~1.5s no-Dialogic scene for the Hostile Slammer archetype.
-	# Sequence: brief pre-beat → transient line label → post-beat silence →
-	# REFUSED resolution. No portrait — the lack of a face is the texture.
+	# ~1.5s, no Dialogic, no portrait — the lack of a face is the texture.
 	_slammer_active = true
 	_leave_button.visible = false
-	_dialogue_id = ""  # No Dialogic; no dialogue_started/ended emit.
 	var line: String = HOSTILE_SLAMMER_LINES[randi() % HOSTILE_SLAMMER_LINES.size()]
 	var label: Label = Label.new()
-	label.text = line
+	label.text = tr(line)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.modulate = Color(0.95, 0.92, 0.86, 0.0)
 	label.add_theme_font_size_override("font_size", 32)
-	label.anchor_left = 0.0
-	label.anchor_top = 0.0
-	label.anchor_right = 1.0
-	label.anchor_bottom = 1.0
+	label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(label)
 	await get_tree().create_timer(SLAMMER_BEAT_PRE).timeout
 	if _resolved or not is_inside_tree():
 		return
-	# Fade in (instant snap for line; silence path stays at alpha 0).
 	if not line.is_empty():
 		label.modulate.a = 0.8
 	await get_tree().create_timer(SLAMMER_BEAT_LINE).timeout
@@ -268,47 +195,26 @@ func _run_hostile_slammer_scene() -> void:
 	await get_tree().create_timer(SLAMMER_BEAT_POST).timeout
 	if _resolved or not is_inside_tree():
 		return
-	# Slammer doubt firing — per-archetype override resolves Hostile Slammer
-	# REFUSED to +0 (Q2). apply() early-returns on delta=0 so the log stays
-	# clean.
-	var delta: int = _resolve_doubt_delta("REFUSED")
-	if delta != 0:
-		DoubtMeter.apply(delta, &"outcome_refused")
-	_resolve_with_outcome(House.State.REFUSED)
+	_resolve("REFUSED")
 
 
-func _resolve_doubt_delta(outcome_key: String) -> int:
-	# Per-archetype override > global table. Empty overrides dict (default)
-	# means use the global magnitude.
-	if _pending_house != null and _pending_house.householder != null:
-		var overrides: Dictionary = _pending_house.householder.doubt_delta_overrides
-		if overrides.has(outcome_key):
-			return int(overrides[outcome_key])
-	return int(OUTCOME_DOUBT_DELTAS.get(outcome_key, 0))
-
-
-func _resolve_with_outcome(outcome: int) -> void:
+func _resolve(outcome_key: String) -> void:
 	if _resolved:
 		return
+	_resolved = true
+	if _pending_house != null:
+		FieldService.resolve_outcome(_pending_house, outcome_key)
+	_leave_scene()
+
+
+func _leave_scene() -> void:
 	_resolved = true
 	if Dialogic.signal_event.is_connected(_on_dialogic_signal):
 		Dialogic.signal_event.disconnect(_on_dialogic_signal)
 	if Dialogic.timeline_ended.is_connected(_on_timeline_ended):
 		Dialogic.timeline_ended.disconnect(_on_timeline_ended)
-	if Dialogic.Choices.choice_selected.is_connected(_on_choice_selected):
-		Dialogic.Choices.choice_selected.disconnect(_on_choice_selected)
-	# M4.6 — character's arc_state transitions to "returning" on any terminal
-	# outcome (Dialogic signal, walk-away, or Hostile Slammer scene). The
-	# character behind this door remembers being knocked. Mutated BEFORE
-	# resolve_pending_house so the persisted state reflects the new arc.
-	# Hostile Slammer + Apostate don't currently read arc_state in their .dtl;
-	# the write is harmless. arc_state survives both per-day and per-week
-	# clickability resets in territory_manager.gd.
-	if _pending_house != null:
-		_pending_house.arc_state = &"returning"
-	TerritoryManager.resolve_pending_house(outcome)
 	if not _dialogue_id.is_empty():
 		SignalBus.dialogue_ended.emit(_dialogue_id)
-	# Deferred: resolution can happen inside _ready (no pending house), when
-	# the tree is still adding this scene and can't swap it out yet.
-	get_tree().change_scene_to_file.call_deferred("res://scenes/territory_map.tscn")
+	# Deferred: resolution can happen inside _ready, when the tree is still
+	# adding this scene and can't swap it out yet.
+	get_tree().change_scene_to_file.call_deferred(TERRITORY_SCENE_PATH)

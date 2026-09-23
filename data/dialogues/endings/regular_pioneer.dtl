@@ -1,0 +1,14 @@
+# Ending — The Regular Pioneer (BACKLOG § Endings, "the doubling-down
+# ending"). Quiet, settled, slightly weary. The player got what they were
+# taught to want; everything outside the org quietly receded.
+# TODO: authenticity check — ending draft.
+
+Five years later.
+You've been a regular pioneer for four of them. You know every street in the territory by its dogs.
+Brother Phillips stepped down as coordinator last spring. At his last meeting in the role he put a hand on your shoulder and didn't say anything, which you understood.
+if GameState.flag("activity_coworker_invite") > 0:
+	Dana from work got married. The invitation is still on your fridge. It was a nice card.
+else:
+	The people from your old job text less now. Then not at all. You didn't notice when.
+Some mornings, before the car group, you sit in the driveway with the engine off and the heater running. You don't pray, exactly. You just sit.
+Then you go. You always go.

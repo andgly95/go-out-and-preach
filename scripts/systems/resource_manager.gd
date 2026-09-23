@@ -1,32 +1,98 @@
 extends Node
 ## Visible player meters from GDD § 5.1. Autoloaded as ResourceManager.
-## Listens to time signals via SignalBus for energy refill and the monthly
-## hours reset. Doubt is intentionally absent — that belongs to M4's
-## doubt_meter.gd and must stay isolated from this file.
+## Sleep restores a fixed amount of energy (not a full refill) and conviction
+## drifts down a little each week — faith takes upkeep. Monthly hours are
+## cleared by GameState when the month's report is filed. Doubt lives in
+## DoubtMeter, deliberately separate.
 
 const STANDING_MIN: int = -100
 const STANDING_MAX: int = 100
 const CONVICTION_MIN: int = 0
 const CONVICTION_MAX: int = 100
 
-# GDD § 5.1 says hours "reset monthly" but never defines month length in
-# week-time. Four weeks is a convention until M2/M3 playtest tunes it.
-const WEEKS_PER_MONTH: int = 4
+const ENERGY_MAX: int = 10
+const STARTING_CONVICTION: int = 50
+# See docs/design/v01-loop.md § Energy. Three a night means a heavy day
+# (long service, meeting, evening out) is still felt the next morning.
+const SLEEP_RECOVERY: int = 3
+const WEEKLY_CONVICTION_DRIFT: int = -3
 
 var field_service_hours: float = 0.0
-var energy: int = 10
-var energy_max: int = 10
+var energy: int = ENERGY_MAX
+var energy_max: int = ENERGY_MAX
 var standing_elders: int = 0
 var standing_congregation: int = 0
 var standing_family: int = 0
-var conviction: int = 50
-
-var _weeks_since_month_reset: int = 0
+var conviction: int = STARTING_CONVICTION
 
 
 func _ready() -> void:
 	SignalBus.day_advanced.connect(_on_day_advanced)
 	SignalBus.week_advanced.connect(_on_week_advanced)
+
+
+func reset() -> void:
+	field_service_hours = 0.0
+	energy = ENERGY_MAX
+	standing_elders = 0
+	standing_congregation = 0
+	standing_family = 0
+	conviction = STARTING_CONVICTION
+	_emit_all()
+
+
+func to_save() -> Dictionary:
+	return {
+		"hours": field_service_hours,
+		"energy": energy,
+		"elders": standing_elders,
+		"congregation": standing_congregation,
+		"family": standing_family,
+		"conviction": conviction,
+	}
+
+
+func from_save(data: Dictionary) -> void:
+	field_service_hours = float(data.get("hours", 0.0))
+	energy = int(data.get("energy", ENERGY_MAX))
+	standing_elders = int(data.get("elders", 0))
+	standing_congregation = int(data.get("congregation", 0))
+	standing_family = int(data.get("family", 0))
+	conviction = int(data.get("conviction", STARTING_CONVICTION))
+	_emit_all()
+
+
+func can_afford(cost: int) -> bool:
+	return energy >= cost
+
+
+## Spends energy if there is enough. Returns false (and spends nothing) if not.
+func spend_energy(cost: int) -> bool:
+	if not can_afford(cost):
+		return false
+	add_energy(-cost)
+	return true
+
+
+func add_standing(track: StringName, delta: int) -> void:
+	match track:
+		&"elders":
+			add_standing_elders(delta)
+		&"congregation":
+			add_standing_congregation(delta)
+		&"family":
+			add_standing_family(delta)
+		_:
+			push_warning("[ResourceManager] Unknown standing track %s" % track)
+
+
+func _emit_all() -> void:
+	SignalBus.resource_changed.emit("field_service_hours", field_service_hours)
+	SignalBus.resource_changed.emit("energy", float(energy))
+	SignalBus.resource_changed.emit("standing_elders", float(standing_elders))
+	SignalBus.resource_changed.emit("standing_congregation", float(standing_congregation))
+	SignalBus.resource_changed.emit("standing_family", float(standing_family))
+	SignalBus.resource_changed.emit("conviction", float(conviction))
 
 
 func set_energy(value: int) -> void:
@@ -84,11 +150,8 @@ func add_conviction(delta: int) -> void:
 
 
 func _on_day_advanced(_phase: int) -> void:
-	set_energy(energy_max)
+	add_energy(SLEEP_RECOVERY)
 
 
 func _on_week_advanced(_week: int) -> void:
-	_weeks_since_month_reset += 1
-	if _weeks_since_month_reset >= WEEKS_PER_MONTH:
-		_weeks_since_month_reset = 0
-		set_hours(0.0)
+	add_conviction(WEEKLY_CONVICTION_DRIFT)

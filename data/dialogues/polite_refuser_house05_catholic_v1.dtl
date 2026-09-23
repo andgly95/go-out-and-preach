@@ -40,7 +40,7 @@
 # - Returning E3c-pin RV-pin → VISIBLY-TIRED W/ STUTTER RETAINED. Three beats
 #   but tighter than first_visit's resignation curve.
 # - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
-#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Catholic returning firmness lands
+#   the OFFSCRIPT signal dict unchanged. Catholic returning firmness lands
 #   in the HOUSEHOLDER response (E3d), not the publisher choice.
 
 if TerritoryManager.pending_arc_state() == "first_visit":
@@ -89,7 +89,8 @@ polite_refuser_house05_catholic (polite_smile): Oh — yeah, thank you, but I'm 
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# E3d — OFF-SCRIPT choice. T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	[signal arg="OFFSCRIPT:3"]
+	# E3d — OFF-SCRIPT choice. T1 fires +3 via the OFFSCRIPT signal on the branch.
 	update polite_refuser_house05_catholic (firm_refusal)
 	polite_refuser_house05_catholic (firm_refusal): Oh — I'd rather not get into all that. Sorry. It's, you know — kind of personal.
 	update polite_refuser_house05_catholic (polite_smile)
@@ -160,7 +161,8 @@ polite_refuser_house05_catholic (polite_smile): Oh — uh, we — we still go to
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT — same text-key as first_visit branch so OFFSCRIPT_CHOICE_TEXTS in door_knock.gd resolves identically.
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT — same text-key as first_visit branch so the OFFSCRIPT signal on the branch resolves identically.
 	update polite_refuser_house05_catholic (firm_refusal)
 	# UNSURE: first_visit E3d carried "Sorry" as the politeness anchor; returning
 	# drops it to land the firmness escalation per skeleton intent ("she's tired

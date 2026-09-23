@@ -32,7 +32,7 @@
 #
 # Phase 0 silent-decision resolutions:
 # - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
-#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Episcopalian voice texture
+#   the OFFSCRIPT signal dict unchanged. Episcopalian voice texture
 #   lands in the HOUSEHOLDER response line at E3d, per cast.md § 6.0.5
 #   canonical sample.
 # - RV-pin (E3c-pin first_visit) → graceful-with-soft-block: schedule-
@@ -86,7 +86,8 @@ polite_refuser_house10_episcopalian (polite_smile): Thank you, but we're already
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6 PR
 	# characters (registry text-key shared). The Episcopalian's voice texture
 	# lands in the response line below, per cast.md § 6.0.5 canonical sample.
@@ -150,7 +151,8 @@ polite_refuser_house10_episcopalian (polite_smile): You were here a little while
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT (returning) — same text-key as first_visit so OFFSCRIPT_CHOICE_TEXTS
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so the OFFSCRIPT signal
 	# resolves identically (+3). Householder response is firmer than first_visit
 	# per skeleton intent (still friendly, still firm).
 	update polite_refuser_house10_episcopalian (firm_refusal)

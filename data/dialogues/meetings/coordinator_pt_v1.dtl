@@ -23,6 +23,7 @@ elder_coordinator (neutral): Good morning, brothers and sisters. It's a real joy
 elder_coordinator (neutral): I was thinking this week about Sister Marin — many of you know her. Her car wouldn't start Thursday morning and within an hour there were three brothers in her driveway. She didn't have to call anyone. That's what we mean by the love among the friends. It isn't something we work up. It's something the spirit produces, quietly, in a people who have stopped living for themselves.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]Three brothers in her driveway. You wonder who would be in yours.[/i]
 
 elder_coordinator (neutral): So as you go through your week, brothers and sisters — at work, at school, in the territory — consider how you might be that quiet answer for someone here. A phone call. A ride to the Hall. A note in the mail. These are not small things. As Paul reminded the Hebrews, we are not to forsake the gathering of ourselves together, but to encourage one another, and so much the more as we see the day approaching. — Take care of each other this week. Thank you, brothers and sisters.

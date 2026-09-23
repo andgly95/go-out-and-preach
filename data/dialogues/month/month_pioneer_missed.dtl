@@ -1,0 +1,20 @@
+# Month end — signed up to auxiliary pioneer, missed the hours. Brother
+# Phillips' "encouragement" (dialogue-context.md § 10: the verb for what is
+# functionally a reprimand). Kind, and corrective.
+# TODO: authenticity check — month-end draft.
+
+join elder_coordinator (neutral) at center
+You hand your report slip across the literature counter. Brother Phillips reads it, and then reads it again.
+elder_coordinator (neutral): {GameState.player_title} {GameState.player_name}. Could I borrow you for a minute?
+He walks you back to the library room and leaves the door open a hand's width.
+elder_coordinator (neutral): Nobody's upset. I want you to hear that first.
+elder_coordinator (neutral): But you put your name to thirty hours. When we make a promise to Jehovah, we want to keep it. You understand.
+elder_coordinator (neutral): Next month, you might consider sitting down with your calendar on the first Sunday. Write the hours in before the month fills up.
+- "I'll do better next month."
+	[signal arg="STANDING:elders:1"]
+	elder_coordinator (neutral): I know you will.
+- "I don't know if I can do thirty."
+	[signal arg="EXPOSE:1"]
+	elder_coordinator (neutral): Then pray about what you can do. Jehovah doesn't ask more of us than we have.
+	He smiles, and pats the doorframe on his way out, as if the room had done something right.
+leave elder_coordinator

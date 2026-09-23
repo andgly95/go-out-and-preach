@@ -29,7 +29,7 @@
 #
 # Phase 0 silent-decision resolutions:
 # - Off-script publisher choice text "Why is that for you?" KEPT verbatim;
-#   OFFSCRIPT_CHOICE_TEXTS dict unchanged. Atheist voice texture lands in the
+#   the OFFSCRIPT signal dict unchanged. Atheist voice texture lands in the
 #   HOUSEHOLDER response line at E3d, not the publisher choice.
 # - RV-pin (E3c-pin first_visit) → FLATTER framing locked ("Uh, sure. I guess.").
 # - Returning E1 → DEEPENED ONE BEAT (recognition without warmth, no sigh).
@@ -79,7 +79,8 @@ polite_refuser_house01_atheist (polite_smile): Yeah, I'm not religious. Sorry.
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6 PR
 	# characters (registry text-key shared). The atheist's voice texture lands
 	# in the response line below, per cast.md § 6.0.1 Flavor A sample.
@@ -140,7 +141,8 @@ polite_refuser_house01_atheist (polite_smile): Yeah. Still not religious, sorry.
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT (returning) — same text-key as first_visit so OFFSCRIPT_CHOICE_TEXTS
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT (returning) — same text-key as first_visit so the OFFSCRIPT signal
 	# resolves identically. Householder response is shorter + firmer than first_visit
 	# per skeleton intent ("I really don't want to get into it").
 	update polite_refuser_house01_atheist (firm_refusal)

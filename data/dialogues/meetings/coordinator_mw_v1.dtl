@@ -24,6 +24,7 @@ elder_coordinator (neutral): Good evening, brothers and sisters. Tonight's part 
 elder_coordinator (neutral): Let me give you an example. Brother Adesina was telling me — he had a woman come to the door last week with a baby on her hip and a phone wedged against her shoulder. Now, the temptation is to push through the presentation anyway. We've prepared it; we want to deliver it. But consider how Jesus met people where they were. Brother Adesina simply said, "I can see this isn't the moment. May I leave this with you and try back another time?" She took the magazine. She thanked him. That was the visit.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]"Try back another time." You count the doors this Saturday where that will be all that happens.[/i]
 
 elder_coordinator (neutral): So as you go out this Saturday — and many of you will be partnered with newer publishers — practice that with them. The thirty-second presentation is a kindness, brothers and sisters, not a defeat. The magazine in the householder's hand is the seed. Jehovah gives the increase. Have a good evening, and we'll see you Saturday morning at Brother Phillips' at eight-thirty.

@@ -22,6 +22,7 @@ elder_strict (neutral): Paragraph one. The question reads: "How does proper subm
 elder_strict (neutral): Paragraph two. Read Hebrews 13:17. "Be obedient to those who are taking the lead among you, and be submissive." Note the apostle does not write — be submissive when you happen to agree. He writes — be submissive. The brothers who take the lead will give an account to Jehovah for the souls in their care. That is not a light weight. The friends help carry it by not adding their own resistance to the load.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]"When you happen to agree." You catch on the word. The paragraph does not let you keep it.[/i]
 
 elder_strict (neutral): Paragraph three. Consider the principle at Numbers 12. Miriam questioned Moses — privately, to her brother. Jehovah did not consider it a private matter. The arrangement matters because Jehovah established it. If you find yourself wanting to push back against counsel from the brothers, the question is not whether you are right. The question is whether you have submitted. The two are not the same.

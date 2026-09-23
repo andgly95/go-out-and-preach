@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Activity" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/activity.gd" id="1_activity"]
+
+[resource]
+script = ExtResource("1_activity")
+id = &"personal_study"
+title = "Personal study"
+description = "Prepare Sunday's Lighthouse article. Underline the answers."
+icon = "✎"
+days = Array[int]([1, 3, 4, 5])
+order = 20
+energy_cost = 1
+conviction = 2
+exposure = 1.0
+sets_flag = "prepared_for_sunday"
+result_text = "The article, a highlighter, the questions at the foot of each page. You underline the answers where the paragraph gives them."

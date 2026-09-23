@@ -1,0 +1,19 @@
+# Weekly Bible study session — shared fallback for any householder without a
+# study_timeline of their own. Narration only (no portrait), so it works at
+# any door. Outcomes: STUDY_CONTINUES keeps the study on the map as an
+# appointment; REFUSED ends it.
+# TODO: authenticity check — the study aid is called "the lesson book" here
+# as a placeholder; confirm how a publisher would name it in passing.
+
+You sit across from them at the kitchen table, the lesson book open between you.
+You read the paragraph aloud, then the question printed beneath it. They answer in their own words, and you guide the answer back toward the paragraph.
+if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
+	[i]They ask something the paragraph doesn't cover. You hear yourself give the answer you were given.[/i]
+The hour goes quickly. At the door they ask whether the same time next week still works.
+- "Same time next week."
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I don't think I can keep coming."
+	[signal arg="REFUSED"]
+	[end_timeline]

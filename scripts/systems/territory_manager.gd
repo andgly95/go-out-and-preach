@@ -20,7 +20,6 @@ extends Node
 ## House.arc_state tracks per-character "you've been here before" memory
 ## and is NEVER reset by the per-day / per-week clickability resets below.
 
-const HOURS_PER_KNOCK: float = 0.25
 const GRID_COLS: int = 4
 const GRID_ROWS: int = 3
 const HOUSE_COUNT: int = GRID_COLS * GRID_ROWS
@@ -73,12 +72,6 @@ const DISTRIBUTION: Array[StringName] = [
 # M3-validated Catholic-PR content at House #5 is the safest fallback —
 # tested dialogue, complete branch coverage, neutral cadence.
 const FALLBACK_ARCHETYPE: StringName = &"polite_refuser_house05_catholic"
-
-# M4.5 — §3 per-knock outcome roll. P(answered) = 1 - P(NOT_HOME)
-# - P(NO_ANSWER_BUT_HOME) = 1 - 0.70 - 0.035 = 0.265. NO_ANSWER_BUT_HOME
-# is folded into NOT_HOME for v1 (encounter-distribution.md §3 + M4.5
-# Q1c). Single tunable, refresh after the spike playtest if cadence is off.
-const P_ANSWERED: float = 0.265
 
 # §4 Apostate sub-roll weights. Per encounter-distribution.md §4. Weights
 # sum to 1.0. M4.4 lands all three variants — House #7 sub-rolls Hostile
@@ -148,10 +141,61 @@ var _pending_house_id: StringName = &""
 
 func _ready() -> void:
 	current_territory = _build_default_territory()
-	# M4.6 — house clickability resets. arc_state is NEVER touched here;
-	# character memory persists across resets.
+	# House clickability resets. arc_state is NEVER touched here; character
+	# memory persists across resets.
 	SignalBus.phase_changed.connect(_on_phase_changed)
 	SignalBus.week_advanced.connect(_on_week_advanced)
+
+
+func reset() -> void:
+	current_territory = _build_default_territory()
+	_pending_house_id = &""
+
+
+func to_save() -> Dictionary:
+	var houses: Array = []
+	for house in current_territory.houses:
+		houses.append({
+			"id": String(house.id),
+			"state": house.state,
+			"arc_state": String(house.arc_state),
+			"lifetime_best": house.lifetime_best_outcome,
+			"householder": house.householder.resource_path if house.householder != null else "",
+			"visit_count": house.visit_count,
+			"study_sessions": house.study_sessions,
+		})
+	return {"houses": houses}
+
+
+func from_save(data: Dictionary) -> void:
+	reset()
+	for entry in data.get("houses", []):
+		var house: House = get_house(StringName(entry.get("id", "")))
+		if house == null:
+			continue
+		house.state = int(entry.get("state", House.State.NOT_VISITED))
+		house.last_outcome_label = outcome_label(house.state)
+		house.arc_state = StringName(entry.get("arc_state", "first_visit"))
+		house.lifetime_best_outcome = int(entry.get("lifetime_best", House.State.NOT_VISITED))
+		house.visit_count = int(entry.get("visit_count", 0))
+		house.study_sessions = int(entry.get("study_sessions", 0))
+		var path: String = entry.get("householder", "")
+		if not path.is_empty() and ResourceLoader.exists(path):
+			house.householder = load(path)
+
+
+## Houses with an ongoing return visit or study — the week's appointments.
+func appointments() -> Array[House]:
+	var result: Array[House] = []
+	for house in current_territory.houses:
+		if is_appointment(house):
+			result.append(house)
+	return result
+
+
+func is_appointment(house: House) -> bool:
+	return house.state == House.State.RETURN_VISIT_SCHEDULED \
+		or house.state == House.State.BIBLE_STUDY_STARTED
 
 
 func _build_default_territory() -> Territory:
@@ -235,7 +279,8 @@ func resolve_pending_house(outcome_state: int) -> void:
 	# (they'd be < TRACT_LEFT=3 anyway since lifetime starts at 0 NOT_VISITED).
 	if _is_positive_outcome(outcome_state) and outcome_state > house.lifetime_best_outcome:
 		house.lifetime_best_outcome = outcome_state
-	ResourceManager.add_hours(HOURS_PER_KNOCK)
+	if outcome_state != House.State.NOT_HOME:
+		house.visit_count += 1
 	SignalBus.territory_house_visited.emit(house.id, outcome_state)
 	clear_pending_house()
 
@@ -263,14 +308,7 @@ func outcome_label(state: int) -> String:
 	return ""
 
 
-# --- M4.5 encounter rollers --------------------------------------------------
-
-func roll_door_outcome() -> bool:
-	# §3 per-knock roll. True = answered, false = NOT_HOME (which absorbs
-	# the folded NO_ANSWER_BUT_HOME mass for v1). Godot 4's global PRNG is
-	# auto-randomized on engine boot — no explicit randomize() needed.
-	return randf() < P_ANSWERED
-
+# --- Apostate sub-roll -------------------------------------------------------
 
 func roll_apostate_subtype() -> StringName:
 	# §4 sub-roll. Weighted pick across APOSTATE_SUB_WEIGHTS. Returns one
@@ -307,7 +345,6 @@ func resolve_householder_for_pending_house() -> void:
 		push_warning("[TerritoryManager] Apostate sub-roll .tres failed to load for variant %s; keeping current householder." % variant)
 		return
 	house.householder = resource
-	print_debug("[M4.5] Apostate sub-roll: %s" % variant)
 
 
 # --- M4.6 clickability resets -----------------------------------------------
@@ -319,9 +356,10 @@ func resolve_householder_for_pending_house() -> void:
 # Rules per the M4.6 plan (Andrew's clarification):
 #  - NOT_HOME clears on the next field service day in the SAME week
 #    (Thursday NOT_HOME → re-knockable Saturday same week).
-#  - All other resolved outcomes (TRACT_LEFT, REFUSED, RV_SCHEDULED,
-#    BIBLE_STUDY_STARTED) clear on the Sunday rollover into next week
+#  - TRACT_LEFT and REFUSED clear on the Sunday rollover into next week
 #    (Thursday TRACT_LEFT stays locked through Saturday, fresh next week).
+#  - RETURN_VISIT_SCHEDULED and BIBLE_STUDY_STARTED never clear here: they
+#    are appointments, kept until the next visit resolves them.
 #  - Per-week reset also catches stragglers in NOT_HOME (week boundary
 #    clears everything).
 #
@@ -335,8 +373,6 @@ const RESOLVED_STATES_FOR_WEEK_RESET: Array[int] = [
 	House.State.NOT_HOME,
 	House.State.REFUSED,
 	House.State.TRACT_LEFT,
-	House.State.RETURN_VISIT_SCHEDULED,
-	House.State.BIBLE_STUDY_STARTED,
 ]
 
 
@@ -353,8 +389,8 @@ func _on_phase_changed(phase: int) -> void:
 
 
 func _on_week_advanced(_new_week: int) -> void:
-	# Per-week reset on SUN entry. All resolved clickability state clears;
-	# arc_state untouched (character memory persists across the week).
+	# Per-week reset on SUN entry. Refusals, tracts, and not-at-homes clear;
+	# appointments and arc_state persist.
 	if current_territory == null:
 		return
 	for house in current_territory.houses:

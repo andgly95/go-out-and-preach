@@ -256,10 +256,13 @@ func _on_song_continue_pressed() -> void:
 
 
 func _on_dialogic_signal(arg: Variant) -> void:
-	# Talk completion signal — fires from each placeholder .dtl's terminal
-	# [signal arg="TALK_COMPLETED"]. Effects fire here (per Decision C: per-
-	# talk Conviction + Standing-Elders). Energy fires later in _resolve_meeting.
+	# TALK_COMPLETED fires from each talk's terminal [signal]; per-talk
+	# conviction and elder standing land here. INNER_VOICE marks a doubt-gated
+	# line the player just heard themselves think.
 	if typeof(arg) != TYPE_STRING:
+		return
+	if arg == "INNER_VOICE":
+		DoubtMeter.inner_voice()
 		return
 	if arg != "TALK_COMPLETED":
 		return
@@ -315,8 +318,7 @@ func _resolve_meeting() -> void:
 	if Dialogic.timeline_ended.is_connected(_on_timeline_ended):
 		Dialogic.timeline_ended.disconnect(_on_timeline_ended)
 	MeetingManager.resolve_meeting_completed(_meeting_type)
-	TimeManager.advance_phase()
-	_return_to_week_view()
+	get_tree().change_scene_to_file(GameState.end_day())
 
 
 func _return_to_week_view() -> void:

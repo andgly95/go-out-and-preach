@@ -42,7 +42,7 @@
 #     TRACT_LEFT:            +4   (vs global -1 — net swing of +5; the gift stings)
 #     RETURN_VISIT_SCHEDULED: +5  (vs global -2 — net swing of +7; the deepest cost)
 #   Off-script choice (E3 Choice 4) fires +4 via the per-choice delta
-#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS.
+#   registry in the [signal arg="OFFSCRIPT:n"] on the branch.
 #   Exposure ceiling per encounter: +9 (off-script + RV_SCHEDULED).
 #
 # CHOICE 4 (off-script) is doubt-gated at ≥40 — the highest of the trio,
@@ -53,7 +53,7 @@
 #
 # COORDINATION (M4.4):
 #   The off-script choice text "How are you doing?" must be registered
-#   in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 4.
+#   in the [signal arg="OFFSCRIPT:n"] on the branch with value 4.
 #
 # REVEAL-40 chain: standard generic chain. Same handling as Wounded.
 #
@@ -207,6 +207,7 @@ apostate_gentle (careful): I had a whole congregation once. There's nobody from 
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
 - How are you doing? | [if DoubtMeter.value >= 40] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:4"]
 	# E4d — OFF-SCRIPT choice. Gated at doubt ≥ 40 — the HIGHEST gate
 	# of the trio, matching cast.md "most dangerous archetype" framing.
 	# The off-script line here is the publisher turning Gentle's
@@ -225,7 +226,7 @@ apostate_gentle (careful): I had a whole congregation once. There's nobody from 
 	# read, not Dialogic's render.)
 	#
 	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
-	# against OFFSCRIPT_CHOICE_TEXTS. This choice fires +4 (the highest
+	# against the OFFSCRIPT signal. This choice fires +4 (the highest
 	# off-script delta in the game). Off-script collapses to REFUSED —
 	# the conversation cannot continue past this beat.
 	#

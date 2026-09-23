@@ -44,7 +44,7 @@
 #   red line; "just" dropped per skeleton "even shorter than first
 #   visit."
 # - Off-script publisher choice text "Why is that for you?" KEPT
-#   verbatim; OFFSCRIPT_CHOICE_TEXTS dict unchanged. Jewish voice
+#   verbatim; the OFFSCRIPT signal dict unchanged. Jewish voice
 #   brevity-as-weight lands in the HOUSEHOLDER response (E3d), not
 #   the publisher choice.
 #
@@ -118,6 +118,7 @@ polite_refuser_house03_jewish (polite_smile): I appreciate it, but we're Jewish.
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	update polite_refuser_house03_jewish (firm_refusal)
 	polite_refuser_house03_jewish (firm_refusal): It just isn't. Sorry.
 	update polite_refuser_house03_jewish (polite_smile)
@@ -181,6 +182,7 @@ polite_refuser_house03_jewish (polite_smile): We're Jewish — as I think I said
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	update polite_refuser_house03_jewish (firm_refusal)
 	polite_refuser_house03_jewish (firm_refusal): It isn't. Sorry.
 	update polite_refuser_house03_jewish (polite_smile)

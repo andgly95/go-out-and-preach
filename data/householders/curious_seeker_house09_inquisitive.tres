@@ -11,4 +11,4 @@ dialogue_timeline = "res://data/dialogues/curious_seeker_house09_inquisitive_v1.
 dialogic_character = null
 doubt_delta_overrides = {}
 voice_subtype = &"inquisitive"
-character_name = ""
+character_name = "Daniel"

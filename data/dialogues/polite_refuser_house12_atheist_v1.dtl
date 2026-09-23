@@ -54,7 +54,7 @@
 #   while topology-accepting RV_SCHEDULED. Voice-true; routes via the
 #   RV_SCHEDULED signal arg. UNSURE annotated.
 # - E3d off-script publisher choice text "Why is that for you?" KEPT
-#   verbatim; OFFSCRIPT_CHOICE_TEXTS dict unchanged. Cast.md § 6.0.1
+#   verbatim; the OFFSCRIPT signal dict unchanged. Cast.md § 6.0.1
 #   Flavor B canonical "It's a long story. Not really doorstep material."
 #   lands in the HOUSEHOLDER response, not the publisher choice.
 # - "Knows JW-adjacent theology in a passing way" awareness beat → ABSENT
@@ -145,7 +145,8 @@ polite_refuser_house12_atheist (polite_smile): Thanks. I've actually thought abo
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
-	# OFF-SCRIPT — T1 fires +3 via OFFSCRIPT_CHOICE_TEXTS in door_knock.gd.
+	[signal arg="OFFSCRIPT:3"]
+	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6
 	# PR characters (registry text-key shared). The intellectual's voice
 	# texture lands in the response line below — cast.md § 6.0.1 Flavor B
@@ -243,8 +244,9 @@ polite_refuser_house12_atheist (polite_smile): I appreciate you coming back. But
 		[signal arg="REFUSED"]
 		[end_timeline]
 - Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT (returning) — same text-key as first_visit so
-	# OFFSCRIPT_CHOICE_TEXTS resolves identically (+3). Householder response
+	# the OFFSCRIPT signal resolves identically (+3). Householder response
 	# is the firming-on-repeat pattern (matches Catholic returning E3d's
 	# doubled "I really — I really don't want to get into all that"
 	# escalation). RED LINE: still NOT condescending — the "still" framing

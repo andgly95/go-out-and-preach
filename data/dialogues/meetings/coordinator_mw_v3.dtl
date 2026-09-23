@@ -22,6 +22,7 @@ elder_coordinator (neutral): Good evening, brothers and sisters. Tonight's part 
 elder_coordinator (neutral): Here's the demonstration. Brother Wen at house number — well, he won't mind me telling it — number twenty-eight on Cedar last spring. He offered the *Lighthouse* article on family. The householder said, "Funny, my husband and I were just talking about this last night." Now, the trained instinct is to launch into the article. Brother Wen didn't. He simply asked, "Would the two of you be willing to look at this together for half an hour next week, just to see if it's useful?" That's the question. Notice how small it is. Half an hour. Just to see. The yes was easy because the ask was easy.
 
 if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
 	[i]The yes was easy because the ask was easy. You wonder which of your yeses were like that.[/i]
 
 elder_coordinator (neutral): So this week, brothers and sisters, the practice is this: when the householder offers you an opening, make the next step small. Smaller than feels right. You might consider phrasing it the way Brother Wen did. The Bible study begins long before anyone calls it that. Have a good evening, and we'll be praying for the work this Saturday.

@@ -34,7 +34,7 @@
 #     TRACT_LEFT: +2   (vs global -1 — net swing of +3, the "positive
 #                       outcome still costs" beat)
 #   Off-script choice (E3 Choice 3) fires +2 via the per-choice delta
-#   registry in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS (M4.3 refactored the
+#   registry in the [signal arg="OFFSCRIPT:n"] on the branch (M4.3 refactored the
 #   registry from Dictionary[String, bool] → Dictionary[String, int] so
 #   PR/CS stay at +3 while Apostate uses +2).
 #   Exposure ceiling per encounter: +5 (off-script + REFUSED).
@@ -46,7 +46,7 @@
 #
 # COORDINATION (M4.3):
 #   The off-script choice text "I'm sorry that happened to you." must be
-#   registered in door_knock.gd::OFFSCRIPT_CHOICE_TEXTS with value 2.
+#   registered in the [signal arg="OFFSCRIPT:n"] on the branch with value 2.
 #   STATUS's M4 tightening target ("T1 brittleness — still text-keyed")
 #   remains open; this milestone only loosens the magnitude side.
 #
@@ -135,6 +135,7 @@ apostate_wounded (grief): My mother won't speak to me. It's been almost five yea
 	[signal arg="TRACT_LEFT"]
 	[end_timeline]
 - I'm sorry that happened to you. | [if DoubtMeter.value >= 35] [else=disable alt_text=""]
+	[signal arg="OFFSCRIPT:2"]
 	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 35 (higher than PR/CS's 25).
 	# Per Q4: you have to be significantly doubting to recognize and take
 	# the moment with an Apostate.
@@ -146,7 +147,7 @@ apostate_wounded (grief): My mother won't speak to me. It's been almost five yea
 	# and the same).
 	#
 	# DOUBT FIRING — T1 hook: door_knock.gd::_on_choice_selected matches
-	# against OFFSCRIPT_CHOICE_TEXTS (per-choice delta registry as of
+	# against the OFFSCRIPT signal (per-choice delta registry as of
 	# M4.3). This choice fires +2. Off-script collapses to REFUSED per
 	# Q3 — the moment is too heavy to also leave a tract.
 	#
