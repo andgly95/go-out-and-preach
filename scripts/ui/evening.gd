@@ -55,7 +55,10 @@ func _start_timeline(path: String) -> void:
 func _show_result_card(activity: Activity) -> void:
 	_card.visible = true
 	_title.text = GameState.fill(tr(activity.title))
-	_body.text = GameState.fill(tr(activity.result_text if not activity.result_text.is_empty() else activity.description))
+	var text: String = activity.result_text if not activity.result_text.is_empty() else activity.description
+	var variants: PackedStringArray = text.split(" || ")
+	var times: int = maxi(GameState.count("activity_" + String(activity.id)), 1)
+	_body.text = GameState.fill(tr(variants[(times - 1) % variants.size()]))
 
 
 func _on_dialogic_signal(arg: Variant) -> void:

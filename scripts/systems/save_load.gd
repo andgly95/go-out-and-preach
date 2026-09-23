@@ -1,6 +1,6 @@
 extends Node
 ## Saves and restores a run. Autoloaded as SaveLoad. Autosave happens at the
-## start of each week (GameState listens for week_advanced); Continue on the
+## start of each day (GameState listens for day_advanced); Continue on the
 ## main menu resumes it. Manual slots are GDD § 10 scope for later.
 
 const AUTOSAVE_PATH: String = "user://autosave.tres"

@@ -3,7 +3,8 @@
 # hour"; hums songs without thinking; "Come sit with me."
 # TODO: authenticity check
 
-{GameState.grandparent_word}'s apartment smells like coffee and the lemon stuff she uses on the furniture. You put the groceries away where they go. She hums the whole time, a song from the songbook, the one about the morning.
+{GameState.grandparent_word}'s apartment smells like coffee and the lemon stuff she uses on the furniture. You put the groceries away where they go.
+She hums the whole time, a song from the songbook, the one about the morning.
 "Come sit with me. You're making the room nervous."
 She wants to know about your job, and whether you're eating, and whether that nice {GameState.partner_formal} is still in your car group. She doesn't ask about your hours.
 - Stay the full hour.

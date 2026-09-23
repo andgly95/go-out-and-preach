@@ -95,3 +95,16 @@ func test_no_accidental_speakers() -> void:
 			if name in ["if", "elif", "else", "label", "jump", "join", "leave", "update"]:
 				continue
 			check(name in known, "%s:%d reads as a speaker named '%s'" % [path, i + 1, name])
+
+
+func test_lines_fit_the_textbox() -> void:
+	# The Dialogic textbox shows about four lines (~215 characters) before it
+	# has to scroll. Split longer lines at a natural beat.
+	for dir in ["beats", "scenes", "study", "month", "endings"]:
+		for path in files_under("res://data/dialogues/" + dir, "dtl"):
+			var lines: PackedStringArray = FileAccess.get_file_as_string(path).split("\n")
+			for i in lines.size():
+				var line: String = lines[i].strip_edges()
+				if line.begins_with("#"):
+					continue
+				check(line.length() <= 215, "%s:%d is %d characters; split it" % [path, i + 1, line.length()])

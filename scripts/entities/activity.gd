@@ -35,7 +35,8 @@ class_name Activity
 @export var scenes: Array[String] = []
 ## Played once `scenes` are used up. Empty = show `result_text` instead.
 @export var repeat_scene: String = ""
-## One line shown when there's no scene to play.
+## One line shown when there's no scene to play. Several variants may be
+## separated by " || "; they rotate each time the activity is chosen.
 @export var result_text: String = ""
 
 @export_group("Availability")

@@ -10,7 +10,7 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 - **Field service is a time budget.** Two hours per morning, plus "keep going" for energy. Return visits and studies persist as appointments that are always home; polite refusers stop answering after two. The map dims houses there's no time left for.
 - **Month end.** Auxiliary pioneer sign-up on the first Sunday of each month (30 hours). A report slip, then one of four elder conversations (affirmation, "encouragement", shepherding with an optional confession, a steady month).
 - **Doubt is exposure.** Success no longer erases it; conviction buffers it and wears down with it. Personal study prepares you for Sunday, and that "successful meeting" is what eases doubt.
-- **Autosave** at the start of each week; Continue works.
+- **Autosave** at the start of each day; Continue works.
 
 - **Story beats** (`data/beats/`): thirteen short scenes across the eight weeks. Coffee with your parent, late-night texts from your brother Micah, Dana's invitation and later her 10pm call and her lunchtime question, Sister Marin in the lobby, the parked car with your service partner, family dinner, the lamp left on, the boxes in the hallway. They come from cast.md's "common beats", and several branch on what you've been doing.
 - **Activity scenes:** family worship, personal study, Grandma, game night, and Dana each have a sequence of authored scenes, then a quieter repeat. Personal study's "look the verse up yourself" branch (doubt ≥ 25) echoes in Daniel's study.
@@ -39,6 +39,7 @@ All are one constant or data file each. Full reasoning in `docs/design/v01-loop.
 - Exposure wears conviction down by half its size; conviction drifts −3 a week.
 - Names: the coworker is **Dana**; the grandparent is **Grandma**; the sibling is **Micah**, a younger brother; the Sister Who Talks is **Sister Marin** (dialogue-context.md's own example name); the service partner is **Eli** (or **Naomi** if you play a sister); house #9's neighbor is **Daniel** (cast.md § 5.2's Householder of Note). Placeholders in dialogue: "the Castillo boy", "Jess", "Ruth" in Grandma's album. All names are one constant each in `game_state.gd`, or a line in a timeline.
 - Beats I placed that go a step beyond cast.md's list: Micah moving into his own apartment (week 7), and Grandma's photo of Ruth "who left". Both are flagged in their files. Dialogue lines in the month-end talks, the five endings, the study session, and the activities are drafts, marked `# TODO: authenticity check`.
+- Autosave runs daily rather than weekly (GDD § 10 said weekly), so quitting mid-week doesn't lose days.
 - The Dialogic autoload uses a `res://` path, so fresh clones import cleanly.
 
 ## Open questions for Andrew

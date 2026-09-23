@@ -20,7 +20,7 @@
 
 - **Month end** (after Saturday of weeks 4 and 8): you fill in your field service report, and an elder talks with you. What he says depends on your hours, your pioneer commitment, and your meeting attendance.
 - **Run end** (week 8): the ending is resolved from your accumulated state and shown as a "five years later" snapshot (GDD § 8).
-- **Save:** autosave at the start of each week; Continue resumes it (GDD § 10).
+- **Save:** autosave at the start of each day; Continue resumes it. (call) GDD § 10 says week boundaries; daily is the same single slot, and quitting mid-week no longer loses days.
 
 ## Energy (0–10)
 

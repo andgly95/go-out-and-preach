@@ -73,7 +73,7 @@ func _ready() -> void:
 	SignalBus.meeting_attended.connect(_on_meeting_attended)
 	SignalBus.meeting_skipped.connect(_on_meeting_skipped)
 	SignalBus.service_session_ended.connect(_on_service_session_ended)
-	SignalBus.week_advanced.connect(_on_week_advanced)
+	SignalBus.day_advanced.connect(_on_day_advanced)
 
 
 # --- Starting a run -----------------------------------------------------------
@@ -304,7 +304,10 @@ func _on_service_session_ended(summary: Dictionary) -> void:
 	month["study_sessions"] = int(month.get("study_sessions", 0)) + int(summary.get("study_continues", 0)) + int(summary.get("bible_study_started", 0))
 
 
-func _on_week_advanced(_week: int) -> void:
+func _on_day_advanced(_day: int) -> void:
+	# Autosave at the start of every day, so Continue never loses more than
+	# the day in progress. (GDD § 10 asks for week boundaries; daily is the
+	# same one-slot mechanism, triggered more often.)
 	if autosave_enabled:
 		SaveLoad.autosave()
 
