@@ -93,9 +93,10 @@ const PREPARED_FLAG: String = "prepared_for_sunday"
 const PREPARED_RELIEF: int = 2
 const PREPARED_ELDERS: int = 1
 
-# 6 seats with one pinned neighbor identity each (Phase 1 proposed default).
-# Neighbor slugs feed SOCIAL_MOMENT_OPTIONS below so the social moment varies
-# with seat choice.
+# 6 seats with one pinned neighbor identity each. Neighbor slugs feed
+# SOCIAL_MOMENT_OPTIONS below so the social moment varies with seat choice;
+# SEAT_NEIGHBOR_LABELS is what the seat picker shows ({tokens} filled by
+# GameState.fill).
 const SEAT_NEIGHBORS: Dictionary = {
 	&"front_left":   &"service_partner",
 	&"front_right":  &"sister_who_talks",
@@ -105,20 +106,29 @@ const SEAT_NEIGHBORS: Dictionary = {
 	&"back_right":   &"sit_alone",
 }
 
+const SEAT_NEIGHBOR_LABELS: Dictionary = {
+	&"service_partner":   "{partner} saved you a spot",
+	&"sister_who_talks":  "beside {talker}",
+	&"strict_elder_wife": "beside Sister Whitcomb",
+	&"lonely_elderly":    "beside an elderly sister",
+	&"parent_in_truth":   "near {parent}",
+	&"sit_alone":         "the empty back row",
+}
+
 # Per-neighbor social moment: prompt text + 2 short choices. Each choice
 # carries a Standing delta (Phase 1 default ±1) into one of three standing
 # tracks. Placeholder copy authored inline; M5.3 / M5.4 dialogue subagent
 # passes rewrite to authentic voice per cast.md.
 const SOCIAL_MOMENT_OPTIONS: Dictionary = {
 	&"service_partner": {
-		"prompt": "Your service partner slides over to make room. \"Saved you a spot. Long week, huh?\"",
+		"prompt": "{partner} slides over to make room. \"Saved you a spot. Long week, huh?\"",
 		"choices": [
 			{"label": "\"Yeah. Glad to be here.\"", "standing_type": &"congregation", "standing_delta": 1},
 			{"label": "Half-smile and reach for the songbook.", "standing_type": &"congregation", "standing_delta": 0},
 		],
 	},
 	&"sister_who_talks": {
-		"prompt": "She leans in before you've even set your bag down. \"Oh — I just want to say, did you hear about Brother Phillips? Such a sweet brother, but —\"",
+		"prompt": "{talker} leans in before you've even set your bag down. \"Oh — I just want to say, did you hear about Brother Phillips? Such a sweet brother, but —\"",
 		"choices": [
 			{"label": "\"What's going on with him?\"", "standing_type": &"congregation", "standing_delta": 1},
 			{"label": "\"Maybe after the meeting, sister.\"", "standing_type": &"congregation", "standing_delta": 0},
@@ -139,7 +149,7 @@ const SOCIAL_MOMENT_OPTIONS: Dictionary = {
 		],
 	},
 	&"parent_in_truth": {
-		"prompt": "Your parent in the Truth catches your eye from down the row. They mouth \"we love you\" and tap the seat between them — but it's already taken.",
+		"prompt": "{parent} catches your eye from down the row, mouths \"we love you,\" and taps the seat beside them — but it's already taken.",
 		"choices": [
 			{"label": "Smile back and mouth \"love you too.\"", "standing_type": &"family", "standing_delta": 1},
 			{"label": "Nod once and face the platform.", "standing_type": &"family", "standing_delta": 0},

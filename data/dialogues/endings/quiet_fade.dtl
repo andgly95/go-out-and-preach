@@ -9,4 +9,8 @@ The phone stopped ringing within a few weeks. The cards took longer.
 {GameState.parent_word} still asks, in a voice that tries not to ask, whether you've been to a meeting lately. You say "not lately."
 Every so often two publishers come to your door on a Saturday morning. You're polite. You take the magazine, so that it will end.
 Once, you recognize one of them. They recognize you. Neither of you says so.
+if GameState.count("daniel_sessions") > 0:
+	Sometimes you see Daniel at the hardware store. He always says hello. He never asks.
+if GameState.count("activity_visit_grandparent") > 0:
+	When you visit {GameState.grandparent_word} she still hums the songs while she makes the coffee. You find you know all the words.
 It's a small life. It's yours. Most days that's enough.

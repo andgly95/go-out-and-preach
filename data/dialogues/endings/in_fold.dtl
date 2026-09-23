@@ -7,4 +7,7 @@ Five years later.
 You still sit in the same row, a little further back now that there are more of you. You met at an assembly. The wedding was at the Hall, and the reception ran late, and nobody minded.
 {GameState.parent_word} watches the baby on meeting nights so the two of you can go together.
 Some weeks are hard. Most weeks are just weeks.
+if GameState.count("activity_visit_grandparent") > 0:
+	{GameState.grandparent_word} lived to hold the baby. She hummed the song about the morning the whole afternoon, and fell asleep with her in her arms.
+{GameState.sibling_name} is the fun uncle. He visits on weekday evenings, when there's no chance of a meeting, and nobody mentions that either.
 On Saturdays you still go out. When a door opens, you smile first. You mean it.

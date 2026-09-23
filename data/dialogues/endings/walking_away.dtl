@@ -8,4 +8,8 @@ You wrote the letter in the second year and never sent it. You didn't need to. B
 {GameState.parent_word} still sends a card, never on your birthday — a few days after, the way it always was. You keep them in a drawer.
 You have opinions now about things you used to have answers for. Some nights you argue with strangers online until two in the morning, and win, and feel nothing.
 On Saturday mornings you sometimes hear two car doors close on the street, and you stand very still in the kitchen until they've passed.
+if GameState.count("covered_for_sibling") > 0 or GameState.count("helped_sibling_move") > 0:
+	{GameState.sibling_name} was the first person you called. He didn't say anything clever. He said, do you want to get breakfast.
+if GameState.count("activity_visit_grandparent") > 0:
+	{GameState.grandparent_word} is the one who still calls. She never mentions any of it. She tells you about the neighbor's cat.
 You're free. You say it to yourself sometimes, to check.

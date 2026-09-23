@@ -16,7 +16,8 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 - **Activity scenes:** family worship, personal study, Grandma, game night, and Dana each have a sequence of authored scenes, then a quieter repeat. Personal study's "look the verse up yourself" branch (doubt ≥ 25) echoes in Daniel's study.
 - **Daniel** (house #9, the Householder of Note): four study sessions that progress (sources, the half-quoted verse, "do they get to keep their friends?", his decision), then he ends it or keeps going for your sake.
 
-Not yet: seat picker still doesn't show who's sitting where; the Lighthouse Study "comment" moment is mechanical only; no endings reference Daniel, Micah, or Dana yet.
+- **Feel:** meters show a fading "+2" / "−1" when they change, even across scene changes. The seat picker names who you'd sit beside. After the Lighthouse Study comes the paragraph question: raise your hand with the answer you prepared, get called on anyway when you didn't, or (if you looked the verse up and doubt has passed 40) mention the rest of the verse.
+- **Opening and endings:** a short opening scene establishes who you are (cast.md § 2). Month 2's pioneer prompt remembers month 1. Endings carry lines for Daniel, Micah, Dana, Grandma, and the elders, depending on what happened.
 
 ## Balance (tools/ci/tests/test_balance.gd, 60 runs per style)
 
@@ -48,4 +49,4 @@ All are one constant or data file each. Full reasoning in `docs/design/v01-loop.
 
 ## Next step
 
-Play it. Then: show who's in each seat at the Hall; an on-screen comment moment at the Sunday Lighthouse Study for players who prepared; endings that remember Daniel, Micah, and Dana.
+**Play it**, a full run from New Game with no debug keys (about an hour), then tell me where it went flat. Candidates after that: deeper door conversations (most are a single choice); a Householder of Note beat in the ending itself; audio (the GDD's sparse field-recording texture); Continue saves mid-week, not just at week start.

@@ -118,7 +118,8 @@ func fill(text: String) -> String:
 		.replace("{grandparent}", grandparent_name()) \
 		.replace("{sibling}", sibling_name) \
 		.replace("{coworker}", coworker_name) \
-		.replace("{partner}", partner_name)
+		.replace("{partner}", partner_name) \
+		.replace("{talker}", talker_name)
 
 
 func weeks_left() -> int:

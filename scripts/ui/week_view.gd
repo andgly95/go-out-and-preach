@@ -72,7 +72,7 @@ func _refresh() -> void:
 	_day_title.text = tr("Week %d — %s") % [TimeManager.current_week, TimeManager.current_phase_name()]
 	_day_flavor.text = tr(DAY_FLAVOR.get(phase, ""))
 	if GameState.pioneer_decision_pending():
-		_day_flavor.text = tr(PIONEER_FLAVOR)
+		_day_flavor.text = _pioneer_flavor()
 	_rebuild_options(_options_for_today())
 	_rebuild_month_card()
 
@@ -121,6 +121,19 @@ func _options_for_today() -> Array:
 	if options.is_empty():
 		options.append({"icon": "☾", "name": "Go to bed", "description": "", "cost": 0, "action": _on_bed_pressed})
 	return options
+
+
+func _pioneer_flavor() -> String:
+	if GameState.months.is_empty():
+		return tr(PIONEER_FLAVOR)
+	match GameState.months.back().get("verdict", ""):
+		"pioneer_met":
+			return tr("The applications are out again. Brother Phillips catches your eye across the Hall and lifts his eyebrows, just slightly.")
+		"pioneer_missed":
+			return tr("The applications are out again. Last month's is still folded in your Bible, the thirty in your own handwriting.")
+		"shepherding":
+			return tr("The applications are out again. Brother Whitcomb is standing near the table, talking to no one in particular.")
+	return tr(PIONEER_FLAVOR)
 
 
 func _pioneer_options() -> Array:

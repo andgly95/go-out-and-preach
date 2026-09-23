@@ -29,8 +29,15 @@ enum Phase {
 	SOCIAL_MOMENT,
 	SONG,
 	TALK,
+	COMMENT,
 	RESOLVE,
 }
+
+# The Lighthouse Study question (dialogue-context.md § 10: members are called
+# on to comment on prepared questions; coming unprepared and being called on
+# is a small public humiliation). Personal study during the week sets
+# MeetingManager.PREPARED_FLAG.
+const CALLED_ON_UNPREPARED_CHANCE: float = 0.3
 
 @onready var _phase_title: Label = $PhaseCard/PhaseMargin/PhaseVBox/PhaseTitle
 @onready var _phase_flavor: Label = $PhaseCard/PhaseMargin/PhaseVBox/PhaseFlavor
@@ -103,9 +110,11 @@ func _show_seat_picker() -> void:
 	grid.add_theme_constant_override("v_separation", 12)
 	for seat_slug in MeetingManager.SEAT_NEIGHBORS:
 		var button: Button = Button.new()
-		button.text = _label_for_seat(seat_slug)
-		button.custom_minimum_size = Vector2(280, 56)
-		button.add_theme_font_size_override("font_size", 16)
+		var neighbor: StringName = MeetingManager.SEAT_NEIGHBORS.get(seat_slug, &"")
+		var who: String = GameState.fill(tr(MeetingManager.SEAT_NEIGHBOR_LABELS.get(neighbor, "")))
+		button.text = "%s\n%s" % [_label_for_seat(seat_slug), who]
+		button.custom_minimum_size = Vector2(280, 64)
+		button.add_theme_font_size_override("font_size", 15)
 		button.pressed.connect(_on_seat_picked.bind(seat_slug))
 		grid.add_child(button)
 	_phase_content.add_child(grid)
@@ -136,12 +145,12 @@ func _show_social_moment() -> void:
 	# is pinned next to.
 	var neighbor: StringName = MeetingManager.SEAT_NEIGHBORS.get(_chosen_seat, &"")
 	var moment: Dictionary = MeetingManager.SOCIAL_MOMENT_OPTIONS.get(neighbor, {})
-	_phase_flavor.text = tr(moment.get("prompt", ""))
+	_phase_flavor.text = GameState.fill(tr(moment.get("prompt", "")))
 	_clear_phase_content()
 	var choices: Array = moment.get("choices", [])
 	for choice in choices:
 		var button: Button = Button.new()
-		button.text = tr(choice.get("label", ""))
+		button.text = GameState.fill(tr(choice.get("label", "")))
 		button.custom_minimum_size = Vector2(0, 48)
 		button.add_theme_font_size_override("font_size", 15)
 		button.pressed.connect(_on_social_moment_picked.bind(choice))
@@ -271,11 +280,85 @@ func _on_dialogic_signal(arg: Variant) -> void:
 
 func _on_timeline_ended() -> void:
 	# Reached after the .dtl's [end_timeline]. The signal_event handler above
-	# already fired the per-talk effects; this just advances to the next talk
-	# (with a brief beat) or resolves the meeting.
+	# already fired the per-talk effects; this advances to the next talk (with
+	# a brief beat), the Lighthouse Study question, or resolves the meeting.
 	if _phase != Phase.TALK:
 		return
+	if _current_talk == &"lighthouse_study":
+		_show_comment_moment()
+		return
 	_advance_after_talk()
+
+
+# --- Phase: the paragraph question --------------------------------------------
+
+func _show_comment_moment() -> void:
+	_phase = Phase.COMMENT
+	_phase_card.visible = true
+	_restore_default_hall_background()
+	var prepared: bool = GameState.flag(MeetingManager.PREPARED_FLAG) != 0
+	_phase_title.text = tr("The paragraph question")
+	_phase_flavor.text = tr("Brother Whitcomb reads the question for paragraph four and looks up. Around the hall, hands go up.")
+	if not prepared:
+		_phase_flavor.text += " " + tr("Your copy of the article is clean. You didn't get to it this week.")
+	_clear_phase_content()
+	_add_comment_choice(tr("Raise your hand"), _on_comment_raise.bind(prepared))
+	if prepared and DoubtMeter.value >= 40 and GameState.count("looked_it_up") > 0:
+		_add_comment_choice(tr("Raise your hand, and mention the rest of the verse"), _on_comment_honest)
+	_add_comment_choice(tr("Keep your hand down"), _on_comment_quiet.bind(prepared))
+
+
+func _add_comment_choice(label: String, handler: Callable) -> void:
+	var button: Button = Button.new()
+	button.text = label
+	button.custom_minimum_size = Vector2(0, 48)
+	button.add_theme_font_size_override("font_size", 15)
+	button.pressed.connect(handler)
+	_phase_content.add_child(button)
+
+
+func _on_comment_raise(prepared: bool) -> void:
+	if _phase != Phase.COMMENT:
+		return
+	if prepared:
+		ResourceManager.add_standing_elders(1)
+		ResourceManager.add_standing_congregation(1)
+		_show_comment_result(tr("You give the answer you underlined, in your own words, the way you practiced. Brother Whitcomb nods once. \"Thank you.\" Across the aisle, {parent} is smiling at the floor."))
+	else:
+		ResourceManager.add_standing_congregation(-1)
+		ResourceManager.add_conviction(-1)
+		_show_comment_result(tr("He calls on you. You read the paragraph's last sentence back, a little too fast, and your voice does something on the last word. \"Thank you,\" he says, and moves on. Your ears are hot for the rest of the study."))
+
+
+func _on_comment_honest() -> void:
+	if _phase != Phase.COMMENT:
+		return
+	ResourceManager.add_standing_elders(-2)
+	DoubtMeter.expose(1.5, &"comment_honest")
+	GameState.set_flag("said_it_at_the_hall", 1)
+	_show_comment_result(tr("You give the answer, and then you mention the verse the paragraph cites, and what the rest of it says. The microphone brother waits. Brother Whitcomb looks at you for a moment. \"Let's keep to the paragraph, {title} {name}. Thank you.\" Nobody turns around. Everybody heard."))
+
+
+func _on_comment_quiet(prepared: bool) -> void:
+	if _phase != Phase.COMMENT:
+		return
+	if not prepared and randf() < CALLED_ON_UNPREPARED_CHANCE:
+		ResourceManager.add_standing_congregation(-1)
+		ResourceManager.add_conviction(-1)
+		_show_comment_result(tr("His eyes find you anyway. \"Perhaps {title} {name}?\" You look down at the clean page and say something about faithfulness that isn't quite the question. \"Thank you.\" He moves on. You wish you'd stayed home."))
+		return
+	_show_comment_result(tr("Someone else gives the answer. It's a good answer."))
+
+
+func _show_comment_result(text: String) -> void:
+	_clear_phase_content()
+	_phase_flavor.text = GameState.fill(text)
+	var continue_button: Button = Button.new()
+	continue_button.text = tr("Continue")
+	continue_button.custom_minimum_size = Vector2(220, 44)
+	continue_button.add_theme_font_size_override("font_size", 15)
+	continue_button.pressed.connect(func() -> void: _advance_after_talk())
+	_phase_content.add_child(continue_button)
 
 
 func _advance_after_talk() -> void:

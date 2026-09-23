@@ -7,8 +7,14 @@ Five years later.
 You've been a regular pioneer for four of them. You know every street in the territory by its dogs.
 Brother Phillips stepped down as coordinator last spring. At his last meeting in the role he put a hand on your shoulder and didn't say anything, which you understood.
 if GameState.flag("activity_coworker_invite") > 0:
-	Dana from work got married. The invitation is still on your fridge. It was a nice card.
+	{GameState.coworker_name} from work got married. The invitation is still on your fridge. It was a nice card.
 else:
 	The people from your old job text less now. Then not at all. You didn't notice when.
 Some mornings, before the car group, you sit in the driveway with the engine off and the heater running. You don't pray, exactly. You just sit.
+if GameState.count("daniel_sessions") > 0:
+	Daniel moved away the second spring. The note he left in your door said thank you for the Saturdays. You keep it in the back of your Bible, which is probably not where he meant it to go.
+if GameState.count("covered_for_sibling") > 0 or GameState.count("helped_sibling_move") > 0:
+	{GameState.sibling_name} sends pictures of his apartment sometimes: a new couch, a cat that isn't his. You look at them a long time before you reply.
+else:
+	You see {GameState.sibling_name} at {GameState.grandparent_word}'s once a year, around the time everyone else calls a holiday. He brings the good pie. You talk about the pie.
 Then you go. You always go.

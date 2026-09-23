@@ -20,6 +20,7 @@ else:
 	jump later
 
 label first
+[signal arg="BUMP:daniel_sessions"]
 Daniel's kitchen table. He's read the whole lesson, and the magazine you left, and he has a legal pad with questions down the margin in small careful handwriting.
 "I'm not trying to catch you out," he says. "I just like to know who's talking."
 He taps a sentence in the lesson. "It says 'many scholars agree.' Which ones?"
@@ -42,6 +43,7 @@ At the door: "Same time next week?"
 	[end_timeline]
 
 label second
+[signal arg="BUMP:daniel_sessions"]
 Daniel has the lesson open to page fourteen and his own Bible open beside it, an old paperback with a cracked spine.
 "So I looked up the verse they quote here. They only quote half of it." He reads you the whole thing, then the verses around it. "It's about something else, isn't it? Or am I reading it wrong?"
 if GameState.count("looked_it_up") > 0:
@@ -63,6 +65,7 @@ At the door he holds it open for you. "Next week?"
 	[end_timeline]
 
 label third
+[signal arg="BUMP:daniel_sessions"]
 Daniel makes coffee this time, without asking, the way you would for a friend. He doesn't open the book right away.
 "Can I ask you something that's not in the lesson? You don't have to answer."
 "What happens if someone in your group stops believing? Like — practically. Do they get to keep their friends?"
@@ -82,6 +85,7 @@ They do the lesson after that, both of you a little careful with each other. At 
 	[end_timeline]
 
 label fourth
+[signal arg="BUMP:daniel_sessions"]
 The lesson book is closed on the table when you come in, squared to the edge, with the legal pad on top of it.
 "I think I'm going to stop the study," Daniel says. "It's not you. You've been great. Honestly, you're the best part of my Saturdays."
 "I think I just — know what I think now. I didn't, before. So, thank you, actually."
@@ -98,6 +102,7 @@ He slides the book back across the table to you.
 	[end_timeline]
 
 label later
+[signal arg="BUMP:daniel_sessions"]
 Daniel's kitchen table, the lesson book, the coffee. He listens to every paragraph all the way through, politely, and asks one precise question each week, and writes your answer down.
 - "See you next week."
 	[signal arg="STUDY_CONTINUES"]

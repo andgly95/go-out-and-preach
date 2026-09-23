@@ -7,4 +7,10 @@ You haven't missed a meeting in three of them. You comment at the Lighthouse Stu
 At night you read things on your phone with the brightness turned all the way down.
 {GameState.parent_word} says you seem settled. You say you are.
 In the territory you knock, you smile, you offer the magazine. When a door closes you feel something you don't have a name for, and it isn't disappointment.
+if GameState.count("honest_with_dana") > 0:
+	{GameState.coworker_name} is the only one who knows. You have lunch every couple of months and never talk about it, and it's the best hour of the month.
+if GameState.count("daniel_sessions") > 0:
+	When the car group works Maple Street, you always take the other side of the road from number nine.
+if GameState.count("confided_in_elders") > 0:
+	Now and then Brother Whitcomb asks how you're doing with "those things." You tell him much better.
 You know exactly what you'd lose. You count it every morning. Then you put on the good shirt.
