@@ -17,3 +17,4 @@ result_text = "A crowded bar with the music too loud. You drink a soda and laugh
 requires_flag = "dana_asked"
 scenes = Array[String](["res://data/dialogues/scenes/coworker_invite_1.dtl", "res://data/dialogues/scenes/coworker_invite_2.dtl"])
 repeat_scene = "res://data/dialogues/scenes/coworker_invite_repeat.dtl"
+background = "res://assets/backgrounds/bar_evening.png"

@@ -8,3 +8,4 @@ id = &"marin_worried"
 week = 4
 day = 2
 timeline = "res://data/dialogues/beats/marin_worried.dtl"
+background = "res://assets/backgrounds/hall_lobby.png"

@@ -5,7 +5,11 @@ extends Control
 ## (the next week, or the ending after the last month).
 
 const TIMELINE_DIR: String = "res://data/dialogues/month/"
+# The report slip goes across the literature counter in the lobby. Falls back
+# to the auditorium until that art exists (docs/design/asset-brief.md).
+const LOBBY_BACKGROUND_PATH: String = "res://assets/backgrounds/hall_lobby.png"
 
+@onready var _background: TextureRect = $Background
 @onready var _card: PanelContainer = $Card
 @onready var _title: Label = $Card/Margin/VBox/Title
 @onready var _body: Label = $Card/Margin/VBox/Body
@@ -16,6 +20,8 @@ var _finished: bool = false
 
 
 func _ready() -> void:
+	if ResourceLoader.exists(LOBBY_BACKGROUND_PATH):
+		_background.texture = load(LOBBY_BACKGROUND_PATH)
 	var month: Dictionary = GameState.month
 	_title.text = tr("Field Service Report")
 	_body.text = tr("Month %d. Fill it in before the meeting.") % int(month.get("month", 1))

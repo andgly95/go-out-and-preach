@@ -9,3 +9,4 @@ week = 7
 day = 1
 timeline = "res://data/dialogues/beats/sibling_boxes.dtl"
 exposure = 1.0
+background = "res://assets/backgrounds/hallway_boxes.png"

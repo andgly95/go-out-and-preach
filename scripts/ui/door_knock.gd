@@ -26,6 +26,7 @@ const HOSTILE_SLAMMER_LINES: Array[String] = [
 
 const REVEAL_40_TIMELINE_PATH: String = "res://data/dialogues/internals/reveal_40.dtl"
 const DEFAULT_STUDY_TIMELINE_PATH: String = "res://data/dialogues/study/study_session.dtl"
+const DEFAULT_STUDY_BACKGROUND_PATH: String = "res://assets/backgrounds/study_kitchen.png"
 const DEBUG_PANEL_SCENE_PATH: String = "res://scenes/dev/doubt_debug.tscn"
 const TERRITORY_SCENE_PATH: String = "res://scenes/territory_map.tscn"
 
@@ -87,6 +88,14 @@ func _refresh_house_badge() -> void:
 func _refresh_house_portrait() -> void:
 	if _pending_house == null:
 		return
+	# A study happens inside, at the kitchen table, once that art exists.
+	if _pending_house.state == House.State.BIBLE_STUDY_STARTED and _pending_house.householder != null:
+		var inside: String = _pending_house.householder.study_background
+		if inside.is_empty():
+			inside = DEFAULT_STUDY_BACKGROUND_PATH
+		if ResourceLoader.exists(inside):
+			_house_portrait.texture = load(inside)
+			return
 	var tex: Texture2D = TerritoryManager.get_house_portrait(TerritoryManager.house_number_for(_pending_house))
 	if tex != null:
 		_house_portrait.texture = tex

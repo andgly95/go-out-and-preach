@@ -41,6 +41,10 @@ Andrew delegated design decisions (CLAUDE.md § How We Work). These are settled;
 - Beats beyond cast.md's list: Micah moves into his own apartment (week 7); Grandma keeps a photo of Ruth, who left.
 - Wording: Dana gets gently corrected on "church" (dialogue-context.md § 5 says members do this); the study aid is "the study book".
 
+## Art
+
+14 background slots and house #1 are wired and waiting; each falls back to current art until its file exists. `docs/design/asset-brief.md` lists every file, spec, and prompt; `bash tools/art_status.sh --missing` shows what's left. Non-Claude agents (Codex) follow `AGENTS.md`.
+
 ## What would still help from Andrew
 
 Nothing blocks. New lines are drafts from the design docs, marked `# TODO: authenticity check`. If something in a playthrough rings false — a phrase no publisher would use, a beat that wouldn't happen that way — note it, and it gets fixed.

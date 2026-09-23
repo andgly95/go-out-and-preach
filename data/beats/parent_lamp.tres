@@ -9,3 +9,4 @@ week = 5
 day = 4
 timeline = "res://data/dialogues/beats/parent_lamp.dtl"
 exposure = 0.5
+background = "res://assets/backgrounds/home_living_room_night.png"

@@ -9,3 +9,4 @@ week = 6
 day = 6
 timeline = "res://data/dialogues/beats/partner_rough.dtl"
 standing_congregation = 1
+background = "res://assets/backgrounds/car_interior_morning.png"

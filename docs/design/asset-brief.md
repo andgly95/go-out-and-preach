@@ -1,0 +1,111 @@
+# Asset Brief — v0.1 art pass
+
+> What art the game needs next, exactly where each file goes, and how to check it in place. Written for whoever makes the images: Andrew, ChatGPT / OpenAI image generation, or an agent such as Codex (see `AGENTS.md`). Supersedes `mockups/asset_prompts.md` for new work; that file's style descriptor is carried forward below.
+
+## How adding art works
+
+Every slot below is **already wired**. The game references the file path and falls back to current art until a file exists there. To add an image:
+
+1. Generate it (style and rules below).
+2. Save it as a PNG at the **exact path** listed. Don't rename; the path is the wiring.
+3. Import, check, commit:
+   ```bash
+   bash tools/godot.sh --headless --import   # creates the .png.import sidecar; commit it with the PNG
+   bash tools/art_status.sh --missing        # what's still to make
+   bash tools/check.sh                        # must print "all clean"
+   ```
+4. Look at it in the game (renders a real frame):
+   ```bash
+   BEAT=parent_coffee bash tools/screenshot.sh res://scenes/evening.tscn out.png res://tools/ci/shots/scene.gd
+   ACTIVITY=visit_grandparent bash tools/screenshot.sh res://scenes/evening.tscn out.png res://tools/ci/shots/scene.gd
+   ```
+
+Portraits (Tier 2) are the one exception: each needs a two-line edit to a character file, described there.
+
+## Rules for every image
+
+These follow CLAUDE.md's legal and tone guardrails. They apply to pictures exactly as they do to dialogue.
+
+- **No real organization.** Don't put "Jehovah's Witnesses", "Kingdom Hall", "Watchtower", "Awake!" or "JW" in a prompt. Reject any output that shows a real logo, sign, magazine cover, or website address.
+- **Not their illustration style.** Avoid the bright, idealized paradise-scene look (lions with lambs, smiling families picnicking in perfect gardens). Our look is quiet, painterly, and lived-in.
+- **The Hall of Witness is not a church.** No cross, no stained glass, no altar, no pews. It's a plain carpeted meeting room with rows of chairs, a small platform, and a lectern.
+- **No legible text.** Magazines, signs, and phones should be unreadable, or read *The Lighthouse* / *Hall of Witness*. Image models garble text anyway.
+- **Backgrounds have no people.** Characters appear as portraits or in the narration, never painted into a scene.
+- **Empathy applies to art.** No sinister lighting on believers, no caricature, no horror framing. cast-portraits.md's "Avoid" notes are binding.
+
+## Style
+
+Match the art already in the game: `assets/backgrounds/hall_of_witness.png`, `assets/sprites/week_view/desk_background.png`, and the houses in `assets/sprites/portraits/houses/`. If your tool accepts reference images, attach two of them.
+
+**Background descriptor.** Paste this at the end of every background prompt:
+
+```
+painterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,
+warm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and
+still, no people, no legible text, 16:9 wide composition
+```
+
+**Layout the art must leave room for.** A navy banner covers the top 86 px. The dialogue box sits bottom-center, roughly x 685–1235 by y 915–1065 at 1920×1080. Speaker portraits appear bottom-left. Put the subject of the scene in the middle and upper two-thirds, and keep the bottom band calm. Scenes are shown slightly darkened (a 35% dim), so mid-tones read best.
+
+## Tier 1 — Backgrounds (14) and one house
+
+**Spec:** PNG, 16:9, at least 1672×941 (1920×1080 preferred), opaque.
+
+| File (`assets/backgrounds/`) | Used by | Prompt (then the descriptor) |
+|---|---|---|
+| `home_kitchen_morning.png` | Coffee with your parent (week 1) | A modest family kitchen table in morning sun, two coffee mugs, an open magazine with passages underlined in two colors of highlighter, a Bible with a worn cover, a small framed cross-stitch on the wall |
+| `home_kitchen_evening.png` | Family worship; family dinner | The same kitchen at evening under a warm hanging lamp, a good tablecloth, open books and a pen, dinner plates at one end, one chair pulled out and empty |
+| `home_living_room_night.png` | The lamp left on (week 5) | A tidy living room at night, one warm lamp lit beside a couch, the rest in shadow, the TV off, reading glasses and a Bible on the side table |
+| `bedroom_night.png` | Late-night texts; Dana's call; rest | A modest young adult's bedroom at night, lights off, cool glow of a phone lighting the ceiling, pressed dress clothes laid over a chair for tomorrow, a canvas shoulder bag of magazines by the door |
+| `back_steps_night.png` | The back steps with your brother (week 5) | The back steps of a suburban house at night, a single motion-sensor light over the garage, two trash bins, a wide concrete step, a dark yard and a fence |
+| `hallway_boxes.png` | Your brother moving out (week 7) | An upstairs hallway of a family home, cardboard moving boxes stacked along the wall, a bedroom door open onto a half-emptied room with a bare mattress and pale rectangles where posters were, afternoon light |
+| `grandma_sitting_room.png` | Visiting Grandma | A small apartment sitting room, a deep armchair with a knitted blanket, old photographs in mismatched frames, a magazine and a tissue box on the side table, a songbook on the chair arm, gauzy curtains with afternoon light |
+| `car_interior_morning.png` | The parked car with your service partner | Inside a parked older sedan seen from the back seat, two paper coffee cups on the dashboard, a canvas bag of magazines in the footwell, a quiet suburban street through the windshield in early-morning light |
+| `hall_lobby.png` | Sister Marin in the lobby; the month-end report | The small lobby of a plain meeting hall, a literature counter with wall racks of magazines and pamphlets, a coat rack, a bulletin board, carpet, fluorescent light mixing with window light; no cross, no stained glass |
+| `print_shop_breakroom.png` | Dana's invitation and question | A small break room at a print shop, a round table with two chairs, a microwave, a corkboard of shift schedules, stacked reams of paper by the door, fluorescent light at lunchtime |
+| `game_night_dining_room.png` | Game night | A crowded family dining room in the evening, a board game spread among snack bowls, chairs borrowed from other rooms, coats piled on a sideboard, warm overhead light |
+| `bar_evening.png` | Saying yes to Dana | A casual neighborhood bar in the evening, warm low light, a booth with a few glasses and one soda with a lime, string lights, a chalkboard menu |
+| `study_kitchen.png` | Bible study at house #4 (and any study without its own) | A householder's kitchen table in late morning, two open books side by side, a pen, a glass of water, a fruit bowl, lived-in but tidy |
+| `daniel_kitchen.png` | Daniel's Bible study (house #9) | A lived-in kitchen of a single man in his thirties, books stacked on the table and counter, a yellow legal pad covered in small handwriting, an old paperback Bible with a cracked spine, a drip coffee maker, a window over the sink onto an untidy garden |
+
+**One house:** `assets/sprites/portraits/houses/house_01.png` — the only house without art. Match `house_02.png` to `house_12.png`: an exterior at golden hour, 1448×1086, opaque. Prompt: *a cream craftsman bungalow with a mature oak to the left and an open porch with one chair, neat but plain, a front walk and small lawn*, plus the background descriptor with "interior" swapped for "exterior".
+
+## Tier 2 — Householder portraits
+
+Door conversations currently show no face. Each householder has five expression slots, pointing at a placeholder.
+
+**Spec:** match the elders (`assets/sprites/portraits/elders/coordinator_hall.png`). That means a painted **half-body portrait with its own background** (their doorway or porch), 4:5, about 1122×1402, opaque. Not the transparent 512×768 the GDD originally suggested: the game's dialogue style shows the speaker's portrait framed beside the textbox.
+
+**Start with one image per character.** Generate the `neutral` expression, and point all five slots at it. Add the other expressions later by *editing* the neutral image ("same person, same framing and light; change only the expression to …"). Editing keeps the face consistent, which regenerating won't.
+
+**Wiring (per character):**
+1. Save to `assets/sprites/portraits/householders/<character_id>_<expression>.png`.
+2. Open `data/dialogues/characters/<character_id>.dch`. For each portrait entry, set `"image"` to the PNG's `res://` path and `"scene"` to `""`.
+3. Change `&"scale": 1.0` to `&"scale": 0.35`, as in `elder_coordinator.dch`.
+4. Run `bash tools/check.sh`. Then knock that door with Shift+click (debug builds), or take a screenshot using `tools/ci/shots/door_house05.gd` as a model.
+
+| Character id | Description | Expressions |
+|---|---|---|
+| `curious_seeker_house09_inquisitive` — **Daniel, do first** | cast-portraits.md § 5.2 "Daniel" (not § 6.2.2, which predates him); his doorway should match `house_09.png` | neutral, interested_lean_in, genuine_question, considering, warm_thank_you |
+| `curious_seeker_house04_grief` | § 6.2.1 | same five as above |
+| `polite_refuser_house05_catholic` | § 6.0.2 | neutral, polite_smile, awkward_pause, firm_refusal, relief |
+| `polite_refuser_house03_jewish` | § 6.0.3 (read cast.md's empathy bar first) | same as above |
+| `polite_refuser_house08_gay_couple` | § 6.0.4, both partners in frame (read the empathy bar first) | same as above |
+| `polite_refuser_house01_atheist` | § 6.0.1, House #1 | same as above |
+| `polite_refuser_house12_atheist` | § 6.0.1, House #12 | same as above |
+| `polite_refuser_house10_episcopalian` | § 6.0.5 | same as above |
+| `apostate_wounded` | § 6.6.2 | grief, quiet_resignation, recognition, tired, wounded_acceptance |
+| `apostate_hostile` | § 6.6.1 | alert, closing, confrontational, dismissive, prepared |
+| `apostate_gentle` | § 6.6.3 | careful, knowing, releasing, seeing, warm |
+
+The Hostile Slammer gets **no portrait**, by design: the lack of a face is the point.
+
+## Tier 3 — The recurring cast (optional; not wired yet)
+
+Your parent (both a **mother** and a **father** version, since the player chooses), Micah, Grandma, Sister Marin, and the service partner (both **Eli** and **Naomi**) are currently written as narration, not spoken lines. Portraits for them would need their scenes converted to spoken lines first, which is a writing task for Claude. If you want to get ahead, generate them to the Tier 2 spec from cast-portraits.md §§ 3–4. Save them as `assets/sprites/portraits/cast/<name>.png` (e.g. `parent_mother.png`, `sibling_micah.png`) and add a line to `docs/STATUS.md`.
+
+**Dana gets no portrait.** cast.md § 5.1 keeps the coworker off-screen: phone and text only.
+
+## Done when
+
+`bash tools/art_status.sh --missing` prints nothing, `bash tools/check.sh` prints `all clean`, and a screenshot of each new scene looks like it belongs next to `hall_of_witness.png`.

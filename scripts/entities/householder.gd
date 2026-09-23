@@ -17,6 +17,11 @@ class_name Householder
 # uses the shared study_session.dtl.
 @export var study_timeline: String = ""
 
+# Backdrop for study sessions (inside the house). Empty uses door_knock's
+# shared study kitchen; either falls back to the house exterior until the
+# art exists.
+@export var study_background: String = ""
+
 # Doubt exposure every conversation with this person carries, whatever the
 # outcome (cast.md § 5.2 Daniel: "every conversation increments doubt
 # slightly; cumulative effect is significant"). Timelines add choice-specific

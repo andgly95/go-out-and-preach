@@ -9,3 +9,4 @@ week = 2
 day = 2
 timeline = "res://data/dialogues/beats/marin_lobby.dtl"
 standing_congregation = 1
+background = "res://assets/backgrounds/hall_lobby.png"

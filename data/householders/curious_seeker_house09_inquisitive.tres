@@ -9,6 +9,7 @@ display_name = ""
 archetype = &"curious_seeker"
 dialogue_timeline = "res://data/dialogues/curious_seeker_house09_inquisitive_v1.dtl"
 study_timeline = "res://data/dialogues/study/daniel_study.dtl"
+study_background = "res://assets/backgrounds/daniel_kitchen.png"
 dialogic_character = null
 doubt_delta_overrides = {}
 voice_subtype = &"inquisitive"

@@ -37,7 +37,11 @@ func _ready() -> void:
 
 
 func _set_background(path: String) -> void:
-	var texture: Texture2D = load(path if not path.is_empty() else Evenings.DEFAULT_BACKGROUND)
+	# Art slots may be wired before the art exists (docs/design/asset-brief.md);
+	# fall back to the desk until it does.
+	if path.is_empty() or not ResourceLoader.exists(path):
+		path = Evenings.DEFAULT_BACKGROUND
+	var texture: Texture2D = load(path)
 	if texture != null:
 		_background.texture = texture
 

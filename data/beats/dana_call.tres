@@ -10,3 +10,4 @@ day = 5
 timeline = "res://data/dialogues/beats/dana_call.dtl"
 requires_flag = "dana_asked"
 exposure = 0.5
+background = "res://assets/backgrounds/bedroom_night.png"

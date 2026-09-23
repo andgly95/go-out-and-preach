@@ -1,5 +1,7 @@
 # Territory Map — AI Asset Generation Prompts
 
+> For new art, use `docs/design/asset-brief.md`. This file is kept for its history.
+
 > ## ⚠ SUPERSEDED — 2026-05-23
 >
 > This file planned a 14-asset AI generation pass. Andrew shipped

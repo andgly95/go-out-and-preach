@@ -105,6 +105,7 @@ const APOSTATE_ARCHETYPES: Array[StringName] = [
 # enters the porch). House numbers without an entry fall back to a placeholder
 # at the call site. Add new entries as art lands per house.
 const HOUSE_PORTRAIT_PATHS: Dictionary = {
+	1: "res://assets/sprites/portraits/houses/house_01.png",
 	2: "res://assets/sprites/portraits/houses/house_02.png",
 	3: "res://assets/sprites/portraits/houses/house_03.png",
 	4: "res://assets/sprites/portraits/houses/house_04.png",
@@ -123,6 +124,9 @@ func get_house_portrait(number: int) -> Texture2D:
 	if not HOUSE_PORTRAIT_PATHS.has(number):
 		return null
 	var path: String = HOUSE_PORTRAIT_PATHS[number]
+	# Art slots may be wired before the art exists (docs/design/asset-brief.md).
+	if not ResourceLoader.exists(path):
+		return null
 	var tex: Texture2D = load(path)
 	if tex == null:
 		push_warning("[TerritoryManager] House #%d portrait failed to load at %s" % [number, path])

@@ -17,3 +17,4 @@ exposure = 1.0
 result_text = "You read the week's paragraphs aloud at the kitchen table. {parent} asks what you learned."
 scenes = Array[String](["res://data/dialogues/scenes/family_worship_1.dtl", "res://data/dialogues/scenes/family_worship_2.dtl", "res://data/dialogues/scenes/family_worship_3.dtl"])
 repeat_scene = "res://data/dialogues/scenes/family_worship_repeat.dtl"
+background = "res://assets/backgrounds/home_kitchen_evening.png"

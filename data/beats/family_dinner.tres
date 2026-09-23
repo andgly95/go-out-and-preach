@@ -9,3 +9,4 @@ week = 3
 day = 1
 timeline = "res://data/dialogues/beats/family_dinner.dtl"
 exposure = 1.0
+background = "res://assets/backgrounds/home_kitchen_evening.png"

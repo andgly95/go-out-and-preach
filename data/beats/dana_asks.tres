@@ -9,3 +9,4 @@ week = 1
 day = 5
 timeline = "res://data/dialogues/beats/dana_asks.dtl"
 sets_flag = "dana_asked"
+background = "res://assets/backgrounds/print_shop_breakroom.png"

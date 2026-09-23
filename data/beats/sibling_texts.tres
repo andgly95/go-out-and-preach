@@ -9,3 +9,4 @@ week = 1
 day = 3
 timeline = "res://data/dialogues/beats/sibling_texts.dtl"
 exposure = 0.5
+background = "res://assets/backgrounds/bedroom_night.png"

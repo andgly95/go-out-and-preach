@@ -9,3 +9,4 @@ week = 1
 day = 1
 timeline = "res://data/dialogues/beats/parent_coffee.dtl"
 standing_family = 1
+background = "res://assets/backgrounds/home_kitchen_morning.png"
