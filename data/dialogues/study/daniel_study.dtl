@@ -86,7 +86,7 @@ They do the lesson after that, both of you a little careful with each other. At 
 
 label fourth
 [signal arg="BUMP:daniel_sessions"]
-The lesson book is closed on the table when you come in, squared to the edge, with the legal pad on top of it.
+The study book is closed on the table when you come in, squared to the edge, with the legal pad on top of it.
 "I think I'm going to stop the study," Daniel says. "It's not you. You've been great. Honestly, you're the best part of my Saturdays."
 "I think I just — know what I think now. I didn't, before. So, thank you, actually."
 He slides the book back across the table to you.
@@ -103,7 +103,7 @@ He slides the book back across the table to you.
 
 label later
 [signal arg="BUMP:daniel_sessions"]
-Daniel's kitchen table, the lesson book, the coffee. He listens to every paragraph all the way through, politely, and asks one precise question each week, and writes your answer down.
+Daniel's kitchen table, the study book, the coffee. He listens to every paragraph all the way through, politely, and asks one precise question each week, and writes your answer down.
 - "See you next week."
 	[signal arg="STUDY_CONTINUES"]
 	[end_timeline]

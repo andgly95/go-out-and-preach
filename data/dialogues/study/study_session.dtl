@@ -2,10 +2,10 @@
 # study_timeline of their own. Narration only (no portrait), so it works at
 # any door. Outcomes: STUDY_CONTINUES keeps the study on the map as an
 # appointment; REFUSED ends it.
-# TODO: authenticity check — the study aid is called "the lesson book" here
-# as a placeholder; confirm how a publisher would name it in passing.
+# The study aid is "the study book" — generic on purpose; the real org's
+# study books have titles, and naming one would be lifting.
 
-You sit across from them at the kitchen table, the lesson book open between you.
+You sit across from them at the kitchen table, the study book open between you.
 You read the paragraph aloud, then the question printed beneath it. They answer in their own words, and you guide the answer back toward the paragraph.
 if DoubtMeter.value >= 40:
 	[signal arg="INNER_VOICE"]

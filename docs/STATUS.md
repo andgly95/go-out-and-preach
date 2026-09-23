@@ -30,23 +30,20 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 
 The sim doesn't apply choice-level extras, so real engaged play runs a little higher. `tools/check.sh` also plays two whole runs through the real UI (`tools/ci/autoplay.gd`) and fails on any script error or stuck screen.
 
-## Decisions to review (Andrew: veto any)
+## Decisions made (revisit any time)
 
-All are one constant or data file each. Full reasoning in `docs/design/v01-loop.md`.
-- Run length: 8 weeks. Sleep: +3 energy. Morning of service: 2 hours; +1 hour costs 2 energy.
-- New-door answer rate 35% on Saturday and 25% on Thursday (was 26.5%).
-- Polite refusers stop answering return visits after 2 conversations.
-- Exposure wears conviction down by half its size; conviction drifts −3 a week.
-- Names: the coworker is **Dana**; the grandparent is **Grandma**; the sibling is **Micah**, a younger brother; the Sister Who Talks is **Sister Marin** (dialogue-context.md's own example name); the service partner is **Eli** (or **Naomi** if you play a sister); house #9's neighbor is **Daniel** (cast.md § 5.2's Householder of Note). Placeholders in dialogue: "the Castillo boy", "Jess", "Ruth" in Grandma's album. All names are one constant each in `game_state.gd`, or a line in a timeline.
-- Beats I placed that go a step beyond cast.md's list: Micah moving into his own apartment (week 7), and Grandma's photo of Ruth "who left". Both are flagged in their files. Dialogue lines in the month-end talks, the five endings, the study session, and the activities are drafts, marked `# TODO: authenticity check`.
-- Autosave runs daily rather than weekly (GDD § 10 said weekly), so quitting mid-week doesn't lose days.
-- The Dialogic autoload uses a `res://` path, so fresh clones import cleanly.
+Andrew delegated design decisions (CLAUDE.md § How We Work). These are settled; each is one constant or data line. Reasoning in `docs/design/v01-loop.md`.
+- Run length 8 weeks. Sleep +3 energy. A morning of service is 2 hours; +1 hour costs 2 energy. New doors answer 35% on Saturday and 25% on Thursday.
+- Polite refusers stop answering return visits after 2 conversations. Exposure wears conviction down by half its size; conviction drifts −3 a week.
+- Autosave daily (GDD § 10 said weekly). The Dialogic autoload uses a `res://` path.
+- **Daniel** (house #9) is the v0.1 Householder of Note (cast.md § 8 Q3).
+- Cast names: sibling **Micah**, a younger brother; coworker **Dana**; grandparent **Grandma**; the Sister Who Talks **Sister Marin**; service partner **Eli** (or **Naomi** for a sister). Background names: the Castillo boy, Jess, Ruth.
+- Beats beyond cast.md's list: Micah moves into his own apartment (week 7); Grandma keeps a photo of Ruth, who left.
+- Wording: Dana gets gently corrected on "church" (dialogue-context.md § 5 says members do this); the study aid is "the study book".
 
-## Open questions for Andrew
+## What would still help from Andrew
 
-- Is **Daniel** the right v0.1 Householder of Note (cast.md § 8 Q3)? He's built at #9 because that house's returning branch already leaned that way.
-- Sibling: older or younger, and a name (cast.md § 3.2 leaves both open). Currently younger brother Micah.
-- Every new line is a draft marked `# TODO: authenticity check`. The ones I'm least sure of are Dana's "It's not church, it's the Hall" correction, the study-session cadence, and whether a publisher would call the study aid "the lesson book".
+Nothing blocks. New lines are drafts from the design docs, marked `# TODO: authenticity check`. If something in a playthrough rings false — a phrase no publisher would use, a beat that wouldn't happen that way — note it, and it gets fixed.
 
 ## Next step
 

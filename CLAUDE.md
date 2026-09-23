@@ -108,7 +108,7 @@ The original M0–M8 plan (`docs/design/gdd.md` § 13) got the scenes built. The
 
 1. **Loop before content.** Until a full run is compelling, a change that makes choices matter beats a new character, portrait, or polish pass.
 2. **Small playable steps.** Each commit leaves a working build (`tools/check.sh` clean). System and content changes may share a commit when the content is what exercises the system.
-3. **Design calls.** When the GDD doesn't answer something mechanical (a cost, a threshold, a pacing number), make the smallest reasonable call, keep it in one tunable constant or data file, and list it under *Decisions to review* in `docs/STATUS.md`. Stop and ask before inventing **narrative beats for named characters, art direction, or anything near the legal guardrails** — and never guess at lived-experience detail (stub `# TODO: authenticity check`).
+3. **Design calls are Claude's.** Andrew has delegated design decisions — mechanics, numbers, names, narrative beats for named characters. When the GDD doesn't answer something, make the call, keep it in one tunable constant or data file, and record it under *Decisions made* in `docs/STATUS.md` so it's easy to revisit. Two limits remain: Andrew supplies the art, so art direction goes through him; and the legal guardrails above are non-negotiable. Lived-experience detail is drafted from cast.md, dialogue-context.md, and authenticity-notes.md, never invented from nowhere — mark lines you're unsure of `# TODO: authenticity check` so Andrew can catch anything that rings false in play.
 4. **`docs/STATUS.md` stays one page.** Overwrite it at the end of each session: what's playable, current focus, decisions to review, open questions, next step. History goes in commit messages, not STATUS. (The May 2026 log is in `docs/archive/`.)
 5. If a task seems to conflict with this CLAUDE.md or the GDD, flag the conflict before resolving it.
 
@@ -116,7 +116,7 @@ The original M0–M8 plan (`docs/design/gdd.md` § 13) got the scenes built. The
 
 ## Common Pitfalls
 
-- **Inventing JW-adjacent details without research.** Real practice is specific. When in doubt, leave a comment and ask.
+- **Inventing JW-adjacent details without research.** Real practice is specific. Draft from the design docs; when a detail isn't grounded there, mark it `# TODO: authenticity check`.
 - **Making the doubt meter visible too early.** Hidden until threshold 40, fully visible at 70. Don't expose it in debug UI by default — there's a debug flag for that.
 - **Dialogue that's too explicit about the system's flaws.** The game's power lives in the player noticing things, not the game pointing them out. Trust the player.
 - **Over-engineering the save system.** Resource serialization at week boundaries is enough. This is a narrative sim, not an MMO.
