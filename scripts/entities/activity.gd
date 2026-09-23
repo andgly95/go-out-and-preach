@@ -43,3 +43,5 @@ class_name Activity
 @export var min_congregation: int = -1000
 ## Only offered while a GameState flag is unset (e.g. a one-time beat).
 @export var hide_if_flag: String = ""
+## Only offered once a GameState flag is set (e.g. after an introduction).
+@export var requires_flag: String = ""

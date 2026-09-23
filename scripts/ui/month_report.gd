@@ -51,8 +51,6 @@ func _on_hand_in_pressed() -> void:
 	if not ResourceLoader.exists(path):
 		_finish()
 		return
-	DialogicResourceUtil.update_directory(".dch")
-	DialogicResourceUtil.update_directory(".dtl")
 	Dialogic.signal_event.connect(_on_dialogic_signal)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
 	Dialogic.start(path)

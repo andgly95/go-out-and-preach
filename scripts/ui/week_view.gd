@@ -52,6 +52,12 @@ func _ready() -> void:
 		($CenterCard/CardMargin/CardVBox.get_node(button_path) as Button).visible = false
 	_back_button.pressed.connect(_on_back_pressed)
 	_refresh()
+	# Today's story beat, if any, plays first; the scene runner brings the
+	# player back here with the day still to choose.
+	var beat: StoryBeat = Story.beat_for_today()
+	if beat != null:
+		Story.play(beat)
+		get_tree().change_scene_to_file.call_deferred("res://scenes/evening.tscn")
 
 
 func _unhandled_input(event: InputEvent) -> void:

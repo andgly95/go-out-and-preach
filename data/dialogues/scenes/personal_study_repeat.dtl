@@ -1,0 +1,7 @@
+# Activity scene — personal study, any later week.
+# TODO: authenticity check
+
+The article, the lamp, the two colors of highlighter. You prepare your answers for Sunday.
+if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
+	[i]You could give these answers in your sleep. Some Sundays you think you do.[/i]

@@ -64,13 +64,17 @@ func test_balance_targets() -> void:
 
 	check(_share(results["devout"], func(r: Dictionary) -> bool: return r["doubt"] < 40) >= 0.8,
 		"devout: at least 80% of runs should end under 40 doubt")
-	# Interim targets while the weekday story beats are being written; the
-	# design targets (typical crosses 25 by week 6, 70% of curious runs cross
-	# 40) come back once those exposures exist. See docs/STATUS.md.
-	check(_percentile(results["typical"], "doubt", 0.9) >= 25,
-		"typical: at least the top tenth of runs should reach 25 doubt")
-	check(_median(results["curious"], "doubt") >= 25,
-		"curious: the median run should reach 25 doubt")
+	# The sim applies activity and beat base effects but not choice-level
+	# [signal] extras, so it slightly understates doubt for engaged players.
+	var typical_median: float = _median(results["typical"], "doubt")
+	check(typical_median >= 18.0 and typical_median <= 40.0,
+		"typical: median doubt at the end should land between 18 and 40 (got %.0f)" % typical_median)
+	check(_percentile(results["typical"], "doubt", 0.9) >= 30,
+		"typical: the top tenth of runs should see the cracks (30+ doubt)")
+	check(_share(results["curious"], func(r: Dictionary) -> bool: return r["week_40"] <= 8) >= 0.7,
+		"curious: at least 70% of runs should cross 40 doubt within the eight weeks")
+	check(_percentile(results["curious"], "doubt", 0.5) < 95,
+		"curious: the median run shouldn't spiral to the ceiling")
 	check(_share(results["drifting"], func(r: Dictionary) -> bool: return r["ending"] in ["quiet_fade", "walking_away"]) >= 0.7,
 		"drifting: most runs should end in the quiet fade or walking away")
 	check(_share(results["devout"], func(r: Dictionary) -> bool: return r["pioneer_met"] >= 1) >= 0.6,
@@ -90,6 +94,10 @@ func simulate_run(style: Dictionary) -> Dictionary:
 		guard += 1
 		if GameState.pioneer_decision_pending():
 			GameState.decide_pioneer(style["pioneer"])
+		var beat: StoryBeat = Story.beat_for_today()
+		if beat != null:
+			Story.play(beat)
+			Story.finish()
 		_play_day(style)
 		if ResourceManager.energy <= 0:
 			exhausted += 1

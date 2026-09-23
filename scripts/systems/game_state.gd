@@ -47,11 +47,28 @@ var parent_word: String:
 var grandparent_word: String:
 	get:
 		return grandparent_name()
+## The supporting cast, as properties for Dialogic text ({GameState.x}).
+## Names are placeholders pending Andrew's review (docs/STATUS.md).
+var sibling_name: String = "Micah"
+var coworker_name: String = "Dana"
+var talker_name: String = "Sister Marin"
+## The recurring service partner is paired with the player, so the same title.
+var partner_name: String:
+	get:
+		return tr("Eli") if player_title == "Brother" else tr("Naomi")
+var partner_formal: String:
+	get:
+		return "%s %s" % [tr(player_title), partner_name]
 ## Off during the balance simulation so it doesn't touch user://.
 var autosave_enabled: bool = true
 
 
 func _ready() -> void:
+	# Fill Dialogic's character/timeline identifier tables once per launch.
+	# Scenes must not rescan later: any speaker Dialogic creates at runtime
+	# is stored in the same table as an object, and the rescan expects paths.
+	DialogicResourceUtil.update_directory(".dch")
+	DialogicResourceUtil.update_directory(".dtl")
 	month = _new_month_record(1)
 	SignalBus.meeting_attended.connect(_on_meeting_attended)
 	SignalBus.meeting_skipped.connect(_on_meeting_skipped)
@@ -98,7 +115,10 @@ func fill(text: String) -> String:
 	return text.replace("{name}", player_name) \
 		.replace("{title}", tr(player_title)) \
 		.replace("{parent}", parent_name()) \
-		.replace("{grandparent}", grandparent_name())
+		.replace("{grandparent}", grandparent_name()) \
+		.replace("{sibling}", sibling_name) \
+		.replace("{coworker}", coworker_name) \
+		.replace("{partner}", partner_name)
 
 
 func weeks_left() -> int:
@@ -118,6 +138,24 @@ func set_flag(key: String, value: Variant = true) -> void:
 func bump(key: String) -> int:
 	flags[key] = int(flags.get(key, 0)) + 1
 	return flags[key]
+
+
+## Integer counter (0 if unset). For timeline conditions.
+func count(key: String) -> int:
+	return int(flags.get(key, 0))
+
+
+# Queries for timeline conditions ([if GameState.x()]).
+func skipped_this_month() -> int:
+	return int(month.get("meetings_skipped", 0))
+
+
+func attended_this_month() -> int:
+	return int(month.get("meetings_attended", 0))
+
+
+func is_pioneering() -> bool:
+	return month.get("aux_pioneer", false)
 
 
 # --- Monthly commitment ---------------------------------------------------------

@@ -1,0 +1,18 @@
+# Beat (week 1, Monday) — coffee with the parent in the Truth. cast.md § 3.1:
+# "Morning conversations over coffee about how the meeting went"; "I was
+# talking to Brother Phillips and he mentioned..."; questions that aren't
+# really questions.
+# TODO: authenticity check
+
+Monday. {GameState.parent_word} is already at the kitchen table when you come down. The coffee's made. Yesterday's Lighthouse is still open to the study article, the answers underlined in two colors.
+if GameState.attended_this_month() > 0:
+	"There you are. Wasn't that a good meeting yesterday? That talk. I thought of you the whole time."
+else:
+	"There you are. We missed you yesterday. Brother Phillips asked after you." A sip of coffee. "I said you weren't feeling well. You weren't, were you?"
+"I was talking to Brother Phillips after. He says you've been such a help in the car group." A pause for the coffee. "He notices, you know. They all notice."
+- "It was a good talk."
+	"It was, wasn't it?" {GameState.parent_word} squeezes your hand once and goes back to the article.
+- "I don't really remember what it was about."
+	[signal arg="STANDING:family:-1"]
+	A small laugh that doesn't quite finish. "Well. You were tired. We'll look at it together tonight, maybe."
+You rinse your cup. The article stays open on the table after you leave.

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StoryBeat" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/story_beat.gd" id="1_beat"]
+
+[resource]
+script = ExtResource("1_beat")
+id = &"marin_worried"
+week = 4
+day = 2
+timeline = "res://data/dialogues/beats/marin_worried.dtl"

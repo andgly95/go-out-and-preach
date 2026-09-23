@@ -5,6 +5,7 @@
 # 2. Boots every scene under scenes/ for a few frames.
 # 3. Runs the GDScript test suite (tools/ci/run_tests.gd), which includes the
 #    month-long balance simulation.
+# 4. Plays two whole runs through the real scenes (tools/ci/autoplay.gd).
 # Fails on any engine ERROR / SCRIPT ERROR line or a failing test.
 set -uo pipefail
 
@@ -39,6 +40,10 @@ for scene in scenes/*.tscn; do
 done
 
 run_godot "tests" --script res://tools/ci/run_tests.gd
+
+for seed in 1 2; do
+	run_godot "autoplay seed $seed" --script res://tools/ci/autoplay.gd -- --seed=$seed
+done
 
 if [ $fail -ne 0 ]; then
 	echo "check.sh: FAILED"

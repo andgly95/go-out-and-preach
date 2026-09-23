@@ -72,8 +72,6 @@ func _ready() -> void:
 		return
 	# Dialogic wiring stays connected for the full meeting; talks share the
 	# same handler that pops _talks_remaining and chains the next start.
-	DialogicResourceUtil.update_directory(".dch")
-	DialogicResourceUtil.update_directory(".dtl")
 	Dialogic.signal_event.connect(_on_dialogic_signal)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
 	_maybe_instantiate_debug_panel()

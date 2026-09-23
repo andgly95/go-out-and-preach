@@ -1,0 +1,16 @@
+# Activity scene — family worship, first time. dialogue-context.md § 10:
+# "Tone is performative-earnest... The phrase 'What did you learn?' carries a
+# specific weight." cast.md § 3.1 the parent; § 3.2 the sibling's chair.
+# TODO: authenticity check
+
+Family worship. The kitchen table, the good tablecloth, the week's paragraphs. {GameState.sibling_name}'s chair is pulled out like he might still come.
+{GameState.parent_word} reads the paragraph aloud and then the question underneath it, and looks up at you, pen ready.
+"So. What did you learn?"
+- Give the answer from the paragraph.
+	[signal arg="CONVICTION:1"]
+	You give the answer from the paragraph, nearly word for word. {GameState.parent_word} underlines something, pleased. "That's it exactly."
+- Say something of your own.
+	[signal arg="EXPOSE:0.5"]
+	You say something of your own — about how hard it must have been, for the people in the account, to wait that long.
+	"That's a lovely thought." A small pause. "And what does the paragraph say?"
+They say the closing prayer. {GameState.sibling_name}'s chair stays pulled out until you push it in.

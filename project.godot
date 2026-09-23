@@ -31,6 +31,7 @@ FieldService="*res://scripts/systems/field_service.gd"
 GameState="*res://scripts/systems/game_state.gd"
 SaveLoad="*res://scripts/systems/save_load.gd"
 Evenings="*res://scripts/systems/evenings.gd"
+Story="*res://scripts/systems/story.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 PlayerState="*res://scripts/entities/player_state.gd"
 
@@ -40,6 +41,7 @@ directories/dch_directory={
 "apostate_gentle": "res://data/dialogues/characters/apostate_gentle.dch",
 "apostate_hostile": "res://data/dialogues/characters/apostate_hostile.dch",
 "apostate_wounded": "res://data/dialogues/characters/apostate_wounded.dch",
+"coworker": "res://data/dialogues/characters/coworker.dch",
 "curious_seeker_house04_grief": "res://data/dialogues/characters/curious_seeker_house04_grief.dch",
 "curious_seeker_house09_inquisitive": "res://data/dialogues/characters/curious_seeker_house09_inquisitive.dch",
 "elder_coordinator": "res://data/dialogues/characters/elder_coordinator.dch",
@@ -49,7 +51,8 @@ directories/dch_directory={
 "polite_refuser_house05_catholic": "res://data/dialogues/characters/polite_refuser_house05_catholic.dch",
 "polite_refuser_house08_gay_couple": "res://data/dialogues/characters/polite_refuser_house08_gay_couple.dch",
 "polite_refuser_house10_episcopalian": "res://data/dialogues/characters/polite_refuser_house10_episcopalian.dch",
-"polite_refuser_house12_atheist": "res://data/dialogues/characters/polite_refuser_house12_atheist.dch"
+"polite_refuser_house12_atheist": "res://data/dialogues/characters/polite_refuser_house12_atheist.dch",
+"sibling": "res://data/dialogues/characters/sibling.dch"
 }
 directories/dtl_directory={
 "apostate_gentle_v1": "res://data/dialogues/apostate_gentle_v1.dtl",

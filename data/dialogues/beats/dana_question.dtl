@@ -1,0 +1,20 @@
+# Beat (week 6, Thursday) — the coworker's sincere question. cast.md § 5.1:
+# "A late-game scene where the coworker asks the player a question about
+# their beliefs — sincere curiosity, not antagonism. The player's response in
+# that scene is a real choice point."
+# TODO: authenticity check
+
+Lunch at work. {GameState.coworker_name} sits across from you with a sandwich and a look like they've been working up to something.
+"Can I ask you something? You totally don't have to answer."
+"Do you actually believe it? Like, all of it? The end of the world and everything." Then, quickly, "I'm not being a jerk. I just realized I've never asked."
+- "Yes. I do."
+	[signal arg="CONVICTION:1"]
+	"Okay." They nod slowly, like they're putting it somewhere careful. "Okay. That's cool. I mean that."
+- Give them the answer you'd give at a door.
+	[signal arg="EXPOSE:1"]
+	You tell them about the paradise earth, the way the magazine puts it. It comes out smooth. They listen all the way through, politely, the way a householder does.
+	"Huh," they say. "You're really good at that."
+- "I don't know." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="EXPOSE:2"]
+	[signal arg="FLAG:honest_with_dana"]
+	They don't say anything for a second. Then: "Yeah. Me neither. About most things." They push half their chips across the table to you.

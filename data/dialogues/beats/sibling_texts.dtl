@@ -1,0 +1,17 @@
+# Beat (week 1, Wednesday) — late-night texts with the sibling drifting.
+# cast.md § 3.2: "Late-night text conversations with the player about
+# nothing — and underneath, everything." Short sentences, humor, deflection.
+# TODO: authenticity check
+
+Eleven-forty. Your phone lights up the ceiling.
+sibling: what was the cereal grandma used to buy. the one with the bear on the box
+sibling: its been bugging me for like an hour
+- Tell him.
+	[signal arg="BUMP:sibling_close"]
+	You tell him. He sends back a row of exclamation points, then nothing for a while.
+	sibling: u still up
+	sibling: nvm. night
+- "Go to sleep, {GameState.sibling_name}."
+	sibling: yes mom
+	sibling: jk. night
+You lie awake a while after, the phone face-down on your chest.

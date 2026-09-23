@@ -70,3 +70,28 @@ func test_householder_timelines_exist() -> void:
 			continue
 		check(ResourceLoader.exists(householder.dialogue_timeline),
 			"%s points at missing timeline %s" % [slug, householder.dialogue_timeline])
+
+
+func test_no_accidental_speakers() -> void:
+	# Dialogic reads "Word: text" at the start of a line as a speaker named
+	# Word. Only characters with a .dch file are allowed there. Anything else
+	# is prose that grew a colon — or an ad-hoc speaker such as
+	# "{GameState.x}: text", which Dialogic creates at runtime and which
+	# crashes Godot on exit. Give recurring speakers a .dch instead.
+	var known: Array = []
+	for path in files_under("res://data/dialogues/characters", "dch"):
+		known.append(path.get_file().get_basename())
+	var speaker := RegEx.create_from_string("^\\s*([^\\s:(\"\\[-][^\\s:(]*)\\s*(\\([^)]*\\))?\\s*:")
+	for path in files_under("res://data/dialogues", "dtl"):
+		var lines: PackedStringArray = FileAccess.get_file_as_string(path).split("\n")
+		for i in lines.size():
+			var line: String = lines[i]
+			if line.strip_edges().begins_with("#") or line.strip_edges().begins_with("["):
+				continue
+			var m: RegExMatch = speaker.search(line)
+			if m == null:
+				continue
+			var name: String = m.get_string(1)
+			if name in ["if", "elif", "else", "label", "jump", "join", "leave", "update"]:
+				continue
+			check(name in known, "%s:%d reads as a speaker named '%s'" % [path, i + 1, name])

@@ -1,0 +1,24 @@
+# Beat (week 4, Tuesday) — the Sister Who Talks, second visit. If the player
+# has missed meetings this month she has noticed, with concern that will
+# reach the elders (cast.md § 4.5 "A scene late game where she has noticed
+# the player's behavior change and is concerned"). Otherwise, more news.
+# TODO: authenticity check
+
+The lobby again. {GameState.talker_name} is handing out mints from her purse, one to each of the children, one to you.
+if GameState.skipped_this_month() > 0:
+	"I just want to say — we missed you. Twice now, isn't it? Is everything alright at home?"
+	"I mentioned it to Sister Phillips, just so someone's praying for you. That's all. Only people who love you."
+	- "Everything's fine. Thank you, sister."
+		[signal arg="STANDING:congregation:1"]
+		"Oh, good. Good." She takes your hand in both of hers. "I knew it."
+	- "I'd rather you didn't talk about me."
+		[signal arg="STANDING:congregation:-2"]
+		[signal arg="STANDING:elders:-1"]
+		She looks genuinely hurt. "Oh, honey. I only told the people who love you."
+else:
+	"I just want to say, the Castillo boy is working at the hardware store now. Sundays, too." She lets that sit. "His mother still sits in the same row. Every meeting. Isn't that something?"
+	- "That must be hard for her."
+		[signal arg="EXPOSE:0.5"]
+		"It is. It is." She lowers her voice further. "She says he's happy. Can you imagine?"
+	- "I'll pray for them."
+		"You're such a sweet {GameState.player_title}." She means it. She presses a second mint into your hand.

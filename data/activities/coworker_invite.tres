@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_activity")
 id = &"coworker_invite"
-title = "Say yes to Dana"
-description = "Dana from work keeps inviting you out. You keep saying no."
+title = "Say yes to {coworker}"
+description = "{coworker} from work keeps inviting you out. You keep saying no."
 icon = "✉"
 days = Array[int]([1, 5])
 order = 60
@@ -14,3 +14,6 @@ energy_cost = 2
 conviction = -1
 exposure = 3.0
 result_text = "A crowded bar with the music too loud. You drink a soda and laugh at the right places, and nobody asks you anything you have to answer."
+requires_flag = "dana_asked"
+scenes = Array[String](["res://data/dialogues/scenes/coworker_invite_1.dtl", "res://data/dialogues/scenes/coworker_invite_2.dtl"])
+repeat_scene = "res://data/dialogues/scenes/coworker_invite_repeat.dtl"

@@ -1,8 +1,9 @@
 extends Control
-## Plays the activity chosen on the day screen (Evenings.pending): its scene
-## timeline over a backdrop, or a single result line when it has none. Scene
-## [signal] events go to Evenings.apply_scene_signal. Ends the day through
-## GameState.
+## Scene runner for the day screen. Plays either today's story beat
+## (Story.pending), then returns to the same day, or the activity the player
+## chose (Evenings.pending): its scene timeline over a backdrop, or a single
+## result line when it has none, then ends the day through GameState.
+## Scene [signal] events go to Evenings.apply_scene_signal.
 
 const WEEK_SCENE_PATH: String = "res://scenes/week_view.tscn"
 
@@ -13,26 +14,42 @@ const WEEK_SCENE_PATH: String = "res://scenes/week_view.tscn"
 @onready var _continue: Button = $Card/Margin/VBox/Continue
 
 var _finished: bool = false
+var _is_beat: bool = false
 
 
 func _ready() -> void:
+	_continue.pressed.connect(_finish)
+	if Story.pending != null:
+		_is_beat = true
+		_set_background(Story.pending.background)
+		_start_timeline(Story.pending.timeline)
+		return
 	var activity: Activity = Evenings.pending
 	if activity == null:
-		push_warning("[evening] No pending activity; returning to the day screen.")
+		push_warning("[evening] Nothing to play; returning to the day screen.")
 		get_tree().change_scene_to_file.call_deferred(WEEK_SCENE_PATH)
 		return
-	var texture: Texture2D = load(Evenings.background_for(activity))
-	if texture != null:
-		_background.texture = texture
-	_continue.pressed.connect(_finish)
+	_set_background(activity.background)
 	if Evenings.pending_timeline.is_empty() or not ResourceLoader.exists(Evenings.pending_timeline):
 		_show_result_card(activity)
 		return
-	DialogicResourceUtil.update_directory(".dch")
-	DialogicResourceUtil.update_directory(".dtl")
+	_start_timeline(Evenings.pending_timeline)
+
+
+func _set_background(path: String) -> void:
+	var texture: Texture2D = load(path if not path.is_empty() else Evenings.DEFAULT_BACKGROUND)
+	if texture != null:
+		_background.texture = texture
+
+
+func _start_timeline(path: String) -> void:
+	if path.is_empty() or not ResourceLoader.exists(path):
+		push_warning("[evening] Missing timeline %s." % path)
+		_finish.call_deferred()
+		return
 	Dialogic.signal_event.connect(_on_dialogic_signal)
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
-	Dialogic.start(Evenings.pending_timeline)
+	Dialogic.start(path)
 
 
 func _show_result_card(activity: Activity) -> void:
@@ -58,5 +75,9 @@ func _finish() -> void:
 		Dialogic.signal_event.disconnect(_on_dialogic_signal)
 	if Dialogic.timeline_ended.is_connected(_on_timeline_ended):
 		Dialogic.timeline_ended.disconnect(_on_timeline_ended)
+	if _is_beat:
+		Story.finish()
+		get_tree().change_scene_to_file.call_deferred(WEEK_SCENE_PATH)
+		return
 	Evenings.finish()
 	get_tree().change_scene_to_file.call_deferred(GameState.end_day())

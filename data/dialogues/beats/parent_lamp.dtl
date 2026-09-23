@@ -1,0 +1,29 @@
+# Beat (week 5, Thursday) — the parent waits up. cast.md § 3.1: "We love you"
+# precedes correction framed as encouragement and "have you been keeping up
+# with your meetings?"; tearful when the player "seems distant"; "I was
+# talking to Brother Phillips". Plays if the player has missed a meeting
+# this month or doubt has begun to show.
+# TODO: authenticity check
+
+{GameState.parent_word} is waiting up when you get home. The good lamp is on.
+if GameState.skipped_this_month() > 0 or DoubtMeter.value >= 30:
+	"Sit with me a minute."
+	"I was talking to Brother Phillips. He asked how you were doing. I told him you were fine." A pause. "You are fine. Aren't you?"
+	"We love you. You know that. That's the only reason I'm asking."
+	- "I'm fine. Just tired."
+		"Of course. Of course you are." They turn the lamp off. In the dark: "Your meeting clothes are still in the dryer."
+	- "I've had some questions lately." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+		[signal arg="STANDING:family:-3"]
+		[signal arg="RELIEF:1"]
+		[signal arg="FLAG:told_parent_questions"]
+		A long quiet. "Questions are fine. Everybody has questions. That's what the meetings are for."
+		They take your hand. "Promise me you'll bring them to the meetings. Not — anywhere else."
+else:
+	"Come sit a minute. I won't keep you."
+	"I don't say it enough. I'm proud of you. The way you've kept on." Their eyes are wet, and they laugh at themselves for it. "Look at me."
+	- "Thanks, {GameState.parent_word}."
+		[signal arg="STANDING:family:1"]
+		They pat the couch cushion twice, which means go to bed, and you do.
+	- Just sit with them.
+		[signal arg="STANDING:family:2"]
+		You sit until the news comes on. They don't turn it up. After a while their head tips onto your shoulder.

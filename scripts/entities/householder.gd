@@ -17,6 +17,12 @@ class_name Householder
 # uses the shared study_session.dtl.
 @export var study_timeline: String = ""
 
+# Doubt exposure every conversation with this person carries, whatever the
+# outcome (cast.md § 5.2 Daniel: "every conversation increments doubt
+# slightly; cumulative effect is significant"). Timelines add choice-specific
+# weight on top through [signal arg="EXPOSE:n"].
+@export var visit_exposure: float = 0.0
+
 # Dialogic character resource (.dch). Untyped to avoid hard-binding the
 # Householder resource to the Dialogic plugin at load time — if the plugin
 # is uninstalled, the .tres still loads.

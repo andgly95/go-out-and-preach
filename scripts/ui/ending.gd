@@ -30,8 +30,6 @@ func _ready() -> void:
 		_show_summary()
 		return
 	_card.visible = false
-	DialogicResourceUtil.update_directory(".dch")
-	DialogicResourceUtil.update_directory(".dtl")
 	Dialogic.timeline_ended.connect(_on_timeline_ended)
 	Dialogic.start(path)
 

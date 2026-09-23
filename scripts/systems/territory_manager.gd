@@ -416,6 +416,13 @@ func _reset_house_to_not_visited(house: House) -> void:
 #   [else]
 #     ... returning branch ...
 #   [end]
+## Study sessions held so far at the pending house — lets a study timeline
+## play the next beat of a householder's arc.
+func pending_study_sessions() -> int:
+	var house: House = get_pending_house()
+	return house.study_sessions if house != null else 0
+
+
 func pending_arc_state() -> StringName:
 	var house: House = get_pending_house()
 	if house == null:

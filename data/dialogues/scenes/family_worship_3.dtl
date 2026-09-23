@@ -1,0 +1,19 @@
+# Activity scene — family worship, third time. cast.md § 3.1: "We love you"
+# precedes correction; "have you been keeping up with your meetings?"
+# TODO: authenticity check
+
+A short one tonight. {GameState.parent_word} closes the book early and folds their hands on top of it.
+if GameState.skipped_this_month() > 0:
+	"We love you. You know that." A breath. "Have you been keeping up with your meetings? I noticed Sunday."
+	- "I'll be there this week."
+		[signal arg="STANDING:family:1"]
+		"Good." They pat the book. "Good. That's all I needed."
+	- "I needed a Sunday to myself."
+		[signal arg="STANDING:family:-2"]
+		[signal arg="EXPOSE:1"]
+		"A Sunday to yourself," {GameState.parent_word} repeats, as if translating. "Jehovah gives us six days for ourselves."
+else:
+	"I was thinking. When you were little you used to fall asleep during family worship with your head right here on the table." They touch the spot. "And now look at you."
+	- Smile.
+		[signal arg="STANDING:family:1"]
+		You smile, and they smile, and for a minute nobody's teaching anybody anything.

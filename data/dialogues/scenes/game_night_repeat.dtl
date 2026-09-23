@@ -1,0 +1,8 @@
+# Activity scene — game night, any later week.
+# TODO: authenticity check
+
+The same dining table, the same too-few chairs. Someone saved you the couch arm.
+Nobody talks about anything that matters, and it's wonderful.
+if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
+	[i]You laugh with everyone. For a whole minute at a time, you forget to watch yourself doing it.[/i]

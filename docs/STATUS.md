@@ -12,18 +12,22 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 - **Doubt is exposure.** Success no longer erases it; conviction buffers it and wears down with it. Personal study prepares you for Sunday, and that "successful meeting" is what eases doubt.
 - **Autosave** at the start of each week; Continue works.
 
-Not yet: most evening activities show a one-line result, not a scene. There's no Householder of Note arc (Daniel at #9 is named, nothing more). No sibling, coworker, or Sister Who Talks beats. No "comment at the Lighthouse Study" moment on screen (it's mechanical only).
+- **Story beats** (`data/beats/`): thirteen short scenes across the eight weeks. Coffee with your parent, late-night texts from your brother Micah, Dana's invitation and later her 10pm call and her lunchtime question, Sister Marin in the lobby, the parked car with your service partner, family dinner, the lamp left on, the boxes in the hallway. They come from cast.md's "common beats", and several branch on what you've been doing.
+- **Activity scenes:** family worship, personal study, Grandma, game night, and Dana each have a sequence of authored scenes, then a quieter repeat. Personal study's "look the verse up yourself" branch (doubt ≥ 25) echoes in Daniel's study.
+- **Daniel** (house #9, the Householder of Note): four study sessions that progress (sources, the half-quoted verse, "do they get to keep their friends?", his decision), then he ends it or keeps going for your sake.
+
+Not yet: seat picker still doesn't show who's sitting where; the Lighthouse Study "comment" moment is mechanical only; no endings reference Daniel, Micah, or Dana yet.
 
 ## Balance (tools/ci/tests/test_balance.gd, 60 runs per style)
 
 | Style | Doubt at wk 8 (median) | Endings |
 |---|---|---|
-| devout (pioneer, never misses) | ~4 | Regular Pioneer / In-Fold |
-| typical | ~15 | mostly In-Fold |
-| curious (honest choices, Dana) | ~35 | mixed: In-Fold, Keeping Up Appearances, Fade |
-| drifting | ~49 | Quiet Fade |
+| devout (pioneer, never misses) | ~20 | Regular Pioneer / In-Fold |
+| typical | ~24 (top tenth 36+) | mostly In-Fold, some Fade |
+| curious (honest choices, says yes to Dana) | ~62 | Keeping Up Appearances, Fade, a few In-Fold |
+| drifting | ~57 | Quiet Fade, Walking Away |
 
-The typical and curious runs are still below the design targets. That's expected: the weekday story beats (sibling, parent, coworker, Daniel) are the everyday exposures and don't exist yet. The balance test carries interim targets until they do.
+The sim doesn't apply choice-level extras, so real engaged play runs a little higher. `tools/check.sh` also plays two whole runs through the real UI (`tools/ci/autoplay.gd`) and fails on any script error or stuck screen.
 
 ## Decisions to review (Andrew: veto any)
 
@@ -32,14 +36,16 @@ All are one constant or data file each. Full reasoning in `docs/design/v01-loop.
 - New-door answer rate 35% on Saturday and 25% on Thursday (was 26.5%).
 - Polite refusers stop answering return visits after 2 conversations.
 - Exposure wears conviction down by half its size; conviction drifts −3 a week.
-- Names: the coworker is **Dana**; the grandparent is **Grandma**; house #9's inquisitive neighbor is **Daniel** (cast.md § 5.2's Householder of Note). Dialogue lines in the month-end talks, the five endings, the study session, and the activities are drafts, marked `# TODO: authenticity check`.
+- Names: the coworker is **Dana**; the grandparent is **Grandma**; the sibling is **Micah**, a younger brother; the Sister Who Talks is **Sister Marin** (dialogue-context.md's own example name); the service partner is **Eli** (or **Naomi** if you play a sister); house #9's neighbor is **Daniel** (cast.md § 5.2's Householder of Note). Placeholders in dialogue: "the Castillo boy", "Jess", "Ruth" in Grandma's album. All names are one constant each in `game_state.gd`, or a line in a timeline.
+- Beats I placed that go a step beyond cast.md's list: Micah moving into his own apartment (week 7), and Grandma's photo of Ruth "who left". Both are flagged in their files. Dialogue lines in the month-end talks, the five endings, the study session, and the activities are drafts, marked `# TODO: authenticity check`.
 - The Dialogic autoload uses a `res://` path, so fresh clones import cleanly.
 
 ## Open questions for Andrew
 
-- Which Householder of Note ships in v0.1? cast.md § 8 Q3 leaves it open. I'm building **Daniel** at #9 next because house #9's returning branch already leans that way ("Looked some stuff up, even").
-- Sibling: older or younger, and a name (cast.md § 3.2 leaves both open).
+- Is **Daniel** the right v0.1 Householder of Note (cast.md § 8 Q3)? He's built at #9 because that house's returning branch already leaned that way.
+- Sibling: older or younger, and a name (cast.md § 3.2 leaves both open). Currently younger brother Micah.
+- Every new line is a draft marked `# TODO: authenticity check`. The ones I'm least sure of are Dana's "It's not church, it's the Hall" correction, the study-session cadence, and whether a publisher would call the study aid "the lesson book".
 
 ## Next step
 
-Story beats that run through the eight weeks. These are cast.md's "common beats" for the parent, sibling, coworker, Sister Who Talks, grandparent, and service partner, scheduled as short scenes on the day screen. Then Daniel's arc. Then re-tune the balance test to its design targets.
+Play it. Then: show who's in each seat at the Hall; an on-screen comment moment at the Sunday Lighthouse Study for players who prepared; endings that remember Daniel, Micah, and Dana.

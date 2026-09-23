@@ -1,0 +1,24 @@
+# Beat (week 6, Saturday) — the service partner again. cast.md § 4.4: "Will
+# admit when something was hard ('Today was rough, huh?')"; their trajectory
+# responds to the player's. If the player has been drifting, the partner
+# notices; otherwise the partner shares their own tiredness.
+# TODO: authenticity check
+
+The parked car again. {GameState.partner_name} has brought two coffees and is holding both.
+if DoubtMeter.value >= 35:
+	"You okay? You've been quiet. Like, quieter."
+	- "Just tired."
+		"Yeah." {GameState.partner_name} hands you a coffee. "Me too." Neither of you believes the other, and it's fine.
+	- "Do you ever feel like you're saying it for them, not for you?" | [if DoubtMeter.value >= 40] [else=disable alt_text=""]
+		[signal arg="EXPOSE:1"]
+		[signal arg="BUMP:partner_close"]
+		{GameState.partner_name} looks at the coffee lids for a long time. "Let's just knock on some doors," {GameState.partner_name} says, gently. "Okay? Let's just do today."
+else:
+	"Last week was rough, huh? That one guy with the dog." A laugh with no air in it. "I kept thinking, if I were him I'd have slammed the door too."
+	- "We're doing a good thing. It's just hard sometimes."
+		[signal arg="CONVICTION:1"]
+		"Yeah." {GameState.partner_name} hands you a coffee. "Yeah. It is."
+	- "I think about that too."
+		[signal arg="EXPOSE:0.5"]
+		[signal arg="BUMP:partner_close"]
+		{GameState.partner_name} nods, and doesn't say anything, and that's the best part of the morning.

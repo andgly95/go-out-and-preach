@@ -1,0 +1,17 @@
+# Beat (week 5, Monday) — the sibling almost says something real, then
+# deflects; the friend the player has never heard of. cast.md § 3.2: "A
+# moment where they almost say something real, then deflect"; "The brief
+# mention of a friend the player has never heard of."
+# TODO: authenticity check — "Jess" is a placeholder.
+
+Late. {GameState.sibling_name} is sitting on the back steps when you take the trash out. He moves over to make room. You sit.
+"Do you ever think about—" He stops. Laughs at nothing. "Never mind. It's dumb."
+"Jess says I overthink everything."
+- "Who's Jess?"
+	[signal arg="EXPOSE:1.5"]
+	[signal arg="BUMP:sibling_close"]
+	[signal arg="FLAG:asked_about_jess"]
+	"Nobody. A friend." He stands. "From work. You'd like her, actually." He says it like he's testing a floorboard with one foot. "Night."
+- "Think about what?"
+	"Nothing. Forget it." He bumps your shoulder with his. "You're gonna be an elder someday, you know that? You've got the face for it."
+You sit on the step a while after he goes in. The motion light over the garage clicks off.

@@ -1,0 +1,16 @@
+# Beat (week 2, Tuesday) — the Sister Who Talks in the lobby. cast.md § 4.5:
+# warm, slightly breathless; "I just want to say..."; touches your arm; drops
+# one piece of information per conversation and never leads with it. She
+# does not think of herself as a gossip.
+# TODO: authenticity check — "the Castillo boy" is a placeholder name.
+
+The lobby before the midweek meeting. {GameState.talker_name} finds you by the literature counter and touches your arm.
+"Oh, I'm so glad you're here. You look well." To no one in particular: "Doesn't {GameState.player_title} {GameState.player_name} look well?"
+"And how's your {GameState.parent_role}? Such a faithful family."
+She lowers her voice. "I just want to say — have you heard about the Castillo boy? Nobody's seen him since the assembly. His mother is being so strong about it."
+- "What happened?"
+	[signal arg="STANDING:congregation:1"]
+	[signal arg="EXPOSE:0.5"]
+	"Oh, I don't know anything. I only know he's been having a hard time." She pats your arm twice. "We'll keep them in our prayers."
+- "I'm sure they'd appreciate the prayers."
+	"Oh, they would. They would." She looks at you a second longer than she needs to, and then the first song is starting.

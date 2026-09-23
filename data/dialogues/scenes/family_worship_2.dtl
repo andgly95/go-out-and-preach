@@ -1,0 +1,16 @@
+# Activity scene — family worship, second time. cast.md § 3.1: "Quotes the
+# Daniel 2 statue prophecy or 2 Timothy 3 (last days behavior) when the news
+# is on." Paraphrase only; no quoted translation.
+# TODO: authenticity check
+
+The TV is on low in the next room while you study. Something about floods somewhere, and then something about a shooting.
+{GameState.parent_word} stops mid-paragraph to listen, then turns back to you with a kind of calm. "You see? Men will be lovers of themselves. Just like Paul said. Right on schedule."
+- Nod.
+	[signal arg="CONVICTION:1"]
+	You nod. It's a comfort, the way everything fits. {GameState.parent_word} finds the place again with one finger.
+- "Didn't they say that about the news when you were my age, too?" | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="EXPOSE:1.5"]
+	[signal arg="STANDING:family:-2"]
+	{GameState.parent_word} looks at you over their reading glasses for a long moment.
+	"We're closer now than we've ever been," they say, gently, as if you'd asked the time. "That's all."
+	They turn the TV off.

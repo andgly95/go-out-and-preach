@@ -1,0 +1,20 @@
+# Beat (week 3, Monday) — family dinner, the sibling present and checked out.
+# cast.md § 3.2 "Family dinners where they're physically present but checked
+# out"; § 3.1 the parent's question that isn't a question ("Don't you
+# think?"). The player can cover for him, press him, or stay out of it.
+# TODO: authenticity check
+
+Dinner. {GameState.sibling_name} came, which is something. He eats with his phone face-down beside his plate and turns it over every few minutes.
+{GameState.parent_word} passes the potatoes. "Will we see you Sunday, {GameState.sibling_name}?"
+"Probably. I've got a thing in the morning. I'll try."
+"You'll try." {GameState.parent_word} looks at you. "It's so encouraging having both of you there. Don't you think?"
+- "He's been working a lot. He'll come when he can."
+	[signal arg="STANDING:family:-2"]
+	[signal arg="BUMP:sibling_close"]
+	[signal arg="FLAG:covered_for_sibling"]
+	{GameState.sibling_name} doesn't look up, but under the table his foot knocks once against yours.
+- "You should come, {GameState.sibling_name}. It's not the same without you."
+	[signal arg="STANDING:family:2"]
+	"Yeah," he says. "Yeah, I know." He turns his phone over, reads something, turns it back.
+- Say nothing.
+	Nobody says anything. The clock over the stove is loud.

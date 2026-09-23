@@ -1,0 +1,12 @@
+# Activity scene — game night, first time. cast.md § 4.3: the Sister Pioneer
+# invites the player to a "group game night" at her parents' house; bright,
+# "upbuilding"; the friends. Belonging, in its best light.
+# TODO: authenticity check
+
+Board games on a dining table, too many people for the chairs, somebody's toddler asleep on a pile of coats. You get a spot on the arm of the couch.
+The regular pioneer who invited you is keeping score in tiny neat numbers. "Are you pioneering this month?" she asks, bright, not testing.
+if GameState.is_pioneering():
+	You say yes. "Oh, that's so upbuilding," she says, and means it, and writes your name at the top of the score sheet like a prize.
+else:
+	You say not this month. "Oh, you should! It's the best month of the year, every time." She says it like she's recommending a restaurant.
+Someone laughs so hard at charades that they have to lie on the floor. It's past eleven when you leave. You feel light, the whole drive home.

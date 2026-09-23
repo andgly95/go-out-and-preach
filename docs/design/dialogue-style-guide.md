@@ -22,6 +22,15 @@ direction is written. The *content* lives in dialogue-context.md.
 
 ---
 
+## 1a. Mechanics that bite (learned the hard way)
+
+- **Speakers need a `.dch`.** A line like `sibling: hey` names a character file in `data/dialogues/characters/`. Never write an ad-hoc speaker (`{GameState.sibling_name}: hey` or `Quickly: …`); Dialogic creates a character on the fly, and Godot crashes on exit. A `.dch` can still show a variable name: set its `display_name` to `{GameState.sibling_name}`. `tools/ci/tests/test_content.gd` enforces this.
+- **Prose never starts with `Word:`.** Dialogic reads it as a speaker. Rephrase (`Then, quickly, "…"`).
+- **Consequences go in `[signal arg="…"]`** events the game understands: `EXPOSE:n`, `RELIEF:n`, `CONVICTION:n`, `STANDING:track:n`, `ENERGY:n`, `FLAG:key`, `BUMP:key`, `INNER_VOICE`, plus door outcomes and `OFFSCRIPT:n` (see `scripts/systems/evenings.gd` and `scripts/ui/door_knock.gd`). Keep choice-level effects small; an activity's or beat's base effects live in its `.tres`, where the balance simulation can see them.
+- **Doubt-gated choices** use `| [if DoubtMeter.value >= N] [else=disable alt_text=""]` so the player sees the door they can't yet open.
+
+---
+
 ## 2. Line length norms
 
 **DRAFT — populated after dialogue subagent first pass.** Expected

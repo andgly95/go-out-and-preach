@@ -15,3 +15,5 @@ conviction = 2
 exposure = 1.0
 sets_flag = "prepared_for_sunday"
 result_text = "The article, a highlighter, the questions at the foot of each page. You underline the answers where the paragraph gives them."
+scenes = Array[String](["res://data/dialogues/scenes/personal_study_1.dtl", "res://data/dialogues/scenes/personal_study_2.dtl", "res://data/dialogues/scenes/personal_study_3.dtl"])
+repeat_scene = "res://data/dialogues/scenes/personal_study_repeat.dtl"

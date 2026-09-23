@@ -97,10 +97,6 @@ func _start() -> void:
 		push_warning("[door_knock] No pending house or householder; returning to the map.")
 		_leave_scene()
 		return
-	# Cold headless launches may not have the .dch/.dtl directory tables
-	# populated yet; rescan so character and timeline identifiers resolve.
-	DialogicResourceUtil.update_directory(".dch")
-	DialogicResourceUtil.update_directory(".dtl")
 	var householder: Householder = _pending_house.householder
 	if householder.archetype == HOSTILE_SLAMMER_ARCHETYPE:
 		_timeline_path = ""

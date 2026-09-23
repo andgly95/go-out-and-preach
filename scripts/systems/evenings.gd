@@ -52,6 +52,8 @@ func available_for(phase: int) -> Array[Activity]:
 			continue
 		if not activity.hide_if_flag.is_empty() and GameState.flag(activity.hide_if_flag):
 			continue
+		if not activity.requires_flag.is_empty() and not GameState.flag(activity.requires_flag):
+			continue
 		result.append(activity)
 	return result
 
@@ -96,9 +98,15 @@ func background_for(activity: Activity) -> String:
 ##   STANDING:<track>:<n>     elders / congregation / family
 ##   ENERGY:<n>               energy change
 ##   FLAG:<key>[=<value>]     set a GameState flag (int values)
+##   BUMP:<key>               add 1 to a GameState counter
 func apply_scene_signal(arg: String) -> bool:
 	var parts: PackedStringArray = arg.split(":")
-	var reason: StringName = StringName("scene_" + (String(pending.id) if pending != null else "event"))
+	var source: String = "event"
+	if pending != null:
+		source = String(pending.id)
+	elif Story.pending != null:
+		source = String(Story.pending.id)
+	var reason: StringName = StringName("scene_" + source)
 	match parts[0]:
 		"INNER_VOICE":
 			DoubtMeter.inner_voice()
@@ -116,6 +124,8 @@ func apply_scene_signal(arg: String) -> bool:
 			var key: String = parts[1].get_slice("=", 0)
 			var value: Variant = int(parts[1].get_slice("=", 1)) if parts[1].contains("=") else 1
 			GameState.set_flag(key, value)
+		"BUMP":
+			GameState.bump(parts[1])
 		_:
 			return false
 	return true

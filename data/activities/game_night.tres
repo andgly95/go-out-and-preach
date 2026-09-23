@@ -16,3 +16,5 @@ standing_congregation = 3
 doubt_relief = 1
 result_text = "Board games on a dining table, too many people for the chairs. Someone saves you a spot on the couch arm."
 min_congregation = 5
+scenes = Array[String](["res://data/dialogues/scenes/game_night_1.dtl"])
+repeat_scene = "res://data/dialogues/scenes/game_night_repeat.dtl"

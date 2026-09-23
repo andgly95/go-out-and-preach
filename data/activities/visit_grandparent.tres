@@ -14,3 +14,5 @@ energy_cost = 2
 standing_family = 1
 doubt_relief = 1
 result_text = "You put the groceries away where they go. {grandparent} tells you to sit down, you're making the room nervous."
+scenes = Array[String](["res://data/dialogues/scenes/visit_grandparent_1.dtl", "res://data/dialogues/scenes/visit_grandparent_2.dtl", "res://data/dialogues/scenes/visit_grandparent_3.dtl"])
+repeat_scene = "res://data/dialogues/scenes/visit_grandparent_repeat.dtl"

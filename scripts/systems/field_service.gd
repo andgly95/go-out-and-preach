@@ -160,6 +160,8 @@ func resolve_outcome(house: House, outcome_key: String) -> void:
 	if house.householder != null and house.householder.doubt_delta_overrides.has(outcome_key):
 		exposure = float(house.householder.doubt_delta_overrides[outcome_key])
 	DoubtMeter.expose(exposure, StringName("door_" + outcome_key.to_lower()))
+	if house.householder != null:
+		DoubtMeter.expose(house.householder.visit_exposure, StringName("visit_" + String(house.householder.id)))
 	DoubtMeter.apply(-int(effects.get("relief", 0)), &"door_fruitful")
 	ResourceManager.add_conviction(int(effects.get("conviction", 0)))
 	if outcome_key == "STUDY_CONTINUES":

@@ -1,0 +1,15 @@
+# Activity scene — visiting the grandparent, third time. cast.md § 3.3: "A
+# moment where the grandparent asks the player something direct that nobody
+# else would ask." She won't tell the player what to do.
+# TODO: authenticity check
+
+{GameState.grandparent_word} watches you put the milk away, and then watches you not sit down.
+"Can I ask you something? Are you happy?"
+Not how are you. Not how's the ministry. Are you happy.
+- "Yes."
+	[signal arg="RELIEF:1"]
+	She looks at you for a while. "Good," she says. "Good. That's all I wanted to know." She reaches for your hand.
+- "I don't know."
+	[signal arg="RELIEF:2"]
+	[signal arg="FLAG:told_grandma"]
+	She nods, like that's an answer too. "That's alright. Nobody knows, half the time." She pats the couch. "Sit. You don't have to know anything in here."

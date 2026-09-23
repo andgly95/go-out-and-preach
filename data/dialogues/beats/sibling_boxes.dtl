@@ -1,0 +1,16 @@
+# Beat (week 7, Monday) — the sibling moves out. cast.md § 3.2: has a life the
+# player doesn't know; won't have a clean exit conversation; hasn't formally
+# disassociated. Moving out is not leaving — nobody says what it is.
+# TODO: authenticity check — Andrew to confirm this beat for the sibling.
+
+Boxes in the hallway. {GameState.sibling_name}'s room is half empty.
+"It's just an apartment," he says, before you can ask. "Closer to work. It's not a big deal."
+{GameState.parent_word} is in the kitchen with the radio turned up.
+- Help him carry the boxes to his car.
+	[signal arg="STANDING:family:-2"]
+	[signal arg="EXPOSE:1"]
+	[signal arg="FLAG:helped_sibling_move"]
+	Four trips. On the last one he hands you a key on a ring with a bottle opener. "Spare. In case." He doesn't say in case of what.
+- Stay in the kitchen with {GameState.parent_word}.
+	[signal arg="STANDING:family:2"]
+	{GameState.parent_word} turns the radio up a little more. Through the window you watch him load the car by himself.

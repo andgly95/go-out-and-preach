@@ -1,0 +1,14 @@
+# Activity scene — visiting the grandparent, second time. cast.md § 3.3: "A
+# photo album scene where the grandparent talks about people who have died";
+# "Drops lines that suggest they see more than they say — usually one
+# sentence per visit." She does not speak ill of the organization.
+# TODO: authenticity check
+
+The photo album comes out. {GameState.grandparent_word} turns the pages slowly, naming everyone.
+"That's your grandfather at the convention in the old stadium. Look at that tie." "That's the Hendersons. Both gone now. Resting, until the resurrection."
+She stops on a picture of a young woman laughing at something off to the side of the frame. She doesn't name her. She turns the page.
+- "Who was that?"
+	[signal arg="EXPOSE:1"]
+	"Oh — that's Ruth. We were in the same service group for years." She smooths the plastic over the next page. "Ruth left. A long time ago." A pause. "I still think about her. Isn't that silly?"
+- Let her turn the page.
+	You let her turn the page. The next one is your {GameState.parent_word} as a baby, asleep in a laundry basket under the seats at an assembly, and she laughs at herself for having kept it.

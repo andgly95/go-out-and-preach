@@ -1,0 +1,13 @@
+# Activity scene — saying yes to the coworker, first time. cast.md § 5.1: the
+# coworker never moralizes when the player declines things; doesn't try to
+# save the player. dialogue-context.md § 3: "worldly" / "bad association".
+# TODO: authenticity check
+
+A bar on Fifth, the music a little too loud. You order a soda with lime so it looks like something.
+{GameState.coworker_name} introduces you to everyone as "the only person at work who actually reads the memos." Someone asks what you did last weekend.
+- "Volunteer work."
+	"They do this door-to-door thing," {GameState.coworker_name} says. "It's actually kind of brave. I couldn't do it."
+- "I was preaching, actually. Door to door."
+	[signal arg="CONVICTION:1"]
+	A small silence, and then someone says "Huh, respect," and means it, and the conversation moves on to someone's terrible landlord.
+Nobody asks you anything you'd have to answer. You're home by ten. The phone buzzes: "glad u came 🙂"

@@ -1,0 +1,14 @@
+# Activity scene — the coworker, second time: a colleague's birthday.
+# cast.md § 5.1: invitations to a colleague's birthday; dialogue-context.md
+# § 10 the studied non-celebration of birthdays.
+# TODO: authenticity check
+
+It's someone's birthday, you realize, as the cake comes out of the back of the restaurant with the candles already lit.
+Everyone starts singing.
+- Step outside.
+	[signal arg="CONVICTION:1"]
+	You step out into the parking lot until it's over. After a minute {GameState.coworker_name} comes out too.
+	"Oh — right. Birthdays. Sorry. I totally forgot." They don't make it weird. "Want me to bring you a piece? It's not a birthday piece. It's just cake."
+- Stay, and don't sing.
+	[signal arg="EXPOSE:1"]
+	You stay, and you don't sing, and you clap at the end with everyone else. The candles go out. Nothing happens. It's a cake.

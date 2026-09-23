@@ -1,0 +1,107 @@
+# Daniel's Bible study — the Householder of Note at House #9 (cast.md § 5.2
+# "Daniel": early 30s, intellectual, polite, never aggressive, precise;
+# reads the magazines and comes back with informed pushback; every
+# conversation increments doubt slightly). Voice continues § 6.2.2: warm,
+# neighborly, curious — not secretly searching, and never a vehicle for the
+# game's argument. Each session plays the next beat; after the fourth he
+# decides for himself.
+# TODO: authenticity check — Andrew to confirm Daniel as the v0.1
+# Householder of Note (cast.md § 8 Q3).
+
+if TerritoryManager.pending_study_sessions() == 0:
+	jump first
+elif TerritoryManager.pending_study_sessions() == 1:
+	jump second
+elif TerritoryManager.pending_study_sessions() == 2:
+	jump third
+elif TerritoryManager.pending_study_sessions() == 3:
+	jump fourth
+else:
+	jump later
+
+label first
+Daniel's kitchen table. He's read the whole lesson, and the magazine you left, and he has a legal pad with questions down the margin in small careful handwriting.
+"I'm not trying to catch you out," he says. "I just like to know who's talking."
+He taps a sentence in the lesson. "It says 'many scholars agree.' Which ones?"
+- "The Society researches everything carefully."
+	[signal arg="CONVICTION:1"]
+	"Okay." He writes something on the legal pad. "Fair enough. I'll take your word for it for now."
+- "I'll find out and bring it next week."
+	[signal arg="FLAG:daniel_promise"]
+	"Great. Honestly, that's all I want." He looks pleased, the way people look when they've been taken seriously.
+- "I don't actually know." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="EXPOSE:1"]
+	[signal arg="BUMP:daniel_bond"]
+	He laughs, not unkindly. "Me neither. That's kind of why I asked."
+At the door: "Same time next week?"
+- "Same time next week."
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I don't think I can keep coming."
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label second
+Daniel has the lesson open to page fourteen and his own Bible open beside it, an old paperback with a cracked spine.
+"So I looked up the verse they quote here. They only quote half of it." He reads you the whole thing, then the verses around it. "It's about something else, isn't it? Or am I reading it wrong?"
+if GameState.count("looked_it_up") > 0:
+	[signal arg="INNER_VOICE"]
+	[i]You've read this verse. At your own desk, under your own lamp, three times.[/i]
+[signal arg="EXPOSE:0.5"]
+- "The lesson's giving you the main point."
+	"Right. The main point." He nods slowly. He doesn't push. He writes it down.
+- "You're not reading it wrong." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	[signal arg="EXPOSE:1"]
+	[signal arg="BUMP:daniel_bond"]
+	He looks up from the page at you for a long moment. "Thanks," he says. "I thought I was going crazy."
+At the door he holds it open for you. "Next week?"
+- "Next week."
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I think we should stop."
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label third
+Daniel makes coffee this time, without asking, the way you would for a friend. He doesn't open the book right away.
+"Can I ask you something that's not in the lesson? You don't have to answer."
+"What happens if someone in your group stops believing? Like — practically. Do they get to keep their friends?"
+- "They'd always be welcome back."
+	[signal arg="CONVICTION:1"]
+	"Welcome back," he repeats. He turns his mug a quarter turn on the table. "Okay."
+- "Mostly, no." | [if DoubtMeter.value >= 30] [else=disable alt_text=""]
+	[signal arg="EXPOSE:2"]
+	[signal arg="BUMP:daniel_bond"]
+	He's quiet for a while. "Huh. That's a lot to put on a person." He looks at you, not at the book. "That's a lot to put on you."
+They do the lesson after that, both of you a little careful with each other. At the door: "Same time?"
+- "Same time."
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I don't think I can keep coming."
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label fourth
+The lesson book is closed on the table when you come in, squared to the edge, with the legal pad on top of it.
+"I think I'm going to stop the study," Daniel says. "It's not you. You've been great. Honestly, you're the best part of my Saturdays."
+"I think I just — know what I think now. I didn't, before. So, thank you, actually."
+He slides the book back across the table to you.
+- "Could we keep going a few more weeks?"
+	"Sure," he says, after a moment. "If it's important to you." He opens the book again, to where you left off.
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I understand."
+	[signal arg="FLAG:daniel_friend"]
+	[signal arg="EXPOSE:1"]
+	"You can still come by, you know. Not to study. Just — if you ever want to talk." He walks you to the door. "I make pretty good coffee."
+	[signal arg="REFUSED"]
+	[end_timeline]
+
+label later
+Daniel's kitchen table, the lesson book, the coffee. He listens to every paragraph all the way through, politely, and asks one precise question each week, and writes your answer down.
+- "See you next week."
+	[signal arg="STUDY_CONTINUES"]
+	[end_timeline]
+- "I think this is our last one."
+	[signal arg="REFUSED"]
+	[end_timeline]

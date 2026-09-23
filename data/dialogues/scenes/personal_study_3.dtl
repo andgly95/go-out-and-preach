@@ -1,0 +1,9 @@
+# Activity scene — personal study, third time.
+# TODO: authenticity check
+
+The article this week is about loyalty. The lamp, the highlighters, the questions at the foot of the page.
+if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
+	[i]You underline the answers. Somewhere around paragraph nine you notice you've started underlining the questions instead.[/i]
+else:
+	You prepare two comments, a short one and a longer one, in case someone else takes the short one first.

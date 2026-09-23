@@ -1,0 +1,14 @@
+# Activity scene — visiting the grandparent, first time. cast.md § 3.3:
+# "The player visits with groceries or a magazine — they sit and talk for an
+# hour"; hums songs without thinking; "Come sit with me."
+# TODO: authenticity check
+
+{GameState.grandparent_word}'s apartment smells like coffee and the lemon stuff she uses on the furniture. You put the groceries away where they go. She hums the whole time, a song from the songbook, the one about the morning.
+"Come sit with me. You're making the room nervous."
+She wants to know about your job, and whether you're eating, and whether that nice {GameState.partner_formal} is still in your car group. She doesn't ask about your hours.
+- Stay the full hour.
+	[signal arg="STANDING:family:1"]
+	[signal arg="RELIEF:1"]
+	You stay the full hour, and a little more. When you leave she presses a folded twenty into your hand like it's contraband.
+- Leave after the groceries.
+	"Go, go. You're busy." She means it kindly. She's already humming again when you close the door.

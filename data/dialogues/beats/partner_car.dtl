@@ -1,0 +1,18 @@
+# Beat (week 2, Saturday) — the parked car before field service with the
+# recurring service partner. cast.md § 4.4: "A scene in a parked car before
+# going out — five minutes of real talk"; peer-level, the one NPC the player
+# can be slightly informal with. dialogue-context.md § 10: cars parked a
+# street or two over from the territory.
+# TODO: authenticity check
+
+Saturday. The car group met at eight, prayed, and scattered. {GameState.partner_name} is in your passenger seat, eating a granola bar over a napkin, parked a street over from the territory.
+"Five more minutes," {GameState.partner_name} says. "Then we go be shining lights."
+"Can I tell you something dumb? I practiced the presentation in the bathroom mirror this morning. Out loud. My roommate heard the whole thing."
+- Laugh.
+	[signal arg="STANDING:congregation:1"]
+	{GameState.partner_name} laughs too. "Don't tell anyone. I'll deny it."
+- "I do that too."
+	[signal arg="STANDING:congregation:1"]
+	[signal arg="BUMP:partner_close"]
+	"Yeah?" {GameState.partner_name} looks relieved, then looks out the windshield at the street. "It helps. Knowing what you're going to say."
+Through the windshield, the first houses of the territory. Somebody's sprinkler ticking.

@@ -22,7 +22,7 @@ const EXPOSURE_SCALE_AT_ZERO_CONVICTION: float = 1.5
 const EXPOSURE_SCALE_MIN: float = 0.5
 # Once the inner voice has started (doubt >= 40 gates those lines), each
 # time it speaks adds a little: noticing is how you keep noticing.
-const INNER_VOICE_EXPOSURE: float = 1.0
+const INNER_VOICE_EXPOSURE: float = 0.5
 const CONVICTION_COST_PER_EXPOSURE: float = 0.5
 
 var value: int = 0

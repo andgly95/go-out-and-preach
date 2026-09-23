@@ -1,0 +1,8 @@
+# Activity scene — family worship, any later week.
+# TODO: authenticity check
+
+The kitchen table, the paragraphs, the question underneath each one. {GameState.parent_word} asks what you learned. You tell them.
+if DoubtMeter.value >= 40:
+	[signal arg="INNER_VOICE"]
+	[i]You answer before they finish asking. You've always been quick. You notice you've stopped listening to the paragraph at all.[/i]
+The closing prayer. The good tablecloth folded back into the drawer.

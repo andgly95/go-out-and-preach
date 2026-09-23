@@ -1,0 +1,17 @@
+# Beat (week 3, Friday) — the coworker calls, having a hard time. cast.md
+# § 5.1: "A phone call when the coworker is having a hard time and just needs
+# to talk"; they have their own problems. dialogue-context.md § 5: members
+# redirect bad news to the New System — the player can choose not to.
+# TODO: authenticity check
+
+Your phone rings at ten at night. {GameState.coworker_name}. They never call.
+"Hey. Sorry. I know it's late." A breath. "My dad's in the hospital. They think it's his heart. I'm just sitting in the parking lot, and I didn't want to call anyone who'd make it a whole thing."
+"Is that weird? That I called you? You're just — calm. You're always so calm."
+- Stay on the phone.
+	[signal arg="ENERGY:-1"]
+	[signal arg="EXPOSE:1"]
+	[signal arg="BUMP:dana_close"]
+	You stay on until the lights in the parking structure click off at midnight. You don't say anything about the New System. They don't ask.
+	Before they hang up: "Thanks. Seriously. You're a good friend."
+- "I'll be praying for him."
+	"Yeah. Okay. Thanks." A pause. "I'll let you go."
