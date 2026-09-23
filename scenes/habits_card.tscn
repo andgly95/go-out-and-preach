@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/habits_card.gd" id="1_habits_card"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.11, 0.13, 0.19, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.5, 0.27, 0.55)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[node name="HabitsCard" type="PanelContainer"]
+custom_minimum_size = Vector2(300, 0)
+offset_left = 24.0
+offset_top = 120.0
+offset_right = 324.0
+offset_bottom = 600.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+script = ExtResource("1_habits_card")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 14
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
+theme_override_font_sizes/font_size = 12
+text = "✦ HABITS ✦"
+horizontal_alignment = 1
+
+[node name="DividerTop" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
+
+[node name="Rows" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Spacer" type="Control" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DividerBottom" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
+
+[node name="OpenButton" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.62, 0.28, 1)
+theme_override_colors/font_hover_color = Color(0.95, 0.85, 0.55, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+text = "SEE THE WHOLE TREE  →"
+flat = true

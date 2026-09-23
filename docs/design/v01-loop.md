@@ -60,6 +60,23 @@ On the first Sunday of each month the auxiliary pioneer application is on the ta
 - **Congregation:** at ≥ 5 you're invited to Friday game night; seat picker shows who's saving you a seat.
 - **Family:** your parent's scenes warm or cool; at ≤ −10 your parent "mentions it to Brother Phillips" (−5 elders).
 
+## Habits: the skill tree
+
+**(call)** The progression layer is a skill tree whose points are your days. There's no XP and nothing to spend. Each track fills with practice, so choosing tonight's activity *is* spending the point, and the energy budget means you can't grow everything. A points-bought tree would turn faith into a stat sheet, which is the satire register the game avoids. Growth from repetition fits GDD pillar 2 ("the player feels their character changing under them") and pillar 4 ("the grind itself is part of the meaning"). Data in `data/habits/*.tres`; logic in the `Habits` autoload.
+
+| Track | Grows with | Forms by itself | The fork (keep one; the other closes) |
+|---|---|---|---|
+| Ministry | each morning in service | **The car group** (2): a morning costs 1 less energy | 5 mornings: **The second hour** (keeping going costs 1 less) / **A return-visit notebook** (return visits and studies take 15 minutes less) |
+| Study | personal study, family worship | **Underlines the answers** (2): personal study costs 1 less | 5: **Ready answers** (exposure wears conviction half as much) / **Reads the whole chapter** (greyed-out choices open 10 doubt sooner) |
+| Congregation | each meeting, game night | **Sunday morning** (4): the Sunday meeting costs 1 less | 9: **Comments every week** (+1 elders per prepared comment) / **The friends** (game night costs 1 less and eases doubt 1 more) |
+| Home | family worship, visits to Grandma | **Monday nights** (2): family worship costs 1 less | 5: **Keeps the peace** (family losses are 1 smaller) / **Grandma's afternoons** (visits cost 1 less and ease doubt 1 more) |
+
+- **Every fork is the same question:** what gets counted, or who's in front of you. Hours or the people on your route; the answer in the paragraph or the chapter it came from; the elders noticing your comment or the friends saving you a plate; peace at home or the grandmother who keeps a photo of Ruth. Both sides are sincere ways to be a publisher; neither is the doubt option.
+- **Lately** is a fifth track that isn't shown at all until doubt first reaches 40. It takes no practice and offers no choice: its habits form by themselves, the morning after doubt crosses the line. **Sitting through it** (40): meetings cost 1 more energy. **Two versions of the week** (55): staying home from a meeting restores 1 energy. The routine that got easier gets heavier again, and the game never says why. This is GDD § 5.2's "faint, ambiguous indicator".
+- **Timing.** First habits land in weeks 1–2 and teach the system; forks open in weeks 3–5, leaving a month to live with the choice. A habit that forms shows as a small card the next morning; a fork opens the whole tree and waits for your pick.
+- **Effect** (balance sim, same seed): devout runs pioneer more easily (Regular Pioneer 58 of 60 runs, from 34), curious runs spiral a little faster (median doubt 68, from 62), typical and drifting are about unchanged. Lately appears in about three quarters of curious runs and one in ten typical ones.
+- Effects are named modifiers (`Habit.modifiers`) that each system reads through `Habits.modifier(key)`; thresholds are each habit's `practice` / `min_doubt`. Greyed-out choices in timelines check `DoubtMeter.noticing` (doubt plus habits), while the inner voice and the reveal still read `DoubtMeter.value`.
+
 ## Endings (week 8)
 
 Resolved in order; first match wins. Texts follow the BACKLOG tone notes and are drafts pending authenticity review.

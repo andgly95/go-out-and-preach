@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"underlines_the_answers"
+track = &"study"
+step = 1
+order = 0
+title = "Underlines the answers"
+flavor = "The question at the foot of the page, the answer in the paragraph. It goes quicker now."
+effect_text = "Personal study costs 1 less energy."
+practice = 2
+min_doubt = 0
+modifiers = {
+"energy:personal_study": -1
+}

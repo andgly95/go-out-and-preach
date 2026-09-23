@@ -18,7 +18,7 @@
 #          Choice 1 — "We're sorry to bother you."        → E4a REFUSED (de-escalate)
 #          Choice 2 — "Would you like a magazine?"        → E4b TRACT_LEFT (press)
 #          Choice 3 — "I'm sorry that happened to you."   → E4c REFUSED (off-script)
-#                     | [if DoubtMeter.value >= 35]
+#                     | [if DoubtMeter.noticing >= 35]
 #   E4a  Apostate (quiet_resignation) — brief close → [signal arg="REFUSED"]
 #   E4b  Apostate (wounded_acceptance) — brief close → [signal arg="TRACT_LEFT"]
 #   E4c  Apostate (grief) — deepest line in the timeline → [signal arg="REFUSED"]
@@ -40,7 +40,7 @@
 #   Exposure ceiling per encounter: +5 (off-script + REFUSED).
 #
 # CHOICE 3 (off-script) is doubt-gated higher than PR/CS (≥35 vs ≥25):
-#   | [if DoubtMeter.value >= 35] [else=disable alt_text=""]
+#   | [if DoubtMeter.noticing >= 35] [else=disable alt_text=""]
 #   Per Q4: you have to be significantly doubting to recognize and take
 #   the moment with an Apostate.
 #
@@ -134,7 +134,7 @@ apostate_wounded (grief): My mother won't speak to me. It's been almost five yea
 	# anything. The wound is in the kindness she's doing for them.
 	[signal arg="TRACT_LEFT"]
 	[end_timeline]
-- I'm sorry that happened to you. | [if DoubtMeter.value >= 35] [else=disable alt_text=""]
+- I'm sorry that happened to you. | [if DoubtMeter.noticing >= 35] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:2"]
 	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 35 (higher than PR/CS's 25).
 	# Per Q4: you have to be significantly doubting to recognize and take

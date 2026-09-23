@@ -85,6 +85,7 @@ func new_game(name: String = "Jordan", title: String = "Brother", parent: String
 	TerritoryManager.reset()
 	MeetingManager.reset()
 	FieldService.reset()
+	Habits.reset()
 	player_name = name.strip_edges() if not name.strip_edges().is_empty() else "Jordan"
 	player_title = title
 	parent_role = parent

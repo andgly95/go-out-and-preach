@@ -12,7 +12,7 @@ if GameState.skipped_this_month() > 0 or DoubtMeter.value >= 30:
 	"We love you. You know that. That's the only reason I'm asking."
 	- "I'm fine. Just tired."
 		"Of course. Of course you are." They turn the lamp off. In the dark: "Your meeting clothes are still in the dryer."
-	- "I've had some questions lately." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+	- "I've had some questions lately." | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 		[signal arg="STANDING:family:-3"]
 		[signal arg="RELIEF:1"]
 		[signal arg="FLAG:told_parent_questions"]

@@ -49,3 +49,9 @@ signal service_session_ended(summary: Dictionary)
 signal evening_completed(activity_id: StringName)
 @warning_ignore("unused_signal")
 signal month_closed(record: Dictionary)
+
+# Habits
+@warning_ignore("unused_signal")
+signal habit_formed(habit_id: StringName)
+@warning_ignore("unused_signal")
+signal habit_choice_offered(track: StringName)

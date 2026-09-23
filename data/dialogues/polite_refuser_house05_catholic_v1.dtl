@@ -88,7 +88,7 @@ polite_refuser_house05_catholic (polite_smile): Oh — yeah, thank you, but I'm 
 		polite_refuser_house05_catholic (relief): Yeah — thanks. Thanks for stopping by.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# E3d — OFF-SCRIPT choice. T1 fires +3 via the OFFSCRIPT signal on the branch.
 	update polite_refuser_house05_catholic (firm_refusal)
@@ -160,7 +160,7 @@ polite_refuser_house05_catholic (polite_smile): Oh — uh, we — we still go to
 		polite_refuser_house05_catholic (relief): Yeah — alright. Thank you. Have a good one.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT — same text-key as first_visit branch so the OFFSCRIPT signal on the branch resolves identically.
 	update polite_refuser_house05_catholic (firm_refusal)

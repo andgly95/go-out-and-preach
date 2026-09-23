@@ -14,33 +14,39 @@ const SEED: int = 20260923
 
 const STYLES: Dictionary = {
 	# Signs up to pioneer, never misses, extends service, picks the "good"
-	# publisher answer at every door.
+	# publisher answer at every door. At each habit fork, keeps what's counted.
 	"devout": {
 		"pioneer": true, "attend": 1.0, "thursday": 1.0, "saturday": 1.0,
 		"extend": true, "reserve": 2, "doors": "dutiful", "confide": false,
+		"comment": 0.9, "habits": "counted",
 		"evenings": {"family_worship": 3, "personal_study": 3, "game_night": 3, "visit_grandparent": 1, "rest": 1},
 	},
 	# A publisher doing what's expected, most of the time, choosing at random.
 	"typical": {
 		"pioneer": false, "attend": 0.9, "thursday": 0.3, "saturday": 0.9,
 		"extend": false, "reserve": 3, "doors": "random", "confide": false,
+		"comment": 0.5, "habits": "random",
 		"evenings": {"family_worship": 2, "personal_study": 2, "game_night": 2, "visit_grandparent": 2, "coworker_invite": 1, "rest": 2},
 	},
-	# Takes the honest choice whenever it's offered; says yes to Dana.
+	# Takes the honest choice whenever it's offered; says yes to Dana. At
+	# each habit fork, keeps the one about people.
 	"curious": {
 		"pioneer": false, "attend": 0.85, "thursday": 0.2, "saturday": 0.9,
 		"extend": false, "reserve": 3, "doors": "honest", "confide": true,
+		"comment": 0.3, "habits": "people",
 		"evenings": {"visit_grandparent": 3, "coworker_invite": 3, "personal_study": 1, "family_worship": 1, "rest": 2},
 	},
 	# Going less and less.
 	"drifting": {
 		"pioneer": false, "attend": 0.45, "thursday": 0.0, "saturday": 0.35,
 		"extend": false, "reserve": 4, "doors": "random", "confide": false,
+		"comment": 0.2, "habits": "random",
 		"evenings": {"coworker_invite": 3, "rest": 4, "visit_grandparent": 1},
 	},
 }
 
-# Off-script gates per archetype, mirroring the .dtl conditions.
+# Off-script gates per archetype, mirroring the .dtl conditions (which read
+# DoubtMeter.noticing, so a habit can open them sooner).
 const OFFSCRIPT_GATES: Dictionary = {
 	&"polite_refuser": [25, 3.0],
 	&"curious_seeker": [25, 3.0],
@@ -89,6 +95,7 @@ func simulate_run(style: Dictionary) -> Dictionary:
 	var week_40: int = 99
 	var exhausted: int = 0
 	var pioneer_met: int = 0
+	var forks: Dictionary = {}  # track → week the fork was chosen
 	var guard: int = 0
 	while guard < 200:
 		guard += 1
@@ -99,6 +106,9 @@ func simulate_run(style: Dictionary) -> Dictionary:
 			Story.play(beat)
 			Story.finish()
 		_play_day(style)
+		for track in Habits.choices_pending:
+			forks[String(track)] = TimeManager.current_week
+		_choose_habits(style)
 		if ResourceManager.energy <= 0:
 			exhausted += 1
 		if DoubtMeter.value >= 25 and week_25 == 99:
@@ -124,6 +134,8 @@ func simulate_run(style: Dictionary) -> Dictionary:
 		"elders": ResourceManager.standing_elders,
 		"congregation": ResourceManager.standing_congregation,
 		"family": ResourceManager.standing_family,
+		"habits": Habits.formed.map(func(id: StringName) -> String: return String(id)),
+		"forks": forks,
 	}
 
 
@@ -146,6 +158,10 @@ func _play_meeting(style: Dictionary, meeting_type: StringName) -> void:
 		return
 	if randf() < 0.5:
 		ResourceManager.add_standing_congregation(1)
+	# The Sunday paragraph question (meeting_hall.gd): a prepared comment.
+	if meeting_type == &"sunday_meeting" and GameState.flag(MeetingManager.PREPARED_FLAG) and randf() < style["comment"]:
+		ResourceManager.add_standing_elders(1 + int(Habits.modifier("comment_elders")))
+		ResourceManager.add_standing_congregation(1)
 	for talk_type in MeetingManager.talks_for_meeting(meeting_type):
 		var slug: StringName = MeetingManager.pick_speech_for(talk_type)
 		if DoubtMeter.value >= 40:
@@ -162,7 +178,7 @@ func _play_service(style: Dictionary) -> void:
 		return TerritoryManager.is_appointment(a) and not TerritoryManager.is_appointment(b))
 	for house in houses:
 		while style["extend"] and FieldService.stops_left() < FieldService.stop_cost(house) \
-				and ResourceManager.energy - FieldService.EXTENSION_ENERGY_COST >= style["reserve"] \
+				and ResourceManager.energy - FieldService.extension_energy_cost() >= style["reserve"] \
 				and ResourceManager.field_service_hours < GameState.hours_target():
 			FieldService.extend()
 		if not FieldService.can_visit(house):
@@ -185,7 +201,7 @@ func _play_door(style: Dictionary, house: House) -> void:
 		return
 	var options: Array = _door_options(archetype)
 	var gate: Array = OFFSCRIPT_GATES.get(archetype, [999, 0.0])
-	var offscript_open: bool = DoubtMeter.value >= int(gate[0])
+	var offscript_open: bool = DoubtMeter.noticing >= int(gate[0])
 	var doors: String = style["doors"]
 	if offscript_open and (doors == "honest" or (doors == "random" and randi() % (options.size() + 1) == 0)):
 		FieldService.resolve_offscript(float(gate[1]))
@@ -235,6 +251,22 @@ func _play_evening(style: Dictionary, phase: int) -> void:
 	Evenings.finish()
 
 
+## At a fork, "counted" keeps the first habit (hours, answers, comments,
+## peace at home) and "people" the second; "random" either.
+func _choose_habits(style: Dictionary) -> void:
+	while not Habits.choices_pending.is_empty():
+		var fork: Array[Habit] = Habits.habits_on(Habits.choices_pending[0], 2)
+		var pick: int = randi() % fork.size()
+		match style["habits"]:
+			"counted":
+				pick = 0
+			"people":
+				pick = fork.size() - 1
+		Habits.choose(fork[pick].id)
+	while Habits.take_unseen() != null:
+		pass
+
+
 func _play_month_conversation(style: Dictionary) -> void:
 	match GameState.month_verdict():
 		&"pioneer_met":
@@ -242,7 +274,7 @@ func _play_month_conversation(style: Dictionary) -> void:
 		&"pioneer_missed":
 			Evenings.apply_scene_signal("STANDING:elders:1")
 		&"shepherding":
-			if style["confide"] and DoubtMeter.value >= 25:
+			if style["confide"] and DoubtMeter.noticing >= 25:
 				Evenings.apply_scene_signal("RELIEF:3")
 			else:
 				Evenings.apply_scene_signal("STANDING:elders:2")
@@ -268,6 +300,18 @@ func _print_summary(style: String, runs: Array) -> void:
 		_mean(runs, "exhausted")])
 	print("  [balance] %-8s standings e/c/f %4.1f %4.1f %4.1f | endings %s" % [
 		style, _mean(runs, "elders"), _mean(runs, "congregation"), _mean(runs, "family"), str(endings)])
+	var fork_weeks: PackedStringArray = PackedStringArray()
+	for track in ["ministry", "study", "congregation", "home"]:
+		var weeks: Array = []
+		for run in runs:
+			if run["forks"].has(track):
+				weeks.append(run["forks"][track])
+		weeks.sort()
+		fork_weeks.append("%s %d%%%s" % [track, 100 * weeks.size() / runs.size(),
+			" wk %d" % weeks[weeks.size() / 2] if not weeks.is_empty() else ""])
+	var lately: float = _share(runs, func(r: Dictionary) -> bool: return r["habits"].has("sitting_through_it"))
+	print("  [balance] %-8s forks reached: %s | lately %.0f%% | habits %.1f" % [
+		style, ", ".join(fork_weeks), 100.0 * lately, _mean_size(runs, "habits")])
 
 
 func _week_label(week: float) -> String:
@@ -284,6 +328,13 @@ func _percentile(runs: Array, key: String, p: float) -> int:
 	var values: Array = runs.map(func(r: Dictionary) -> int: return int(r[key]))
 	values.sort()
 	return values[mini(int(p * values.size()), values.size() - 1)]
+
+
+func _mean_size(runs: Array, key: String) -> float:
+	var total: float = 0.0
+	for run in runs:
+		total += run[key].size()
+	return total / runs.size()
 
 
 func _mean(runs: Array, key: String) -> float:

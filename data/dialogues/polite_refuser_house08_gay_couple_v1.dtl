@@ -135,7 +135,7 @@ polite_refuser_house08_gay_couple (polite_smile): We're not interested, but than
 		polite_refuser_house08_gay_couple (relief): Thanks for stopping by.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6
@@ -207,7 +207,7 @@ polite_refuser_house08_gay_couple (polite_smile): We're still not interested. Th
 		polite_refuser_house08_gay_couple (relief): Take care.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT (returning) — same text-key as first_visit so
 	# the OFFSCRIPT signal resolves identically (+3). Householder response

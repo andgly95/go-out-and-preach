@@ -58,22 +58,30 @@ func available_for(phase: int) -> Array[Activity]:
 	return result
 
 
+## Energy the activity costs after habits; negative restores (rest).
+func energy_cost(activity: Activity) -> int:
+	return Habits.energy_cost(activity.id, activity.energy_cost)
+
+
 func can_afford(activity: Activity) -> bool:
-	return activity.energy_cost <= 0 or ResourceManager.can_afford(activity.energy_cost)
+	var cost: int = energy_cost(activity)
+	return cost <= 0 or ResourceManager.can_afford(cost)
 
 
 ## Commits to the activity: energy and effects land now; the scene to play
 ## (if any) is left in pending_timeline for the evening scene.
 func choose(activity: Activity) -> void:
-	if activity.energy_cost > 0:
-		ResourceManager.spend_energy(activity.energy_cost)
-	elif activity.energy_cost < 0:
-		ResourceManager.add_energy(-activity.energy_cost)
-	ResourceManager.add_conviction(activity.conviction)
+	var cost: int = energy_cost(activity)
+	if cost > 0:
+		ResourceManager.spend_energy(cost)
+	elif cost < 0:
+		ResourceManager.add_energy(-cost)
+	var key: String = String(activity.id)
+	ResourceManager.add_conviction(activity.conviction + int(Habits.modifier("conviction:" + key)))
 	ResourceManager.add_standing_elders(activity.standing_elders)
 	ResourceManager.add_standing_congregation(activity.standing_congregation)
 	ResourceManager.add_standing_family(activity.standing_family)
-	DoubtMeter.apply(-activity.doubt_relief, StringName("relief_" + String(activity.id)))
+	DoubtMeter.apply(-(activity.doubt_relief + int(Habits.modifier("relief:" + key))), StringName("relief_" + key))
 	DoubtMeter.expose(activity.exposure, StringName("activity_" + String(activity.id)))
 	if not activity.sets_flag.is_empty():
 		GameState.set_flag(activity.sets_flag, 1)

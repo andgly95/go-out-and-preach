@@ -21,7 +21,7 @@
 #          Choice 2 — "Would you like a magazine?"     → E4b TRACT_LEFT (press)
 #          Choice 3 — "Could I come back another time?" → E4c RV_SCHEDULED (Gentle-only)
 #          Choice 4 — "How are you doing?"             → E4d REFUSED (off-script)
-#                     | [if DoubtMeter.value >= 40]
+#                     | [if DoubtMeter.noticing >= 40]
 #   E4a  Gentle (releasing) — soft close → [signal arg="REFUSED"]
 #   E4b  Gentle (careful) — accepts the tract carefully → [signal arg="TRACT_LEFT"]
 #   E4c  Gentle (seeing) — agrees to a return visit → [signal arg="RETURN_VISIT_SCHEDULED"]
@@ -206,7 +206,7 @@ apostate_gentle (careful): I had a whole congregation once. There's nobody from 
 	# usually home Tuesday afternoons. You can come by." which is plainer.
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
-- How are you doing? | [if DoubtMeter.value >= 40] [else=disable alt_text=""]
+- How are you doing? | [if DoubtMeter.noticing >= 40] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:4"]
 	# E4d — OFF-SCRIPT choice. Gated at doubt ≥ 40 — the HIGHEST gate
 	# of the trio, matching cast.md "most dangerous archetype" framing.

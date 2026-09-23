@@ -172,7 +172,10 @@ func set_standing_family(value: int) -> void:
 	SignalBus.resource_changed.emit("standing_family", float(standing_family))
 
 
+## Losses shrink with the "keeps the peace" habit, never past zero.
 func add_standing_family(delta: int) -> void:
+	if delta < 0:
+		delta = mini(0, delta + int(Habits.modifier("family_loss")))
 	set_standing_family(standing_family + delta)
 
 

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"second_hour"
+track = &"ministry"
+step = 2
+order = 0
+title = "The second hour"
+flavor = "You've learned to pace a morning. The second hour doesn't cost what it used to."
+effect_text = "Keeping going another hour costs 1 less energy."
+practice = 5
+min_doubt = 0
+modifiers = {
+"service_extension_energy": -1
+}

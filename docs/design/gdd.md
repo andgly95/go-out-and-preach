@@ -108,6 +108,10 @@ Tracked progression:
 
 Each unlock changes what scenes are available and what the elders ask of the player.
 
+### 5.5 Habits
+
+The player's own progression, beside the org's ladder of privileges: a skill tree whose points are the days spent. Four tracks (Ministry, Study, Congregation, Home) fill with practice. Each forms one habit by itself, then offers a fork between what gets counted and who's in front of you. A fifth track, *Lately*, stays hidden until doubt first reaches 40; its habits form by themselves and make the routine heavier. Details and numbers: `docs/design/v01-loop.md` § Habits.
+
 ---
 
 ## 6. The Door-Knock Minigame

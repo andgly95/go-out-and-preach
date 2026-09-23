@@ -194,8 +194,14 @@ func from_save(data: Dictionary) -> void:
 		_last_played_per_type[StringName(talk_type)] = StringName(last[talk_type])
 
 
+## After habits: Sunday gets easier with routine, and heavier with doubt.
 func energy_cost_for(meeting_type: StringName) -> int:
-	return int(MEETING_ENERGY_COST.get(meeting_type, 2))
+	return Habits.energy_cost(meeting_type, int(MEETING_ENERGY_COST.get(meeting_type, 2)))
+
+
+## Energy restored by staying home (0 until a habit says otherwise).
+func skip_energy() -> int:
+	return int(Habits.modifier("skip_energy"))
 
 
 ## Pays the meeting's energy on the way in. False if too tired to go.
@@ -303,6 +309,7 @@ func resolve_meeting_skipped(meeting_type: StringName) -> void:
 	# faith, not behavior).
 	ResourceManager.add_standing_elders(SKIP_STANDING_DELTA)
 	DoubtMeter.expose(SKIP_EXPOSURE, &"meeting_skipped")
+	ResourceManager.add_energy(skip_energy())
 	SignalBus.meeting_skipped.emit(meeting_type)
 	clear_pending_meeting()
 

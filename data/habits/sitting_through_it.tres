@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"sitting_through_it"
+track = &"lately"
+step = 1
+order = 0
+title = "Sitting through it"
+flavor = "The talks are the same length they always were."
+effect_text = "Meetings cost 1 more energy."
+practice = 0
+min_doubt = 40
+modifiers = {
+"energy:sunday_meeting": 1,
+"energy:tuesday_meeting": 1
+}

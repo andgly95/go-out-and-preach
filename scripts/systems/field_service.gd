@@ -65,14 +65,24 @@ func _ready() -> void:
 	reset()
 
 
+## A morning's energy, after habits (the car group).
+func morning_energy_cost() -> int:
+	return maxi(0, MORNING_ENERGY_COST + int(Habits.modifier("service_morning_energy")))
+
+
+## Another hour's energy, after habits (the second hour).
+func extension_energy_cost() -> int:
+	return maxi(0, EXTENSION_ENERGY_COST + int(Habits.modifier("service_extension_energy")))
+
+
 func can_start() -> bool:
-	return ResourceManager.can_afford(MORNING_ENERGY_COST)
+	return ResourceManager.can_afford(morning_energy_cost())
 
 
 func start_session() -> bool:
 	if active:
 		return true
-	if not ResourceManager.spend_energy(MORNING_ENERGY_COST):
+	if not ResourceManager.spend_energy(morning_energy_cost()):
 		return false
 	active = true
 	stops_total = STOPS_PER_MORNING
@@ -91,13 +101,13 @@ func minutes_left() -> int:
 
 
 func can_extend() -> bool:
-	return active and ResourceManager.can_afford(EXTENSION_ENERGY_COST)
+	return active and ResourceManager.can_afford(extension_energy_cost())
 
 
 func extend() -> bool:
 	if not can_extend():
 		return false
-	ResourceManager.spend_energy(EXTENSION_ENERGY_COST)
+	ResourceManager.spend_energy(extension_energy_cost())
 	stops_total += STOPS_PER_EXTENSION
 	extensions += 1
 	return true
@@ -106,9 +116,9 @@ func extend() -> bool:
 func stop_cost(house: House) -> int:
 	match house.state:
 		House.State.RETURN_VISIT_SCHEDULED:
-			return STOP_COST_RETURN_VISIT
+			return maxi(1, STOP_COST_RETURN_VISIT + int(Habits.modifier("return_visit_stops")))
 		House.State.BIBLE_STUDY_STARTED:
-			return STOP_COST_STUDY
+			return maxi(1, STOP_COST_STUDY + int(Habits.modifier("study_stops")))
 	return STOP_COST_NEW_DOOR
 
 

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"reads_the_whole_chapter"
+track = &"study"
+step = 2
+order = 1
+title = "Reads the whole chapter"
+flavor = "You look up the verse the paragraph cites, and then the verses around it."
+effect_text = "Choices that are greyed out open sooner."
+practice = 5
+min_doubt = 0
+modifiers = {
+"gate_offset": 10
+}

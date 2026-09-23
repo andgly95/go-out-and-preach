@@ -7,7 +7,7 @@ Paragraph six cites a verse in parentheses. The paragraph quotes half of it, the
 - Underline the answer and move on.
 	[signal arg="CONVICTION:1"]
 	You underline the answer. The verse is in parentheses for a reason; the brothers have already done the reading. You finish the article before ten.
-- Look the verse up yourself. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Look the verse up yourself. | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="EXPOSE:2"]
 	[signal arg="BUMP:looked_it_up"]
 	You open your own Bible to the verse and read the whole thing, then the verses around it.

@@ -30,7 +30,7 @@ He taps a sentence in the lesson. "It says 'many scholars agree.' Which ones?"
 - "I'll find out and bring it next week."
 	[signal arg="FLAG:daniel_promise"]
 	"Great. Honestly, that's all I want." He looks pleased, the way people look when they've been taken seriously.
-- "I don't actually know." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- "I don't actually know." | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="EXPOSE:1"]
 	[signal arg="BUMP:daniel_bond"]
 	He laughs, not unkindly. "Me neither. That's kind of why I asked."
@@ -52,7 +52,7 @@ if GameState.count("looked_it_up") > 0:
 [signal arg="EXPOSE:0.5"]
 - "The lesson's giving you the main point."
 	"Right. The main point." He nods slowly. He doesn't push. He writes it down.
-- "You're not reading it wrong." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- "You're not reading it wrong." | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="EXPOSE:1"]
 	[signal arg="BUMP:daniel_bond"]
 	He looks up from the page at you for a long moment. "Thanks," he says. "I thought I was going crazy."
@@ -72,7 +72,7 @@ Daniel makes coffee this time, without asking, the way you would for a friend. H
 - "They'd always be welcome back."
 	[signal arg="CONVICTION:1"]
 	"Welcome back," he repeats. He turns his mug a quarter turn on the table. "Okay."
-- "Mostly, no." | [if DoubtMeter.value >= 30] [else=disable alt_text=""]
+- "Mostly, no." | [if DoubtMeter.noticing >= 30] [else=disable alt_text=""]
 	[signal arg="EXPOSE:2"]
 	[signal arg="BUMP:daniel_bond"]
 	He's quiet for a while. "Huh. That's a lot to put on a person." He looks at you, not at the book. "That's a lot to put on you."

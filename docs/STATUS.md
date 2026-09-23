@@ -11,6 +11,7 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 - **Month end.** Auxiliary pioneer sign-up on the first Sunday of each month (30 hours). A report slip, then one of four elder conversations (affirmation, "encouragement", shepherding with an optional confession, a steady month).
 - **Doubt is exposure.** Success no longer erases it; conviction buffers it and wears down with it. Personal study prepares you for Sunday, and that "successful meeting" is what eases doubt.
 - **Autosave** at the start of each day; Continue works.
+- **Habits, a skill tree whose points are your days.** Four tracks (Ministry, Study, Congregation, Home) fill as you do the thing. Each forms one habit by itself (the car group, Sunday morning…), then opens a fork: keep one, and the other closes for the run. The choice is always what gets counted or who's in front of you. *Lately*, a fifth track, doesn't exist until doubt first reaches 40; it fills by itself and makes meetings heavier. The card on the left of the day screen shows the tree at a glance, and the full tree opens over it. See `docs/design/v01-loop.md` § Habits.
 
 - **Story beats** (`data/beats/`): thirteen short scenes across the eight weeks. Coffee with your parent, late-night texts from your brother Micah, Dana's invitation and later her 10pm call and her lunchtime question, Sister Marin in the lobby, the parked car with your service partner, family dinner, the lamp left on, the boxes in the hallway. They come from cast.md's "common beats", and several branch on what you've been doing.
 - **Activity scenes:** family worship, personal study, Grandma, game night, and Dana each have a sequence of authored scenes, then a quieter repeat. Personal study's "look the verse up yourself" branch (doubt ≥ 25) echoes in Daniel's study.
@@ -23,10 +24,10 @@ A full run: New Game (name, Brother/Sister, Mom/Dad) → eight weeks → two mon
 
 | Style | Doubt at wk 8 (median) | Endings |
 |---|---|---|
-| devout (pioneer, never misses) | ~20 | Regular Pioneer / In-Fold |
-| typical | ~24 (top tenth 36+) | mostly In-Fold, some Fade |
-| curious (honest choices, says yes to Dana) | ~62 | Keeping Up Appearances, Fade, a few In-Fold |
-| drifting | ~57 | Quiet Fade, Walking Away |
+| devout (pioneer, never misses; keeps what's counted) | ~16 | Regular Pioneer (nearly all) |
+| typical (random forks) | ~24 (top tenth 43+) | mostly In-Fold, some Fade |
+| curious (honest choices, says yes to Dana; keeps the people side) | ~68 | Keeping Up Appearances, Fade, some In-Fold |
+| drifting | ~55 | Quiet Fade, Walking Away |
 
 The sim doesn't apply choice-level extras, so real engaged play runs a little higher. `tools/check.sh` also plays two whole runs through the real UI (`tools/ci/autoplay.gd`) and fails on any script error or stuck screen.
 
@@ -40,6 +41,7 @@ Andrew delegated design decisions (CLAUDE.md § How We Work). These are settled;
 - Cast names: sibling **Micah**, a younger brother; coworker **Dana**; grandparent **Grandma**; the Sister Who Talks **Sister Marin**; service partner **Eli** (or **Naomi** for a sister). Background names: the Castillo boy, Jess, Ruth.
 - Beats beyond cast.md's list: Micah moves into his own apartment (week 7); Grandma keeps a photo of Ruth, who left.
 - Wording: Dana gets gently corrected on "church" (dialogue-context.md § 5 says members do this); the study aid is "the study book".
+- **Habits instead of a points-bought skill tree** (v01-loop.md § Habits): practice is the only currency; each fork weighs what gets counted against who's in front of you; *Lately* forms from doubt (40, 55) and stays hidden until then. Every number is one field in `data/habits/*.tres`. The habit lines are drafts: "when to say you'll pray about it" and "Sunday runs itself" most need your ear (`# TODO: authenticity check`).
 
 ## Art
 
@@ -51,4 +53,4 @@ Nothing blocks. New lines are drafts from the design docs, marked `# TODO: authe
 
 ## Next step
 
-**Play it**, a full run from New Game with no debug keys (about an hour), then tell me where it went flat. Candidates after that: deeper door conversations (most are a single choice); a Householder of Note beat in the ending itself; audio (the GDD's sparse field-recording texture); Continue saves mid-week, not just at week start.
+**Play it**, a full run from New Game with no debug keys (about an hour), then tell me where it went flat, and whether the forks felt like choices. Candidates after that: habits that speak (the elder's month-end talk and the ending remembering what you kept); deeper door conversations (most are a single choice); a Householder of Note beat in the ending itself; audio (the GDD's sparse field-recording texture).

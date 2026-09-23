@@ -303,7 +303,7 @@ func _show_comment_moment() -> void:
 		_phase_flavor.text += " " + tr("Your copy of the article is clean. You didn't get to it this week.")
 	_clear_phase_content()
 	_add_comment_choice(tr("Raise your hand"), _on_comment_raise.bind(prepared))
-	if prepared and DoubtMeter.value >= 40 and GameState.count("looked_it_up") > 0:
+	if prepared and DoubtMeter.noticing >= 40 and GameState.count("looked_it_up") > 0:
 		_add_comment_choice(tr("Raise your hand, and mention the rest of the verse"), _on_comment_honest)
 	_add_comment_choice(tr("Keep your hand down"), _on_comment_quiet.bind(prepared))
 
@@ -321,7 +321,7 @@ func _on_comment_raise(prepared: bool) -> void:
 	if _phase != Phase.COMMENT:
 		return
 	if prepared:
-		ResourceManager.add_standing_elders(1)
+		ResourceManager.add_standing_elders(1 + int(Habits.modifier("comment_elders")))
 		ResourceManager.add_standing_congregation(1)
 		_show_comment_result(tr("You give the answer you underlined, in your own words, the way you practiced. Brother Whitcomb nods once. \"Thank you.\" Across the aisle, {parent} is smiling at the floor."))
 	else:

@@ -9,7 +9,7 @@ if DoubtMeter.value >= 35:
 	"You okay? You've been quiet. Like, quieter."
 	- "Just tired."
 		"Yeah." {GameState.partner_name} hands you a coffee. "Me too." Neither of you believes the other, and it's fine.
-	- "Do you ever feel like you're saying it for them, not for you?" | [if DoubtMeter.value >= 40] [else=disable alt_text=""]
+	- "Do you ever feel like you're saying it for them, not for you?" | [if DoubtMeter.noticing >= 40] [else=disable alt_text=""]
 		[signal arg="EXPOSE:1"]
 		[signal arg="BUMP:partner_close"]
 		{GameState.partner_name} looks at the coffee lids for a long time. "Let's just knock on some doors," {GameState.partner_name} says, gently. "Okay? Let's just do today."

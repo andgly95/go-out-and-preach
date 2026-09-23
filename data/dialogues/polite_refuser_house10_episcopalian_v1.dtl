@@ -85,7 +85,7 @@ polite_refuser_house10_episcopalian (polite_smile): Thank you, but we're already
 		polite_refuser_house10_episcopalian (relief): Thank you. You have a good morning.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT — T1 fires +3 via the OFFSCRIPT signal on the branch.
 	# Publisher choice text "Why is that for you?" KEPT VERBATIM across all 6 PR
@@ -150,7 +150,7 @@ polite_refuser_house10_episcopalian (polite_smile): You were here a little while
 		polite_refuser_house10_episcopalian (relief): You as well.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# OFF-SCRIPT (returning) — same text-key as first_visit so the OFFSCRIPT signal
 	# resolves identically (+3). Householder response is firmer than first_visit

@@ -14,7 +14,7 @@ Lunch at work. {GameState.coworker_name} sits across from you with a sandwich an
 	[signal arg="EXPOSE:1"]
 	You tell them about the paradise earth, the way the magazine puts it. It comes out smooth. They listen all the way through, politely, the way a householder does.
 	"Huh," they say. "You're really good at that."
-- "I don't know." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- "I don't know." | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="EXPOSE:2"]
 	[signal arg="FLAG:honest_with_dana"]
 	They don't say anything for a second. Then: "Yeah. Me neither. About most things." They push half their chips across the table to you.

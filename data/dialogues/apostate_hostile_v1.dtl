@@ -19,7 +19,7 @@
 #          Choice 1 — "We're sorry to bother you."     → E4a REFUSED (de-escalate)
 #          Choice 2 — "Would you like a magazine?"     → E4b TRACT_LEFT (press)
 #          Choice 3 — "We — we don't have to."         → E4c REFUSED (off-script)
-#                     | [if DoubtMeter.value >= 30]
+#                     | [if DoubtMeter.noticing >= 30]
 #   E4a  Hostile (closing) — sharp brief close → [signal arg="REFUSED"]
 #   E4b  Hostile (dismissive) — accepts the tract dismissively → [signal arg="TRACT_LEFT"]
 #   E4c  Hostile (prepared) — deepest line in the timeline → [signal arg="REFUSED"]
@@ -155,7 +155,7 @@ apostate_hostile (confrontational): My sister walked past me at the grocery stor
 	# (flatter, less imperative-physical, but loses the curtness).
 	[signal arg="TRACT_LEFT"]
 	[end_timeline]
-- We — we don't have to. | [if DoubtMeter.value >= 30] [else=disable alt_text=""]
+- We — we don't have to. | [if DoubtMeter.noticing >= 30] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# E4c — OFF-SCRIPT choice. Gated at doubt ≥ 30 (Hostile is the
 	# lowest gate of the trio because the off-script line here is

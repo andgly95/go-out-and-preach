@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"the_friends"
+track = &"congregation"
+step = 2
+order = 1
+title = "The friends"
+flavor = "Someone always has room in their car, and a plate set aside if you're late."
+effect_text = "Game night costs 1 less energy and settles you more."
+practice = 9
+min_doubt = 0
+modifiers = {
+"energy:game_night": -1,
+"relief:game_night": 1
+}

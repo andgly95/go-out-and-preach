@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"keeps_the_peace"
+track = &"home"
+step = 2
+order = 0
+title = "Keeps the peace"
+flavor = "You know which subjects to leave alone at dinner, and when to say you'll pray about it."
+effect_text = "Anything that costs you family standing costs 1 less."
+practice = 5
+min_doubt = 0
+modifiers = {
+"family_loss": 1
+}

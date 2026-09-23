@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"comments_every_week"
+track = &"congregation"
+step = 2
+order = 0
+title = "Comments every week"
+flavor = "Your hand is up by the second paragraph. Brother Whitcomb has started to look for it."
+effect_text = "A prepared comment earns 1 more standing with the elders."
+practice = 9
+min_doubt = 0
+modifiers = {
+"comment_elders": 1
+}

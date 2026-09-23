@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"return_visit_notebook"
+track = &"ministry"
+step = 2
+order = 1
+title = "A return-visit notebook"
+flavor = "Names, what they said, what you promised to bring back. You pick up where you left off."
+effect_text = "Return visits and studies each take 15 minutes less."
+practice = 5
+min_doubt = 0
+modifiers = {
+"return_visit_stops": -1,
+"study_stops": -1
+}

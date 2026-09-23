@@ -26,7 +26,7 @@ elder_coordinator (neutral): Is there anything going on we should know about? An
 	[signal arg="STANDING:elders:2"]
 	elder_coordinator (neutral): That's all we wanted to hear.
 	elder_strict (neutral): We'll look for you Sunday.
-- "I've been having a hard time with some things." | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- "I've been having a hard time with some things." | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="RELIEF:3"]
 	[signal arg="FLAG:confided_in_elders"]
 	elder_coordinator (neutral): Thank you for telling us. That took courage.

@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bgp0m0week001"]
+[gd_scene load_steps=10 format=3 uid="uid://bgp0m0week001"]
 
 [ext_resource type="Script" path="res://scripts/ui/week_view.gd" id="1_week_view"]
 [ext_resource type="PackedScene" path="res://scenes/top_banner.tscn" id="2_banner"]
 [ext_resource type="Texture2D" path="res://assets/sprites/week_view/desk_background.png" id="3_deskbg"]
+[ext_resource type="PackedScene" path="res://scenes/habits_card.tscn" id="4_habits_card"]
+[ext_resource type="PackedScene" path="res://scenes/habits_tree.tscn" id="5_habits_tree"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
 bg_color = Color(0.18, 0.16, 0.13, 1)
@@ -267,6 +269,14 @@ theme_override_font_sizes/font_size = 11
 text = "— MATTHEW 5:16"
 horizontal_alignment = 1
 
+[node name="HabitsCard" parent="." instance=ExtResource("4_habits_card")]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 120.0
+offset_right = 324.0
+offset_bottom = 600.0
+
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 2
@@ -280,3 +290,6 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 12
 text = "←  BACK TO MENU"
 flat = true
+
+[node name="HabitsTree" parent="." instance=ExtResource("5_habits_tree")]
+layout_mode = 1

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"grandmas_afternoons"
+track = &"home"
+step = 2
+order = 1
+title = "{grandparent}'s afternoons"
+flavor = "She keeps the good chair for you, and shows you the photos she doesn't show everyone."
+effect_text = "Visiting {grandparent} costs 1 less energy and settles you more."
+practice = 5
+min_doubt = 0
+modifiers = {
+"energy:visit_grandparent": -1,
+"relief:visit_grandparent": 1
+}

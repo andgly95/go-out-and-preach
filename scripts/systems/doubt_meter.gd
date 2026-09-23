@@ -27,6 +27,12 @@ const CONVICTION_COST_PER_EXPOSURE: float = 0.5
 
 var value: int = 0
 var exact: float = 0.0
+## What greyed-out choices check (`[if DoubtMeter.noticing >= N]`): doubt,
+## plus habits that make you notice sooner. The inner voice and the reveal
+## still read `value`.
+var noticing: int:
+	get:
+		return value + int(Habits.modifier("gate_offset"))
 
 var _pending_reveal_40: bool = false
 var _event_log: Array = []
@@ -62,7 +68,8 @@ func expose(base: float, reason: StringName) -> void:
 		return
 	var scaled: float = base * exposure_scale()
 	_change(scaled, reason)
-	_conviction_wear += scaled * CONVICTION_COST_PER_EXPOSURE
+	var wear_scale: float = maxf(0.0, 1.0 + Habits.modifier("conviction_wear_scale"))
+	_conviction_wear += scaled * CONVICTION_COST_PER_EXPOSURE * wear_scale
 	if _conviction_wear >= 1.0:
 		var whole: int = int(floor(_conviction_wear))
 		_conviction_wear -= whole

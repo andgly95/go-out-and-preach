@@ -3,7 +3,9 @@ extends Control
 ## few options — the meeting, field service, an evening activity, rest — as
 ## rows showing their energy cost; options you can't afford are disabled.
 ## The right-hand card tracks the month: hours against any pioneer
-## commitment, meetings, and standing appointments. Days end through
+## commitment, meetings, and standing appointments. The left-hand card is the
+## habits tree at a glance; the full tree opens over the screen, and opens by
+## itself when a fork is waiting or a habit has formed. Days end through
 ## GameState.end_day() (sleep, month close, run end).
 
 const SERVICE_DAY_PHASES: Array = [TimeManager.Phase.THURSDAY, TimeManager.Phase.SATURDAY]
@@ -43,6 +45,8 @@ const GOLD: Color         = Color(0.78, 0.62, 0.28, 1)
 @onready var _scripture_quote:  Label = $ScheduleCard/ScheduleMargin/ScheduleVBox/ScriptureQuote
 @onready var _scripture_ref:    Label = $ScheduleCard/ScheduleMargin/ScheduleVBox/ScriptureRef
 @onready var _back_button:      Button = $BackButton
+@onready var _habits_card:      HabitsCard = $HabitsCard
+@onready var _habits_tree:      HabitsTree = $HabitsTree
 
 
 func _ready() -> void:
@@ -51,17 +55,43 @@ func _ready() -> void:
 	for button_path in ["ServiceButton", "MeetingButton", "SkipButton", "AdvanceButton"]:
 		($CenterCard/CardMargin/CardVBox.get_node(button_path) as Button).visible = false
 	_back_button.pressed.connect(_on_back_pressed)
+	_habits_card.open_requested.connect(_habits_tree.open_tree)
+	_habits_tree.closed.connect(_on_habits_closed)
+	_begin_day()
+
+
+## Today's story beat, if any, plays first; the scene runner brings the
+## player back here with the day still to choose. Then whatever the habits
+## tree has waiting: a fork to choose, or a habit that formed.
+func _begin_day() -> void:
 	_refresh()
-	# Today's story beat, if any, plays first; the scene runner brings the
-	# player back here with the day still to choose.
 	var beat: StoryBeat = Story.beat_for_today()
 	if beat != null:
 		Story.play(beat)
 		get_tree().change_scene_to_file.call_deferred("res://scenes/evening.tscn")
+		return
+	_show_pending_habits()
+
+
+func _show_pending_habits() -> void:
+	if _habits_tree.visible:
+		return
+	if not Habits.choices_pending.is_empty():
+		_habits_tree.open_tree()
+		return
+	var habit: Habit = Habits.take_unseen()
+	if habit != null:
+		_habits_tree.open_notice(habit)
+
+
+func _on_habits_closed() -> void:
+	# A habit can change what today's options cost.
+	_refresh()
+	_show_pending_habits()
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") and not _habits_tree.visible:
 		_on_back_pressed()
 
 
@@ -75,6 +105,7 @@ func _refresh() -> void:
 		_day_flavor.text = _pioneer_flavor()
 	_rebuild_options(_options_for_today())
 	_rebuild_month_card()
+	_habits_card.refresh()
 
 
 func _options_for_today() -> Array:
@@ -97,7 +128,7 @@ func _options_for_today() -> Array:
 			"icon": "☾",
 			"name": "Stay home",
 			"description": "Someone will notice the empty seat.",
-			"cost": 0,
+			"cost": -MeetingManager.skip_energy(),
 			"action": _on_skip_pressed.bind(meeting_type),
 		})
 		return options
@@ -106,7 +137,7 @@ func _options_for_today() -> Array:
 			"icon": "✎",
 			"name": "Go out in service",
 			"description": "Two hours in the territory. Keep going longer if you can." if phase == TimeManager.Phase.SATURDAY else "A weekday morning with whoever can make it. Two hours.",
-			"cost": FieldService.MORNING_ENERGY_COST,
+			"cost": FieldService.morning_energy_cost(),
 			"primary": phase == TimeManager.Phase.SATURDAY,
 			"action": _on_service_pressed,
 		})
@@ -115,7 +146,7 @@ func _options_for_today() -> Array:
 			"icon": activity.icon,
 			"name": _fill(activity.title),
 			"description": _fill(activity.description),
-			"cost": activity.energy_cost,
+			"cost": Evenings.energy_cost(activity),
 			"action": _on_activity_pressed.bind(activity),
 		})
 	if options.is_empty():
@@ -333,7 +364,8 @@ func _on_bed_pressed() -> void:
 func _end_day() -> void:
 	var next_scene: String = GameState.end_day()
 	if next_scene == scene_file_path:
-		_refresh()
+		# Same screen, new day: it may have a story beat or a habit waiting.
+		_begin_day()
 	else:
 		get_tree().change_scene_to_file(next_scene)
 

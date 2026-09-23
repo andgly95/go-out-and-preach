@@ -168,7 +168,7 @@ curious_seeker_house09_inquisitive (genuine_question): Sure, I have a minute. Wh
 	curious_seeker_house09_inquisitive (warm_thank_you): Okay. Yeah, drop by. Take care.
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
-- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- I don't know. Honestly. | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# E4-d — OFF-SCRIPT. T1 fires +3 via the OFFSCRIPT signal on the branch, in
 	# door_knock.gd. Text-key matches house04 grief's off-script
@@ -276,7 +276,7 @@ curious_seeker_house09_inquisitive (genuine_question): Yeah, actually — I've b
 	curious_seeker_house09_inquisitive (warm_thank_you): Okay. Yeah, take care.
 	[signal arg="RETURN_VISIT_SCHEDULED"]
 	[end_timeline]
-- I don't know. Honestly. | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- I don't know. Honestly. | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	# E4-d — OFF-SCRIPT (returning). Shared text-key with grief and
 	# first_visit (+3). He meets the publisher's honesty with his

@@ -200,7 +200,7 @@ func _refresh_session_panel() -> void:
 		_time_label.text = tr("%dh %02dm left") % [minutes / 60, minutes % 60] if minutes % 60 != 0 else tr("%dh left") % (minutes / 60)
 	else:
 		_time_label.text = tr("%dm left") % minutes
-	_extend_button.text = tr("KEEP GOING  +1 hr  ·  −%d energy") % FieldService.EXTENSION_ENERGY_COST
+	_extend_button.text = tr("KEEP GOING  +1 hr  ·  −%d energy") % FieldService.extension_energy_cost()
 	_extend_button.disabled = not FieldService.can_extend()
 	if not FieldService.can_extend() and FieldService.active:
 		_extend_button.text = tr("TOO TIRED TO KEEP GOING")

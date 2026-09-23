@@ -1,8 +1,9 @@
 extends RefCounted
 ## Driver for tools/ci/autoplay.gd (loaded at runtime so autoload names
 ## resolve). Plays a whole run through the real scenes, headless: presses the day
-## screen's option buttons, knocks doors on the map, clicks through Dialogic
-## (random enabled choice at each question), and follows every scene change
+## screen's option buttons (and the habits tree when it's open), knocks doors
+## on the map, clicks through Dialogic (random enabled choice at each
+## question), and follows every scene change
 ## until the ending. Fails (exit 1) if the run gets stuck or never ends.
 ## Script errors surface as engine ERROR lines, which tools/check.sh catches.
 ##
@@ -132,6 +133,10 @@ func _step_territory(scene: Node) -> void:
 
 
 func _press_random_button(scene: Node) -> void:
+	# The habits tree covers the day screen; only its buttons can be clicked.
+	var overlay: Control = scene.get_node_or_null("HabitsTree")
+	if overlay != null and overlay.visible:
+		scene = overlay
 	var buttons: Array = []
 	_collect_buttons(scene, buttons)
 	if buttons.is_empty():

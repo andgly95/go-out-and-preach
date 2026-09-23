@@ -52,6 +52,7 @@ func snapshot() -> Dictionary:
 		"doubt": DoubtMeter.to_save(),
 		"territory": TerritoryManager.to_save(),
 		"meetings": MeetingManager.to_save(),
+		"habits": Habits.to_save(),
 	}
 
 
@@ -62,4 +63,5 @@ func restore(data: Dictionary) -> void:
 	DoubtMeter.from_save(data.get("doubt", {}))
 	TerritoryManager.from_save(data.get("territory", {}))
 	MeetingManager.from_save(data.get("meetings", {}))
+	Habits.from_save(data.get("habits", {}))
 	GameState.from_save(data.get("game", {}))

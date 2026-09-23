@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"monday_nights"
+track = &"home"
+step = 1
+order = 0
+title = "Monday nights"
+flavor = "Family worship has a shape now: the same chairs, the same order, {parent}'s good pen."
+effect_text = "Family worship costs 1 less energy."
+practice = 2
+min_doubt = 0
+modifiers = {
+"energy:family_worship": -1
+}

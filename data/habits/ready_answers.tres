@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"ready_answers"
+track = &"study"
+step = 2
+order = 0
+title = "Ready answers"
+flavor = "There's an answer for most things. You've read most of them."
+effect_text = "What you hear wears your conviction down half as much."
+practice = 5
+min_doubt = 0
+modifiers = {
+"conviction_wear_scale": -0.5
+}

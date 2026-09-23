@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"sunday_morning"
+track = &"congregation"
+step = 1
+order = 0
+title = "Sunday morning"
+flavor = "Clothes pressed the night before, the same parking spot, the same row. Sunday runs itself."
+effect_text = "The Sunday meeting costs 1 less energy."
+practice = 4
+min_doubt = 0
+modifiers = {
+"energy:sunday_meeting": -1
+}

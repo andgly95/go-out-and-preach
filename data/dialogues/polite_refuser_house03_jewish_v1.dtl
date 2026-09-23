@@ -117,7 +117,7 @@ polite_refuser_house03_jewish (polite_smile): I appreciate it, but we're Jewish.
 		polite_refuser_house03_jewish (relief): Thank you. Take care.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	update polite_refuser_house03_jewish (firm_refusal)
 	polite_refuser_house03_jewish (firm_refusal): It just isn't. Sorry.
@@ -181,7 +181,7 @@ polite_refuser_house03_jewish (polite_smile): We're Jewish — as I think I said
 		polite_refuser_house03_jewish (relief): Thank you. Take care.
 		[signal arg="REFUSED"]
 		[end_timeline]
-- Why is that for you? | [if DoubtMeter.value >= 25] [else=disable alt_text=""]
+- Why is that for you? | [if DoubtMeter.noticing >= 25] [else=disable alt_text=""]
 	[signal arg="OFFSCRIPT:3"]
 	update polite_refuser_house03_jewish (firm_refusal)
 	polite_refuser_house03_jewish (firm_refusal): It isn't. Sorry.

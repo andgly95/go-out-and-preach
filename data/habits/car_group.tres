@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Habit" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/habit.gd" id="1_habit"]
+
+[resource]
+script = ExtResource("1_habit")
+id = &"car_group"
+track = &"ministry"
+step = 1
+order = 0
+title = "The car group"
+flavor = "You know who drives, where they park, and how everyone takes their coffee."
+effect_text = "A morning in service costs 1 less energy."
+practice = 2
+min_doubt = 0
+modifiers = {
+"service_morning_energy": -1
+}
