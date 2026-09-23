@@ -43,7 +43,7 @@ Andrew delegated design decisions (CLAUDE.md § How We Work). These are settled;
 
 ## Art
 
-14 background slots and house #1 are wired and waiting; each falls back to current art until its file exists. `docs/design/asset-brief.md` lists every file, spec, and prompt; `bash tools/art_status.sh --missing` shows what's left. Non-Claude agents (Codex) follow `AGENTS.md`.
+All 14 background slots and house #1 now have opaque 1672×941 paintings. Daniel (house #9) has a 1122×1402 neutral doorway portrait; all five expressions use it at scale 0.35. Other householder portraits remain deferred. House #1 follows Andrew's 16:9 request over the brief's 4:3 size. Exact generation prompts and revisions are in `docs/design/art-pass-prompts.json`. macOS verification uses the Godot wrapper; Xvfb screenshots are skipped as instructed. `bash tools/art_status.sh --missing` shows remaining wired slots.
 
 ## What would still help from Andrew
 
