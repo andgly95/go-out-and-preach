@@ -309,4 +309,6 @@ func _resolve_with_outcome(outcome: int) -> void:
 	TerritoryManager.resolve_pending_house(outcome)
 	if not _dialogue_id.is_empty():
 		SignalBus.dialogue_ended.emit(_dialogue_id)
-	get_tree().change_scene_to_file("res://scenes/territory_map.tscn")
+	# Deferred: resolution can happen inside _ready (no pending house), when
+	# the tree is still adding this scene and can't swap it out yet.
+	get_tree().change_scene_to_file.call_deferred("res://scenes/territory_map.tscn")

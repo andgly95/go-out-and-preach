@@ -9,8 +9,18 @@ A narrative simulation game built in Godot 4.x about life inside a fictional hig
 Before executing any task:
 1. Read this file in full.
 2. Skim `docs/design/gdd.md` for the relevant section.
-3. Check `docs/STATUS.md` for current milestone and open work.
-4. If the task is systems work, enter **plan mode (Shift+Tab)** and produce a written plan before code.
+3. Read `docs/STATUS.md` (one page): current focus, decisions awaiting review, next step.
+4. For a large systems change, write a short plan first (plan mode or a few bullets in chat).
+
+---
+
+## Running & Verifying
+
+Godot 4.6.1 is installed in Claude Code web sessions by `.claude/hooks/session-start.sh` (`godot` on PATH; `bash tools/install_godot.sh` anywhere else).
+
+- `bash tools/check.sh` — imports, boots every scene, runs the test suite (`tools/ci/tests/`). **Run before every commit; it must print `all clean`.** CI runs the same script.
+- `bash tools/screenshot.sh res://scenes/<scene>.tscn out.png [setup.gd]` — renders a real frame under Xvfb. Use it to *look at* UI changes; a setup script can stage game state first (see `tools/ci/screenshot.gd`).
+- `bash tools/godot.sh <args>` — run Godot on this project for anything else. Always go through this wrapper: it restores `project.godot`, whose Dialogic tables an import would otherwise empty.
 
 ---
 
@@ -54,7 +64,7 @@ Lean on original framing rather than parodying real material. The flavor comes f
 
 - **Engine:** Godot 4.x (latest stable)
 - **Language:** GDScript primary. C# only if a specific system genuinely requires it — justify in the commit message.
-- **Dialogue runner:** Dialogic plugin (pending final decision in M3). All dialogue lives external to `.gd` files regardless of choice.
+- **Dialogue runner:** Dialogic 2 (alpha, vendored in `addons/dialogic/`). Upgrade deliberately, never incidentally. All dialogue lives external to `.gd` files.
 - **Save format:** Godot resource serialization at week boundaries plus three manual slots.
 
 Don't add new plugins or dependencies without flagging the request in the session.
@@ -64,7 +74,7 @@ Don't add new plugins or dependencies without flagging the request in the sessio
 ## Engineering Conventions
 
 ### File organization
-Follow the structure in `docs/design/gdd.md` § 11. Don't invent new top-level directories without updating the GDD first.
+Follow the structure in `docs/design/gdd.md` § 11. Don't invent new top-level directories without updating the GDD first. Dev tooling lives in `tools/`, CI in `.github/`.
 
 ### Naming
 - Scenes: `snake_case.tscn`
@@ -75,43 +85,32 @@ Follow the structure in `docs/design/gdd.md` § 11. Don't invent new top-level d
 
 ### Data discipline
 - Householders, NPCs, events, territories: all `Resource` subclasses, serialized as `.tres`
-- Never hardcode dialogue, NPC names, or content strings in `.gd` files
+- Conversations and scenes with characters live in `data/dialogues/` as Dialogic timelines — never in `.gd` files
+- Short screen copy (button labels, one-line flavor, report lines) may sit in the script that shows it, as a clearly named const table; move it to data when it grows or needs variants
 - All user-facing strings wrapped in `tr()` for future localization
-- Dialogue lives in `data/dialogues/` as external files (Dialogic timelines or `.ink`)
 
 ### Code style
 - Type hints required on all function signatures and class members
 - Prefer signals over direct cross-system calls
 - One class per file, filename matches class name
-- Keep scripts under 200 lines — refactor into components if a script grows past that
+- Split a script when it mixes unrelated jobs; length alone (~300+ lines) is a prompt to look, not a rule
+- Comments describe what the code does and why. Milestone / phase / session history belongs in commit messages, not comments
 
 ### Don't
 - Don't optimize prematurely — readable beats clever in a 2D narrative sim
 - Don't refactor working code unprompted
-- Don't mix system work and content work in the same session — they ship as separate commits
 
 ---
 
-## Milestone Discipline
+## How We Work
 
-Project is structured into M0 – M8 (see `docs/design/gdd.md` § 13).
+The original M0–M8 plan (`docs/design/gdd.md` § 13) got the scenes built. The current phase is **making v0.1 fun**: one full run from New Game to an ending that holds a tester, played without debug keys.
 
-1. **Work one milestone per session.** Don't run ahead, don't combine milestones.
-2. **End each session with a working build.** No half-merged systems.
-3. **If a milestone needs a design decision the GDD doesn't answer**, stop and ask. Don't guess on doubt thresholds, dialogue gating, narrative beats, or art direction.
-4. **Core loop validation gate at M3.** The door-knock minigame must feel emotionally compelling. If it doesn't, stop and redesign before building M4+. This is a real gate, not a formality.
-5. **Update `docs/STATUS.md`** at the end of every session: completed work, open questions, next-session entry point.
-
----
-
-## When You're Stuck
-
-If a task is ambiguous or the design doesn't address it:
-1. Check the GDD's "Open Design Questions" section (§ 15)
-2. If still unclear, propose 2-3 specific interpretations and ask which to take
-3. Never silently choose one and proceed
-
-If a task seems to conflict with this CLAUDE.md or the GDD, flag the conflict before resolving it.
+1. **Loop before content.** Until a full run is compelling, a change that makes choices matter beats a new character, portrait, or polish pass.
+2. **Small playable steps.** Each commit leaves a working build (`tools/check.sh` clean). System and content changes may share a commit when the content is what exercises the system.
+3. **Design calls.** When the GDD doesn't answer something mechanical (a cost, a threshold, a pacing number), make the smallest reasonable call, keep it in one tunable constant or data file, and list it under *Decisions to review* in `docs/STATUS.md`. Stop and ask before inventing **narrative beats for named characters, art direction, or anything near the legal guardrails** — and never guess at lived-experience detail (stub `# TODO: authenticity check`).
+4. **`docs/STATUS.md` stays one page.** Overwrite it at the end of each session: what's playable, current focus, decisions to review, open questions, next step. History goes in commit messages, not STATUS. (The May 2026 log is in `docs/archive/`.)
+5. If a task seems to conflict with this CLAUDE.md or the GDD, flag the conflict before resolving it.
 
 ---
 
@@ -127,18 +126,18 @@ If a task seems to conflict with this CLAUDE.md or the GDD, flag the conflict be
 
 ## Subagent Notes
 
-When parallelizing with subagents in worktrees (M5+):
+Subagents are optional; most work is faster in one session. If you do parallelize:
 - Each subagent reads this CLAUDE.md and the relevant GDD section
-- Subagents do not edit shared singletons (`TimeManager`, `PlayerState`, `DoubtMeter`) without explicit coordination
-- All subagent work lands in its own worktree and integrates through a dedicated merge session
-- Content subagents (dialogue, householders) can work fully in parallel
-- System subagents (new managers, scene scaffolding) serialize through main
+- Content subagents (dialogue, householders) can work in parallel; system changes to shared autoloads (`TimeManager`, `ResourceManager`, `DoubtMeter`, `GameState`) go through one session
 
 ---
 
 ## Reference Documents
 
 - `docs/design/gdd.md` — game design document (canonical)
+- `docs/design/cast.md`, `docs/design/dialogue-context.md` — character voices and vocabulary; read before writing any line
 - `docs/design/authenticity-notes.md` — lived-experience texture notes (Andrew populates)
-- `docs/design/dialogue-style-guide.md` — voice and cadence guide (created M3)
-- `docs/STATUS.md` — current milestone, open work, next-session entry point
+- `docs/design/dialogue-style-guide.md` — voice and cadence guide
+- `docs/STATUS.md` — one page: what's playable, current focus, decisions to review, next step
+- `docs/BACKLOG.md` — wanted but unscheduled ideas
+- `docs/archive/` — superseded logs, kept for history

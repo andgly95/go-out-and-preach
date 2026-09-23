@@ -1,0 +1,20 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  godot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot
+          key: godot-4.6.1-linux
+      - name: Install Godot
+        run: bash tools/install_godot.sh
+      - name: Import, boot scenes, run tests
+        run: bash tools/check.sh

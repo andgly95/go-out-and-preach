@@ -256,6 +256,9 @@ res://
     icons/
   addons/
     dialogic/ (or godot-ink/)
+  tools/                     # dev-only: Godot install, check.sh, screenshots
+    ci/                      # headless test runner + tests/ (incl. balance sim)
+.github/workflows/           # CI runs tools/check.sh
 ```
 
 ---

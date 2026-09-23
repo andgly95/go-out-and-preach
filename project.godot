@@ -27,7 +27,7 @@ ResourceManager="*res://scripts/systems/resource_manager.gd"
 DoubtMeter="*res://scripts/systems/doubt_meter.gd"
 TerritoryManager="*res://scripts/systems/territory_manager.gd"
 MeetingManager="*res://scripts/systems/meeting_manager.gd"
-Dialogic="*uid://ds2q0uclmolvu"
+Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 PlayerState="*res://scripts/entities/player_state.gd"
 
 [dialogic]
