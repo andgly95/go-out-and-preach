@@ -16,30 +16,30 @@
 &"offset": Vector2(0, 0),
 &"portraits": {
 "considering": {
-"image": "",
+"image": "res://assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 },
 "genuine_question": {
-"image": "",
+"image": "res://assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 },
 "interested_lean_in": {
-"image": "",
+"image": "res://assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 },
 "neutral": {
-"image": "",
+"image": "res://assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 },
 "warm_thank_you": {
-"image": "",
+"image": "res://assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
 "offset": Vector2(0, 0),
-"scene": "res://assets/sprites/portraits/_shared_placeholder/placeholder_portrait.tscn"
+"scene": ""
 }
 },
-&"scale": 1.0
+&"scale": 0.35
 }

@@ -1,0 +1,235 @@
+{
+  "tool": "Built-in image_gen",
+  "date": "2026-09-23",
+  "notes": [
+    "All 14 backgrounds and house_01 are 1672x941 opaque PNGs. User requested 16:9 for house_01, superseding the brief's 1448x1086 house specification.",
+    "Daniel is 1122x1402, opaque. Only his neutral portrait was generated; all five expression entries use it.",
+    "Shared background descriptor is preserved in each exact prompt below. Style references are role-labelled in prompts.",
+    "Living room: initial result added book markings, including a cross-like spine ornament; targeted edit did not reliably clear them, so a new generation was accepted.",
+    "Bedroom: first result left the bedside lamp lit; an edit turned it off and retained phone glow.",
+    "On macOS, GODOT=/Applications/Godot.app/Contents/MacOS/Godot was used through tools/godot.sh; screenshot.sh was skipped as instructed."
+  ],
+  "assets": [
+    {
+      "output": "assets/backgrounds/home_kitchen_morning.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A modest family kitchen table in morning sun, two coffee mugs, an open magazine with passages underlined in two colors of highlighter, a Bible with a worn cover, a small framed cross-stitch on the wall. The cross-stitch is a tiny stitched botanical motif, not a cross symbol or lettering; all page marks are illegible brush dashes.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/home_kitchen_evening.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "location_reference": "assets/backgrounds/home_kitchen_morning.png",
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: The same kitchen at evening under a warm hanging lamp, a good tablecloth, open books and a pen, dinner plates at one end, one chair pulled out and empty. Image 3 is the exact kitchen location to preserve: same pale blue cabinets, sink under broad window, wallpaper, wood chairs and small framed botanical cross-stitch. Change time and table setting as requested; outside the window is evening. Use a somewhat wider view with the important tabletop in the middle rather than along the bottom edge.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/home_living_room_night.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A tidy living room at night, one warm lamp lit beside a couch, the rest in shadow, the TV off, reading glasses and a Bible on the side table. Nighttime with a gentle domestic mood, retain readable shadow midtones. Worn book has a completely unmarked cover.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": false
+        },
+        {
+          "prompt": "Edit this painted nighttime living room image. Change only the books: remove the small gold cross-like mark from the book on the lamp side table, and remove ALL lettering, symbols and text-like shapes from every book spine in the TV cabinet. Make all covers and spines plain worn unmarked cloth or leather, without decorations. Preserve every other object, composition, lighting, brushwork and colors exactly. Output opaque PNG at the same 1672x941 resolution or larger, 16:9. No people, logos or legible text.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": false
+        },
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A tidy modest living room at night. Exactly one warm lamp lit beside a couch, the rest in soft shadow, a small TV off, reading glasses resting ON TOP of a CLOSED PLAIN BROWN BOOK on the side table. The book is a worn Bible but MUST have an entirely featureless brown cloth binding, with NO cross, no title, no decorative motif and no spine stamping. Turn the book spine away from view; its cream page edges face the viewer. No other books visible. Put the lamp and side table toward the center-right so they are legible beside the dialogue overlay, and keep lower foreground calm. Gentle domestic mood, readable shadow midtones.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/bedroom_night.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A modest young adult's bedroom at night, lights off, cool glow of a phone lighting the ceiling, pressed dress clothes laid over a chair for tomorrow, a canvas shoulder bag of magazines by the door. Phone rests unattended face-up and its screen is a plain blue glow, with no text or icons. Covers of magazines are plain slate and cream with no titles or logos. Soft readable cool midtones, quiet ordinary room, no person in bed, no dramatic light beam.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": false
+        },
+        {
+          "prompt": "Edit this bedroom illustration. Turn the bedside desk lamp OFF: bulb dark, no warm light on wall, books, pillow or bed. The phone is the only artificial light, creating a faint soft cool-blue patch on the ceiling above the bed. Preserve all furniture, props, dress clothes on chair, magazine bag by the door, camera, brushwork and dimensions. Keep readable slate-blue nighttime midtones from the window; no dramatic beam, no horror. No people, legible text, logos or brands. Output opaque PNG at least 1672x941, 16:9.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/back_steps_night.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: The back steps of a suburban house at night, a single motion-sensor light over the garage, two trash bins, a wide concrete step, a dark yard and a fence. This is an exterior despite the shared style descriptor. Restrained practical lighting, no beam theatrics, no ominous framing. Clearly readable empty wide concrete step near the middle, ordinary imperfect yard and fence.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/hallway_boxes.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: An upstairs hallway of a family home, cardboard moving boxes stacked along the wall, a bedroom door open onto a half-emptied room with a bare mattress and pale rectangles where posters were, afternoon light. No labels, tape branding or handwriting on boxes. Boxes and empty bedroom are the focus in middle/upper two thirds, calm unobstructed floor in foreground. The absence is quiet and ordinary, not melodramatic.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/grandma_sitting_room.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A small apartment sitting room, a deep armchair with a knitted blanket, old photographs in mismatched frames, a magazine and a tissue box on the side table, a songbook on the chair arm, gauzy curtains with afternoon light. For the absolute no-people constraint, the old photographs show only faded houses, gardens and landscapes, no human figures. The songbook is closed with a completely plain unmarked fabric cover, the magazine uses abstract muted areas without a title, cover text or recognizable publication design. Gentle domestic intimacy.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/car_interior_morning.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: Inside a parked older sedan seen from the back seat, two paper coffee cups on the dashboard, a canvas bag of magazines in the footwell, a quiet suburban street through the windshield in early-morning light. Car interior overrides the word interior in the shared descriptor, this is not a room. Both front seats empty. Unbranded steering wheel, dashboard, cups and car body. No legible numerals on instruments, no logos, screen blank, magazines unmarked. No figures or faces in rearview or wing mirrors; the mirror reflects only empty interior. A natural wider viewpoint shows bag and windshield clearly.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/hall_lobby.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: The small lobby of a plain meeting hall, a literature counter with wall racks of magazines and pamphlets, a coat rack, a bulletin board, carpet, fluorescent light mixing with window light; no cross, no stained glass. This is the fictional Hall of Witness: an ordinary modest carpeted meeting-space lobby, not a church. No altar, pews, religious symbols or ornamental church architecture. No text at all on the bulletin board, counter or magazines; only small unrecognizable abstract brush marks, no imitation of real magazine designs. If the meeting room is visible through a door, it contains only rows of individual upholstered chairs, a small low platform and a plain lectern. Inherit materials and palette from image 1, but do not copy any lettering from it.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/print_shop_breakroom.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A small break room at a print shop, a round table with two chairs, a microwave, a corkboard of shift schedules, stacked reams of paper by the door, fluorescent light at lunchtime. Modest utilitarian workplace, scuffed linoleum, laminate counter rather than a cozy home, paper packages completely unbranded, microwave display dark. Shift schedules represented only by faded grid shapes and nonsemantic marks, no letters or numbers. Gentle lunchtime daylight mixes with fluorescent light, no decorative branding or posters.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/game_night_dining_room.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A crowded family dining room in the evening, a board game spread among snack bowls, chairs borrowed from other rooms, coats piled on a sideboard, warm overhead light. Crowded means furniture and objects only: no people. The game is an original abstract path of plain colored squares with plain wooden tokens and blank cards; no letters, numbers, logos or recognizable commercial game layout. Show the full dining table in the middle area with a quiet lower foreground.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/bar_evening.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A casual neighborhood bar in the evening, warm low light, a booth with a few glasses and one soda with a lime, string lights, a chalkboard menu. Entire bar empty of people, no reflections of people. Chalkboard uses only smudged pale strokes too abstract to be words, no menu heading or numerals. Any bottles entirely unlabelled; no branded glasses, taps, signs or logos. Midtones clearly readable, modest ordinary local bar, no glamour, no lurid or sinister mood. Booth and drinks are the focus in the central band.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/study_kitchen.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A householder's kitchen table in late morning, two open books side by side, a pen, a glass of water, a fruit bowl, lived-in but tidy. Make this a distinct modest home from the family kitchen: plain cream cabinets, a modest small table, a simple sunlit window. All printing in the two books consists of soft blurry brush dashes with no readable text or identifiable publication design. Main objects on the table occupy the central band with calm foreground below.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/backgrounds/daniel_kitchen.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A lived-in kitchen of a single man in his thirties, books stacked on the table and counter, a yellow legal pad covered in small handwriting, an old paperback Bible with a cracked spine, a drip coffee maker, a window over the sink onto an untidy garden. The man is ABSENT; absolutely no people. This kitchen is a little cluttered with reading materials, ordinary and unstyled, not a pristine country kitchen. Small handwriting is rendered as illegible looping graphite strokes, never actual words. Book covers and spines are completely plain, no cross emblems or titles. Paperback Bible is open with visibly cracked binding and unreadable soft linework. Coffee maker unbranded. Weeds in the untidy garden, not a perfect paradise view. Keep tabletop focal objects mid-frame.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban interior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/sprites/portraits/houses/house_01.png",
+      "style_references": [
+        "assets/backgrounds/hall_of_witness.png",
+        "assets/sprites/portraits/houses/house_05.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Create one production-ready opaque PNG, 1920x1080 pixels, true 16:9 landscape, for the narrative game Go Out and Preach. Input images are style references only: first the existing plain meeting hall painting, second an existing suburban house painting. Match their restrained painterly brushwork and muted lived-in mood, without copying their content. Put key scene details in the middle and upper two-thirds; keep the top 8% and bottom 18% calm for the game's UI, but do not draw UI. Use readable midtones that will survive a 35% dim overlay. Absolutely no people, human silhouettes, or faces even in photos, reflections, screens or printed matter. No legible text, letters, numbers, logos, watermarks, brands, web addresses, real organization signs or identifiable real publications. All pages, book covers, signs and screens must use nonsemantic soft marks or be blank. No crosses, stained glass, altar or pews. No bright idealized paradise illustration aesthetic; no horror or sinister framing. \nScene: A cream craftsman bungalow with a mature oak to the left and an open porch with one chair, neat but plain, a front walk and small lawn. Exterior at golden hour. Match the restrained brushwork, house scale and warm autumn ambience of house reference image 2, but this is a modest simple cream craftsman bungalow, not the ornate house in that reference. Exactly one empty porch chair. Plain short front lawn with mild wear, no extravagant floral garden, no house numbers, no lettering, no signs or visible people. Show whole house with clear porch and front path. Landscape 16:9, at least 1672x941 as requested by the user, overriding the older 4:3 brief size.\npainterly 2D illustration, muted palette of sepia, slate blue and cream with soft gold accents,\nwarm lived-in American suburban exterior, soft brush textures, gentle natural light, quiet and\nstill, no people, no legible text, 16:9 wide composition",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "output": "assets/sprites/portraits/householders/curious_seeker_house09_inquisitive_neutral.png",
+      "style_references": [
+        "assets/sprites/portraits/elders/coordinator_hall.png",
+        "assets/sprites/portraits/houses/house_09.png"
+      ],
+      "generations": [
+        {
+          "prompt": "Use case: illustration-story. Asset: Daniel's neutral dialogue portrait for the narrative game Go Out and Preach. Create one opaque painted half-body portrait with its own doorway background, vertical 4:5, about 1122x1402 pixels. Input image 1 is ONLY the established painted rendering quality, half-body framing and subdued palette reference: do NOT copy this older man's identity, age, suit, gestures, setting, magazines, words or any signs. Input image 2 is the exact house whose doorway must match: weathered slate-blue horizontal wood siding, cream trim, brown wooden paneled front door with small upper glass panes, simple porch. Show that brown front door open behind Daniel, revealing a modest hallway and bookshelf; cream doorframe and blue siding remain recognizable.\nSubject: Daniel, an ordinary particular man in his early thirties. Lean, slightly soft from desk work. Shaggy-tidy medium brown hair, neither styled nor neglected. Thin metal framed glasses. Short two-day stubble. The face thinks before speaking: a calm neutral attentive expression, gentle direct eye contact, relaxed brows, closed relaxed mouth, no pronounced smile. Worn cardigan over a plain t-shirt and jeans, casual Saturday at home. Half-body crop around hips, head fully inside frame and both hands natural; one hand holds a plain book partly closed with one finger holding his place. He is casually answering his own door, not posing for a formal portrait. He is polite, never aggressive, with no smug intellectual stereotype. Only Daniel appears.\nStyle: muted painterly 2D, soft brush textures, sepia, slate blue and cream, restrained soft gold daylight, believable ordinary lived-in face, empathetic realism, subtle grain, no photorealistic glossy finish. Match existing art. Soft natural porch light, readable midtones. No heroic, glamorous or archetypal staging, no caricature, no sinister framing, no horror, no idealized paradise illustration look. No legible text anywhere, no numbers, logos, branded clothing, signs, websites, real organizations or identifiable publication covers. All books have plain unmarked bindings. No crosses or religious symbols, no stained glass. No UI or border, no transparent background.",
+          "accepted": true
+        }
+      ]
+    }
+  ]
+}
