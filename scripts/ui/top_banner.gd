@@ -11,12 +11,12 @@ const DRIFT_PIXELS: float = 12.0
 const COLOR_UP: Color = Color(0.62, 0.84, 0.55, 1)
 const COLOR_DOWN: Color = Color(0.92, 0.55, 0.48, 1)
 
-@onready var _conviction_value: Label = $BannerMargin/BannerRow/StatRow/ConvictionStat/Value
-@onready var _elders_value:     Label = $BannerMargin/BannerRow/StatRow/EldersStat/Value
-@onready var _cong_value:       Label = $BannerMargin/BannerRow/StatRow/CongregationStat/Value
-@onready var _family_value:     Label = $BannerMargin/BannerRow/StatRow/FamilyStat/Value
-@onready var _energy_value:     Label = $BannerMargin/BannerRow/StatRow/EnergyStat/Value
-@onready var _hours_value:      Label = $BannerMargin/BannerRow/StatRow/HoursStat/Value
+@onready var _conviction_value: Label = $BannerMargin/BannerRow/StatRow/ConvictionStat/Text/Value
+@onready var _elders_value:     Label = $BannerMargin/BannerRow/StatRow/EldersStat/Text/Value
+@onready var _cong_value:       Label = $BannerMargin/BannerRow/StatRow/CongregationStat/Text/Value
+@onready var _family_value:     Label = $BannerMargin/BannerRow/StatRow/FamilyStat/Text/Value
+@onready var _energy_value:     Label = $BannerMargin/BannerRow/StatRow/EnergyStat/Text/Value
+@onready var _hours_value:      Label = $BannerMargin/BannerRow/StatRow/HoursStat/Text/Value
 
 var _labels: Dictionary = {}
 var _shown: Dictionary = {}
@@ -82,7 +82,8 @@ func _show_delta(resource_name: String, delta: float) -> void:
 	var label: Label = Label.new()
 	var magnitude: String = ("%.2f" % absf(delta)).rstrip("0").rstrip(".") if resource_name == "field_service_hours" else str(int(absf(delta)))
 	label.text = ("+" if delta > 0.0 else "−") + magnitude
-	label.add_theme_font_size_override("font_size", 15)
+	label.add_theme_font_override("font", UiStyle.FONT_BOLD)
+	label.add_theme_font_size_override("font_size", 18)
 	label.add_theme_color_override("font_color", COLOR_UP if delta > 0.0 else COLOR_DOWN)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.top_level = true

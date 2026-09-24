@@ -114,7 +114,7 @@ func _show_seat_picker() -> void:
 		var who: String = GameState.fill(tr(MeetingManager.SEAT_NEIGHBOR_LABELS.get(neighbor, "")))
 		button.text = "%s\n%s" % [_label_for_seat(seat_slug), who]
 		button.custom_minimum_size = Vector2(280, 64)
-		button.add_theme_font_size_override("font_size", 15)
+		button.add_theme_font_size_override("font_size", 19)
 		button.pressed.connect(_on_seat_picked.bind(seat_slug))
 		grid.add_child(button)
 	_phase_content.add_child(grid)
@@ -152,7 +152,7 @@ func _show_social_moment() -> void:
 		var button: Button = Button.new()
 		button.text = GameState.fill(tr(choice.get("label", "")))
 		button.custom_minimum_size = Vector2(0, 48)
-		button.add_theme_font_size_override("font_size", 15)
+		button.add_theme_font_size_override("font_size", 19)
 		button.pressed.connect(_on_social_moment_picked.bind(choice))
 		_phase_content.add_child(button)
 
@@ -246,12 +246,12 @@ func _show_song(song_slug: StringName) -> void:
 	lyric.text = tr(String(song.get("opening_lines", "")))
 	lyric.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lyric.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lyric.add_theme_font_size_override("font_size", 16)
+	lyric.add_theme_font_size_override("font_size", 20)
 	_phase_content.add_child(lyric)
 	var continue_button: Button = Button.new()
 	continue_button.text = tr("Continue")
 	continue_button.custom_minimum_size = Vector2(220, 44)
-	continue_button.add_theme_font_size_override("font_size", 15)
+	continue_button.add_theme_font_size_override("font_size", 19)
 	continue_button.pressed.connect(_on_song_continue_pressed)
 	_phase_content.add_child(continue_button)
 
@@ -312,7 +312,7 @@ func _add_comment_choice(label: String, handler: Callable) -> void:
 	var button: Button = Button.new()
 	button.text = label
 	button.custom_minimum_size = Vector2(0, 48)
-	button.add_theme_font_size_override("font_size", 15)
+	button.add_theme_font_size_override("font_size", 19)
 	button.pressed.connect(handler)
 	_phase_content.add_child(button)
 
@@ -356,7 +356,7 @@ func _show_comment_result(text: String) -> void:
 	var continue_button: Button = Button.new()
 	continue_button.text = tr("Continue")
 	continue_button.custom_minimum_size = Vector2(220, 44)
-	continue_button.add_theme_font_size_override("font_size", 15)
+	continue_button.add_theme_font_size_override("font_size", 19)
 	continue_button.pressed.connect(func() -> void: _advance_after_talk())
 	_phase_content.add_child(continue_button)
 

@@ -63,18 +63,18 @@ func _build_setup() -> void:
 	_card_vbox.add_child(_setup_box)
 	_card_vbox.move_child(_setup_box, quit_button.get_index() + 1)
 
-	_setup_box.add_child(_make_label(tr("Your name"), 13, MUTED_TEXT))
+	_setup_box.add_child(_make_label(tr("Your name"), 17, MUTED_TEXT))
 	_name_edit = LineEdit.new()
 	_name_edit.text = "Jordan"
 	_name_edit.max_length = 20
 	_name_edit.custom_minimum_size = Vector2(0, 44)
-	_name_edit.add_theme_font_size_override("font_size", 18)
+	_name_edit.add_theme_font_size_override("font_size", 22)
 	_name_edit.text_submitted.connect(func(_text: String) -> void: _begin())
 	_setup_box.add_child(_name_edit)
 
-	_setup_box.add_child(_make_label(tr("The friends call you"), 13, MUTED_TEXT))
+	_setup_box.add_child(_make_label(tr("The friends call you"), 17, MUTED_TEXT))
 	_setup_box.add_child(_make_choice_row(["Brother", "Sister"], _title_buttons, _on_title_picked))
-	_setup_box.add_child(_make_label(tr("Your parent in the Truth"), 13, MUTED_TEXT))
+	_setup_box.add_child(_make_label(tr("Your parent in the Truth"), 17, MUTED_TEXT))
 	_setup_box.add_child(_make_choice_row(["mother", "father"], _parent_buttons, _on_parent_picked))
 	_on_title_picked(_title_choice)
 	_on_parent_picked(_parent_choice)
@@ -117,7 +117,7 @@ func _make_menu_button(text: String) -> Button:
 	for style in ["normal", "hover", "pressed"]:
 		button.add_theme_stylebox_override(style, new_game_button.get_theme_stylebox(style))
 	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	button.add_theme_font_size_override("font_size", 16)
+	button.add_theme_font_size_override("font_size", 20)
 	button.add_theme_color_override("font_color", new_game_button.get_theme_color("font_color"))
 	button.add_theme_color_override("font_pressed_color", CREAM_TEXT)
 	return button

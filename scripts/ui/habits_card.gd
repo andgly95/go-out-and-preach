@@ -49,15 +49,15 @@ func _add_row(title: String, pip_text: String, formed: String, next: String) -> 
 	var column: VBoxContainer = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 1)
 	var head: HBoxContainer = HBoxContainer.new()
-	var title_label: Label = _make_label(title.to_upper(), 12, CREAM_TEXT)
+	var title_label: Label = _make_label(title.to_upper(), 16, CREAM_TEXT)
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(title_label)
-	head.add_child(_make_label(pip_text, 11, BRIGHT_GOLD))
+	head.add_child(_make_label(pip_text, 14, BRIGHT_GOLD))
 	column.add_child(head)
 	for line in [[formed, BRIGHT_GOLD], [next, MUTED_TEXT]]:
 		if String(line[0]).is_empty():
 			continue
-		var label: Label = _make_label(line[0], 12, line[1])
+		var label: Label = _make_label(line[0], 15, line[1])
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		column.add_child(label)
 	_rows.add_child(column)

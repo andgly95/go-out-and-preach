@@ -1,25 +1,55 @@
-[gd_scene load_steps=11 format=3 uid="uid://bgp0m2terr001"]
+[gd_scene load_steps=30 format=3 uid="uid://bgp0m2terr001"]
 
 [ext_resource type="Script" path="res://scripts/ui/territory_map.gd" id="1_territory_map"]
+
 [ext_resource type="Texture2D" path="res://assets/sprites/territory/background.png" id="2_bg"]
+
 [ext_resource type="Texture2D" path="res://assets/sprites/territory/house_painting.png" id="3_house"]
+
 [ext_resource type="Texture2D" path="res://assets/sprites/territory/car.png" id="4_car"]
+
 [ext_resource type="PackedScene" path="res://scenes/top_banner.tscn" id="5_banner"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/territory/background_soft.png" id="6_backdrop"]
+
+[ext_resource type="Texture2D" path="res://ui/themes/panel_frame.png" id="7_panel"]
+
+[ext_resource type="Texture2D" path="res://ui/themes/plate.png" id="8_plate"]
+
+[ext_resource type="Texture2D" path="res://ui/themes/button_gold.png" id="9_gold"]
+
+[ext_resource type="Texture2D" path="res://ui/themes/button_gold_hover.png" id="10_gold_hover"]
+
+[ext_resource type="Texture2D" path="res://ui/themes/board_frame.png" id="11_board"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_display.tres" id="12_display"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_caps.tres" id="13_caps"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_italic.tres" id="14_italic"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_bold.tres" id="15_bold"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_body.tres" id="16_body"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/end.svg" id="17_end"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_root"]
 bg_color = Color(0.18, 0.16, 0.13, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_polaroid"]
-bg_color = Color(0.96, 0.94, 0.88, 1)
+bg_color = Color(0.925, 0.886, 0.792, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.62, 0.5, 0.27, 0.45)
-content_margin_left = 6.0
-content_margin_top = 6.0
-content_margin_right = 6.0
-content_margin_bottom = 14.0
+border_color = Color(0.627, 0.518, 0.337, 0.6)
+content_margin_left = 9.0
+content_margin_top = 9.0
+content_margin_right = 9.0
+content_margin_bottom = 0.0
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 8
+shadow_offset = Vector2(0, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 bg_color = Color(0.11, 0.13, 0.19, 0.94)
@@ -65,6 +95,75 @@ content_margin_top = 10.0
 content_margin_right = 18.0
 content_margin_bottom = 10.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_panel"]
+texture = ExtResource("7_panel")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+content_margin_left = 4.0
+content_margin_right = 4.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_plate"]
+texture = ExtResource("8_plate")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+content_margin_left = 30.0
+content_margin_right = 30.0
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gold"]
+texture = ExtResource("9_gold")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+content_margin_left = 22.0
+content_margin_right = 22.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gold_hover"]
+texture = ExtResource("10_gold_hover")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+content_margin_left = 22.0
+content_margin_right = 22.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_board"]
+texture = ExtResource("11_board")
+texture_margin_left = 28.0
+texture_margin_top = 28.0
+texture_margin_right = 28.0
+texture_margin_bottom = 28.0
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caption"]
+bg_color = Color(0.925, 0.886, 0.792, 1)
+border_width_left = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.627, 0.518, 0.337, 0.6)
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_top = 4.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
 [node name="TerritoryMap" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -83,6 +182,28 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_root")
 
+[node name="Backdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("6_backdrop")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackdropDim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.06, 0.08, 0.11, 0.62)
+
 [node name="TopBanner" parent="." instance=ExtResource("5_banner")]
 
 [node name="MainRow" type="HBoxContainer" parent="."]
@@ -91,25 +212,25 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = 104.0
+offset_top = 120.0
 offset_right = -24.0
-offset_bottom = -88.0
+offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 24
 
 [node name="LeftInfoCard" type="PanelContainer" parent="MainRow"]
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
 
 [node name="LeftMargin" type="MarginContainer" parent="MainRow/LeftInfoCard"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
+theme_override_constants/margin_left = 22
 theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
 
 [node name="LeftVBox" type="VBoxContainer" parent="MainRow/LeftInfoCard/LeftMargin"]
 layout_mode = 2
@@ -117,23 +238,28 @@ theme_override_constants/separation = 12
 
 [node name="DayLabel" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 1)
+theme_override_font_sizes/font_size = 16
 text = "✦ SATURDAY · FIELD SERVICE ✦"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("13_caps")
 
 [node name="TerritoryTitle" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 46
 text = "Maple Street"
+theme_override_fonts/font = ExtResource("16_body")
+horizontal_alignment = 1
 
 [node name="FlavorText" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "A quiet neighborhood of families and familiar faces."
 autowrap_mode = 2
+theme_override_fonts/font = ExtResource("16_body")
+horizontal_alignment = 1
 
 [node name="Divider1" type="HSeparator" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
@@ -141,13 +267,14 @@ theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
 
 [node name="ProgressHeader" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 17
 text = "TODAY'S PROGRESS"
+theme_override_fonts/font = ExtResource("13_caps")
 
 [node name="ProgressRows" type="VBoxContainer" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="TractRow" type="HBoxContainer" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows"]
 layout_mode = 2
@@ -155,15 +282,17 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/TractRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "Tract Left"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="Value" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/TractRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="ReturnRow" type="HBoxContainer" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows"]
 layout_mode = 2
@@ -171,15 +300,17 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/ReturnRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "Return Visits"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="Value" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/ReturnRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="StudyRow" type="HBoxContainer" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows"]
 layout_mode = 2
@@ -187,15 +318,17 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/StudyRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "Studies Started"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="Value" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressRows/StudyRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="Spacer" type="Control" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
@@ -207,18 +340,20 @@ theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
 
 [node name="ScriptureQuote" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.76, 0.62, 0.9)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 18
 text = "\"Let your light shine before others, so that they may see the good works\""
 autowrap_mode = 2
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("14_italic")
 
 [node name="ScriptureRef" type="Label" parent="MainRow/LeftInfoCard/LeftMargin/LeftVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 1)
+theme_override_font_sizes/font_size = 14
 text = "— MATTHEW 5:16"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("13_caps")
 
 [node name="CenterMap" type="Control" parent="MainRow"]
 layout_mode = 2
@@ -236,22 +371,6 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="SelectPrompt" type="Label" parent="MainRow/CenterMap"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -200.0
-offset_top = -28.0
-offset_right = 200.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
-text = "✦  SELECT A HOUSE TO VISIT  ✦"
-horizontal_alignment = 1
-
 [node name="HouseSlots" type="Control" parent="MainRow/CenterMap"]
 layout_mode = 1
 anchors_preset = 15
@@ -261,32 +380,63 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="BoardFrame" type="Panel" parent="MainRow/CenterMap"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_board")
+
+[node name="SelectPrompt" type="Label" parent="MainRow/CenterMap"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -230.0
+offset_top = -24.0
+offset_right = 230.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 19
+text = "◆   Select a House to Visit   ◆"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("13_caps")
+theme_override_styles/normal = SubResource("StyleBoxTexture_plate")
+uppercase = true
+
 [node name="RightDetailPanel" type="PanelContainer" parent="MainRow"]
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
 
 [node name="RightMargin" type="MarginContainer" parent="MainRow/RightDetailPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
+theme_override_constants/margin_left = 22
 theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
 
 [node name="RightVBox" type="VBoxContainer" parent="MainRow/RightDetailPanel/RightMargin"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 
 [node name="HouseHeader" type="Label" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 32
 text = "✦ HOUSE #—— ✦"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("12_display")
 
 [node name="Polaroid" type="PanelContainer" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_polaroid")
 
@@ -295,20 +445,24 @@ layout_mode = 2
 texture = ExtResource("3_house")
 expand_mode = 1
 stretch_mode = 6
+custom_minimum_size = Vector2(0, 190)
 
 [node name="StateCaption" type="Label" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.118, 0.118, 0.133, 1)
+theme_override_font_sizes/font_size = 19
 text = "Hover a house to inspect."
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("14_italic")
+theme_override_styles/normal = SubResource("StyleBoxFlat_caption")
 
 [node name="BodyText" type="Label" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 19
 text = "Move over a slot in the territory grid to see what's known about that household."
 autowrap_mode = 2
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="LegendDivider" type="HSeparator" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
@@ -316,13 +470,15 @@ theme_override_colors/separator = Color(0.62, 0.5, 0.27, 0.4)
 
 [node name="LegendHeader" type="Label" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 17
 text = "LEGEND"
+theme_override_fonts/font = ExtResource("13_caps")
+horizontal_alignment = 1
 
 [node name="LegendRows" type="VBoxContainer" parent="MainRow/RightDetailPanel/RightMargin/RightVBox"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 7
 
 [node name="CarFrame" type="TextureRect" parent="."]
 layout_mode = 1
@@ -359,19 +515,27 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -260.0
-offset_top = -64.0
+offset_left = -350.0
+offset_top = -84.0
 offset_right = -24.0
-offset_bottom = -16.0
+offset_bottom = -18.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_font_sizes/font_size = 14
-theme_override_styles/normal = SubResource("StyleBoxFlat_endbtn")
-theme_override_styles/hover = SubResource("StyleBoxFlat_endbtn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_endbtn_hover")
-theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_gold")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gold_hover")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_gold_hover")
+theme_override_colors/font_color = Color(0.118, 0.118, 0.133, 1)
 theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
-text = "END FIELD SERVICE  ▸"
+text = "END FIELD SERVICE"
+theme_override_fonts/font = ExtResource("13_caps")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_colors/icon_normal_color = Color(0.118, 0.118, 0.133, 1)
+theme_override_colors/icon_hover_color = Color(0.118, 0.118, 0.133, 1)
+theme_override_colors/icon_pressed_color = Color(0.118, 0.118, 0.133, 1)
+theme_override_constants/h_separation = 14
+theme_override_constants/icon_max_width = 30
+icon = ExtResource("17_end")
 
 [node name="AfterServiceDim" type="ColorRect" parent="."]
 visible = false
@@ -393,13 +557,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -280.0
-offset_right = 320.0
-offset_bottom = 280.0
+offset_left = -340.0
+offset_top = -310.0
+offset_right = 340.0
+offset_bottom = 310.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
 
 [node name="Margin" type="MarginContainer" parent="AfterServiceCard"]
 layout_mode = 2
@@ -414,24 +578,28 @@ theme_override_constants/separation = 12
 
 [node name="Eyebrow" type="Label" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 1)
-theme_override_font_sizes/font_size = 12
-text = "✦ AFTER SERVICE ✦"
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 1)
+theme_override_font_sizes/font_size = 16
+text = "◆  After Service  ◆"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("13_caps")
+uppercase = true
 
 [node name="Title" type="Label" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 40
 text = "The Report"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("12_display")
 
 [node name="DividerTop" type="Label" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.7)
-theme_override_font_sizes/font_size = 14
-text = "──────  ◇  ──────"
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 0.7)
+theme_override_font_sizes/font_size = 16
+text = "———————  ◆  ———————"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="StatsGrid" type="GridContainer" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
@@ -441,102 +609,116 @@ columns = 2
 
 [node name="HoursLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Hours preached"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="HoursValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0.0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="TractLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Tracts placed"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="TractValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="ReturnLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Return visits scheduled"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="ReturnValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="StudyLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Studies started"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="StudyValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="RefusedLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Refused"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="RefusedValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="NotHomeLabel" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_font_sizes/font_size = 20
 text = "Not home"
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="NotHomeValue" type="Label" parent="AfterServiceCard/Margin/VBox/StatsGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = "0"
 horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("15_bold")
 
 [node name="DividerMid" type="Label" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.5, 0.27, 0.7)
-theme_override_font_sizes/font_size = 14
-text = "──────  ◇  ──────"
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 0.7)
+theme_override_font_sizes/font_size = 16
+text = "———————  ◆  ———————"
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="Debrief" type="Label" parent="AfterServiceCard/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.86, 0.8, 0.66, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.937, 0.890, 0.776, 1)
+theme_override_font_sizes/font_size = 20
 text = ""
 horizontal_alignment = 1
 autowrap_mode = 2
+theme_override_fonts/font = ExtResource("16_body")
 
 [node name="InnerVoice" type="RichTextLabel" parent="AfterServiceCard/Margin/VBox"]
 visible = false
@@ -546,16 +728,21 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 theme_override_colors/default_color = Color(0.74, 0.66, 0.5, 0.92)
-theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/normal_font_size = 19
 text = ""
+theme_override_fonts/normal_font = ExtResource("16_body")
+theme_override_fonts/italics_font = ExtResource("14_italic")
+theme_override_font_sizes/italics_font_size = 19
 
 [node name="SubmitButton" type="Button" parent="AfterServiceCard/Margin/VBox"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-theme_override_styles/normal = SubResource("StyleBoxFlat_endbtn")
-theme_override_styles/hover = SubResource("StyleBoxFlat_endbtn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_endbtn_hover")
-theme_override_colors/font_color = Color(0.09, 0.11, 0.16, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_gold")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gold_hover")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_gold_hover")
+theme_override_colors/font_color = Color(0.118, 0.118, 0.133, 1)
 theme_override_colors/font_hover_color = Color(0.09, 0.11, 0.16, 1)
-text = "TURN IN YOUR HOURS  ▸"
+text = "TURN IN YOUR HOURS"
+theme_override_fonts/font = ExtResource("13_caps")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")

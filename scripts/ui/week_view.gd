@@ -234,13 +234,14 @@ func _make_option_row(option: Dictionary) -> Button:
 	text_column.add_theme_constant_override("separation", 2)
 	text_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(text_column)
-	var name_label: Label = _make_label(tr(option.get("name", "")).to_upper(), 16, DARK_TEXT if primary else CREAM_TEXT)
+	var name_label: Label = _make_label(tr(option.get("name", "")).to_upper(), 20, DARK_TEXT if primary else CREAM_TEXT)
+	name_label.add_theme_font_override("font", UiStyle.FONT_CAPS)
 	text_column.add_child(name_label)
 	var description: String = tr(option.get("description", ""))
 	if not affordable:
 		description = tr("Too tired.") + " " + description
 	if not description.is_empty():
-		var desc_label: Label = _make_label(description, 13, DIM_DARK_TEXT if primary else MUTED_TEXT)
+		var desc_label: Label = _make_label(description, 17, DIM_DARK_TEXT if primary else MUTED_TEXT)
 		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		text_column.add_child(desc_label)
 
@@ -249,7 +250,8 @@ func _make_option_row(option: Dictionary) -> Button:
 		cost_text = tr("−%d energy") % cost
 	elif cost < 0:
 		cost_text = tr("+%d energy") % -cost
-	var cost_label: Label = _make_label(cost_text, 13, DARK_TEXT if primary else GOLD)
+	var cost_label: Label = _make_label(cost_text, 17, DARK_TEXT if primary else GOLD)
+	cost_label.add_theme_font_override("font", UiStyle.FONT_BOLD)
 	cost_label.custom_minimum_size = Vector2(84, 0)
 	cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(cost_label)
@@ -318,8 +320,8 @@ func _rebuild_month_card() -> void:
 func _add_month_row(title: String, detail: String) -> void:
 	var column: VBoxContainer = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 1)
-	column.add_child(_make_label(title, 14, CREAM_TEXT))
-	var detail_label: Label = _make_label(detail, 12, MUTED_TEXT)
+	column.add_child(_make_label(title, 18, CREAM_TEXT))
+	var detail_label: Label = _make_label(detail, 16, MUTED_TEXT)
 	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(detail_label)
 	_schedule_box.add_child(column)

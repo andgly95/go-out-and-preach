@@ -22,7 +22,6 @@ const STEP_ONE_WIDTH: float = 380.0
 const CONNECTOR_WIDTH: float = 64.0
 const ROW_HEIGHT: float = 140.0
 
-const PANEL_BG: Color = Color(0.11, 0.13, 0.19, 0.99)
 const NODE_BG: Color = Color(0.13, 0.16, 0.22, 1)
 const NODE_BG_FORMED: Color = Color(0.18, 0.18, 0.2, 1)
 const NODE_BG_HOVER: Color = Color(0.21, 0.23, 0.3, 1)
@@ -103,8 +102,8 @@ func _build_tree() -> void:
 	vbox.add_theme_constant_override("separation", 10)
 	margin.add_child(vbox)
 
-	vbox.add_child(_make_label(tr("✦ HABITS ✦"), 13, GOLD, HORIZONTAL_ALIGNMENT_CENTER))
-	vbox.add_child(_make_label(_subtitle(), 17, CREAM_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	vbox.add_child(_make_label(tr("✦ HABITS ✦"), 17, GOLD, HORIZONTAL_ALIGNMENT_CENTER))
+	vbox.add_child(_make_label(_subtitle(), 21, CREAM_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	vbox.add_child(_make_divider())
 	for info in Habits.TRACKS:
 		vbox.add_child(_track_row(info))
@@ -141,14 +140,14 @@ func _track_row(info: Dictionary) -> Control:
 	about.custom_minimum_size = Vector2(INFO_WIDTH, 0)
 	about.alignment = BoxContainer.ALIGNMENT_CENTER
 	about.add_theme_constant_override("separation", 4)
-	about.add_child(_make_label(tr(info["title"]).to_upper(), 15, CREAM_TEXT))
-	about.add_child(_wrapped(_make_label(_fill(info["grows"]), 12, MUTED_TEXT)))
+	about.add_child(_make_label(tr(info["title"]).to_upper(), 19, CREAM_TEXT))
+	about.add_child(_wrapped(_make_label(_fill(info["grows"]), 16, MUTED_TEXT)))
 	var have: int = Habits.practice_on(track)
 	var target: int = Habits.milestone(track)
-	about.add_child(_make_label("%s   %d / %d" % [HabitsCard.pips(have, target), mini(have, target), target], 14, BRIGHT_GOLD))
+	about.add_child(_make_label("%s   %d / %d" % [HabitsCard.pips(have, target), mini(have, target), target], 18, BRIGHT_GOLD))
 	var next: String = Habits.next_step_text(track)
 	if not next.is_empty():
-		about.add_child(_wrapped(_make_label(next, 12, MUTED_TEXT)))
+		about.add_child(_wrapped(_make_label(next, 16, MUTED_TEXT)))
 	row.add_child(about)
 	row.add_child(_gap(24))
 
@@ -186,8 +185,8 @@ func _lately_row() -> Control:
 	about.custom_minimum_size = Vector2(INFO_WIDTH, 0)
 	about.alignment = BoxContainer.ALIGNMENT_CENTER
 	about.add_theme_constant_override("separation", 4)
-	about.add_child(_make_label(tr(Habits.LATELY_TITLE).to_upper(), 15, CREAM_TEXT))
-	about.add_child(_wrapped(_make_label(tr(Habits.LATELY_NOTE), 12, MUTED_TEXT)))
+	about.add_child(_make_label(tr(Habits.LATELY_TITLE).to_upper(), 19, CREAM_TEXT))
+	about.add_child(_wrapped(_make_label(tr(Habits.LATELY_NOTE), 16, MUTED_TEXT)))
 	row.add_child(about)
 	row.add_child(_gap(24))
 	var first: bool = true
@@ -237,13 +236,13 @@ func _habit_node(habit: Habit, state: int) -> Control:
 	margin.add_child(content)
 	var head: HBoxContainer = HBoxContainer.new()
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var title: Label = _make_label(_fill(habit.title), 15, BRIGHT_GOLD if formed else CREAM_TEXT)
+	var title: Label = _make_label(_fill(habit.title), 19, BRIGHT_GOLD if formed else CREAM_TEXT)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(title)
-	head.add_child(_make_label(_tag(habit, state), 10, GOLD))
+	head.add_child(_make_label(_tag(habit, state), 13, GOLD))
 	content.add_child(head)
-	content.add_child(_wrapped(_make_label(_fill(habit.flavor), 12, MUTED_TEXT)))
-	content.add_child(_wrapped(_make_label("▸ " + _fill(habit.effect_text), 12, CREAM_TEXT)))
+	content.add_child(_wrapped(_make_label(_fill(habit.flavor), 16, MUTED_TEXT)))
+	content.add_child(_wrapped(_make_label("▸ " + _fill(habit.effect_text), 16, CREAM_TEXT)))
 
 	if state == NodeState.CHOOSABLE:
 		var button: Button = Button.new()
@@ -314,10 +313,10 @@ func _build_notice(habit: Habit) -> void:
 	vbox.add_theme_constant_override("separation", 12)
 	margin.add_child(vbox)
 	var kicker: String = tr("LATELY") if habit.track == Habits.LATELY_TRACK else tr("A HABIT HAS FORMED")
-	vbox.add_child(_make_label("✦ %s ✦" % kicker, 12, GOLD, HORIZONTAL_ALIGNMENT_CENTER))
-	vbox.add_child(_make_label(_fill(habit.title), 28, CREAM_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
-	vbox.add_child(_wrapped(_make_label(_fill(habit.flavor), 16, MUTED_TEXT, HORIZONTAL_ALIGNMENT_CENTER)))
-	vbox.add_child(_wrapped(_make_label(_fill(habit.effect_text), 14, BRIGHT_GOLD, HORIZONTAL_ALIGNMENT_CENTER)))
+	vbox.add_child(_make_label("✦ %s ✦" % kicker, 16, GOLD, HORIZONTAL_ALIGNMENT_CENTER))
+	vbox.add_child(_make_label(_fill(habit.title), 32, CREAM_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	vbox.add_child(_wrapped(_make_label(_fill(habit.flavor), 20, MUTED_TEXT, HORIZONTAL_ALIGNMENT_CENTER)))
+	vbox.add_child(_wrapped(_make_label(_fill(habit.effect_text), 18, BRIGHT_GOLD, HORIZONTAL_ALIGNMENT_CENTER)))
 	var buttons: HBoxContainer = HBoxContainer.new()
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
 	buttons.add_theme_constant_override("separation", 16)
@@ -330,9 +329,7 @@ func _build_notice(habit: Habit) -> void:
 
 func _make_panel() -> PanelContainer:
 	var panel: PanelContainer = PanelContainer.new()
-	var style: StyleBoxFlat = _node_style(PANEL_BG, Color(GOLD, 0.7), 1)
-	style.set_corner_radius_all(6)
-	panel.add_theme_stylebox_override("panel", style)
+	panel.add_theme_stylebox_override("panel", UiStyle.panel(Vector2(4, 4)))
 	return panel
 
 
@@ -379,7 +376,7 @@ func _make_button(text: String, action: Callable) -> Button:
 	var button: Button = Button.new()
 	button.text = text
 	button.custom_minimum_size = Vector2(200, 44)
-	button.add_theme_font_size_override("font_size", 15)
+	button.add_theme_font_size_override("font_size", 19)
 	button.pressed.connect(action)
 	return button
 

@@ -45,7 +45,10 @@ Andrew delegated design decisions (CLAUDE.md § How We Work). These are settled;
 
 ## Art
 
-All 14 background slots and house #1 now have opaque 1672×941 paintings. Daniel (house #9) has a 1122×1402 neutral doorway portrait; all five expressions use it at scale 0.35. Other householder portraits remain deferred. House #1 follows Andrew's 16:9 request over the brief's 4:3 size. Exact generation prompts and revisions are in `docs/design/art-pass-prompts.json`. macOS verification uses the Godot wrapper; Xvfb screenshots are skipped as instructed. `bash tools/art_status.sh --missing` shows remaining wired slots.
+- **Paintings:** all 14 backgrounds, house #1, and Daniel's portrait are in (Codex art pass; prompts in `docs/design/art-pass-prompts.json`). Other householder portraits and the cast are still to come.
+- **UI** follows Andrew's territory-map concept: slate panels framed in gold, EB Garamond throughout (small caps for titles), line icons in the banner, the map's tiles, and its legend. The map screen matches the concept closely; every other screen shares its panels, buttons, and type. Frames and buttons are drawn by `tools/make_ui_textures.py`; colors and helpers live in `scripts/ui/ui_style.gd`.
+- Added assets (flagged per CLAUDE.md): **EB Garamond** (SIL Open Font License, `assets/fonts/OFL.txt`) and **Lucide** icons (ISC, `ui/icons/LICENSE-lucide.txt`). Both are free for commercial use.
+- Not yet restyled: the Dialogic dialogue box (still a plain black box).
 
 ## What would still help from Andrew
 

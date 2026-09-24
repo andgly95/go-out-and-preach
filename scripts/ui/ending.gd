@@ -64,12 +64,12 @@ func _add_row(label: String, value: String) -> void:
 	left.text = label
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left.add_theme_color_override("font_color", Color(0.82, 0.76, 0.62, 1))
-	left.add_theme_font_size_override("font_size", 16)
+	left.add_theme_font_size_override("font_size", 20)
 	row.add_child(left)
 	var right: Label = Label.new()
 	right.text = value
 	right.add_theme_color_override("font_color", Color(0.96, 0.92, 0.79, 1))
-	right.add_theme_font_size_override("font_size", 16)
+	right.add_theme_font_size_override("font_size", 20)
 	row.add_child(right)
 	_rows.add_child(row)
 

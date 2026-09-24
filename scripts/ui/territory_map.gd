@@ -34,18 +34,25 @@ const SLOT_FRACTIONS: Array = [
 	Vector4(0.703, 0.600, 0.222, 0.190),  # Row 2 — #12
 ]
 
-const BADGE_GREEN: Color  = Color(0.36, 0.55, 0.36, 0.94)
-const BADGE_AMBER: Color  = Color(0.78, 0.60, 0.30, 0.94)
-const BADGE_RED:   Color  = Color(0.55, 0.20, 0.20, 0.94)
-const BADGE_GREY:  Color  = Color(0.45, 0.45, 0.45, 0.94)
-const BADGE_CREAM: Color  = Color(0.85, 0.78, 0.62, 0.88)
-# M4.6+ — brighter green for the BIBLE_STUDY_STARTED lifetime pip so it
-# visually outranks TRACT_LEFT's muted green at a glance.
-const BADGE_GREEN_BRIGHT: Color = Color(0.42, 0.72, 0.44, 0.96)
-
-const GOLD: Color         = Color(0.78, 0.62, 0.28, 1.0)
-const NAVY_DEEP: Color    = Color(0.09, 0.11, 0.16, 0.92)
-const CREAM_TEXT: Color   = Color(0.96, 0.92, 0.79, 1.0)
+# How each house state shows on its tile and in the legend (Andrew's map
+# concept): a pill in the state's color, a line icon, and the tint that
+# icon takes in the legend.
+const STATUS_LOOK: Dictionary = {
+	House.State.TRACT_LEFT:             {"text": "Tract Left",    "icon": "tract",        "pill": Color8(52, 84, 98),    "tint": Color8(128, 176, 196), "note": "We left a tract."},
+	House.State.RETURN_VISIT_SCHEDULED: {"text": "Return Visit",  "icon": "return_visit", "pill": Color8(146, 108, 46),  "tint": Color8(226, 182, 100), "note": "Follow up needed."},
+	House.State.BIBLE_STUDY_STARTED:    {"text": "Study Started", "icon": "study",        "pill": Color8(60, 94, 58),    "tint": Color8(136, 186, 124), "note": "Bible study in progress."},
+	House.State.REFUSED:                {"text": "Refused",       "icon": "refused",      "pill": Color8(120, 46, 38),   "tint": Color8(216, 94, 78),   "note": "Not interested."},
+	House.State.NOT_HOME:               {"text": "Not Home",      "icon": "not_home",     "pill": Color8(82, 86, 94),    "tint": Color8(172, 177, 188), "note": "No one answered."},
+	House.State.NOT_VISITED:            {"text": "Not Visited",   "icon": "not_visited",  "pill": Color8(226, 214, 184), "tint": Color8(226, 214, 184), "note": "No prior contact."},
+}
+const LEGEND_ORDER: Array = [
+	House.State.TRACT_LEFT, House.State.RETURN_VISIT_SCHEDULED, House.State.BIBLE_STUDY_STARTED,
+	House.State.REFUSED, House.State.NOT_HOME, House.State.NOT_VISITED,
+]
+# Lifetime pip (top-right of a tile): the best that ever happened here.
+const PIP_TRACT: Color = Color8(128, 176, 196)
+const PIP_RETURN: Color = Color8(226, 182, 100)
+const PIP_STUDY: Color = Color8(136, 186, 124)
 
 const SCRIPTURE_QUOTE: String = "\"Let your light shine before others, so that they may see the good works\""
 const SCRIPTURE_REF:   String = "— MATTHEW 5:16"
@@ -117,6 +124,7 @@ func _ready() -> void:
 	_scripture_ref_label.text = tr(SCRIPTURE_REF)
 	_territory_title.text = TerritoryManager.current_territory.display_name
 	_default_polaroid_texture = _detail_polaroid.texture
+	_apply_skin()
 	if not FieldService.active:
 		# week_view starts the session (and charges its energy); this covers
 		# booting the scene directly during development.
@@ -147,38 +155,125 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_end_pressed()
 
 
+# --- Look (Andrew's territory-map concept) ------------------------------------
+
+## The parts of the concept a .tscn can't express on its own: the day strip
+## with its icon, ornamented dividers, icon rows, the titled house header,
+## the photo's caption strip, and the Esc hint.
+func _apply_skin() -> void:
+	var left: VBoxContainer = $MainRow/LeftInfoCard/LeftMargin/LeftVBox
+	var day_label: Label = left.get_node("DayLabel")
+	day_label.text = tr("%s — Field Service") % TimeManager.current_phase_name()
+	day_label.uppercase = true
+	var strip: PanelContainer = PanelContainer.new()
+	var strip_style: StyleBoxFlat = StyleBoxFlat.new()
+	strip_style.bg_color = Color(UiStyle.SLATE_DARK, 0.85)
+	strip_style.border_color = Color(UiStyle.GOLD, 0.55)
+	strip_style.border_width_bottom = 1
+	strip_style.content_margin_top = 8
+	strip_style.content_margin_bottom = 8
+	strip.add_theme_stylebox_override("panel", strip_style)
+	var strip_row: HBoxContainer = HBoxContainer.new()
+	strip_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	strip_row.add_theme_constant_override("separation", 10)
+	strip.add_child(strip_row)
+	left.add_child(strip)
+	left.move_child(strip, day_label.get_index())
+	strip_row.add_child(UiStyle.icon_rect("day", 22, UiStyle.GOLD))
+	day_label.reparent(strip_row)
+
+	for divider_path in ["MainRow/LeftInfoCard/LeftMargin/LeftVBox/Divider1",
+			"MainRow/LeftInfoCard/LeftMargin/LeftVBox/Divider2",
+			"MainRow/RightDetailPanel/RightMargin/RightVBox/LegendDivider"]:
+		var divider: Control = get_node(divider_path)
+		var ornament: HBoxContainer = UiStyle.ornament()
+		divider.get_parent().add_child(ornament)
+		divider.get_parent().move_child(ornament, divider.get_index())
+		divider.visible = false
+
+	var rows: VBoxContainer = left.get_node("ProgressRows")
+	for pair in [["TractRow", "tract"], ["ReturnRow", "return_visit"], ["StudyRow", "study"]]:
+		var row: HBoxContainer = rows.get_node(pair[0])
+		var well: PanelContainer = PanelContainer.new()
+		well.add_theme_stylebox_override("panel", UiStyle.inset(Vector2(12, 7)))
+		rows.add_child(well)
+		rows.move_child(well, row.get_index())
+		row.reparent(well)
+		row.add_theme_constant_override("separation", 12)
+		var icon: TextureRect = UiStyle.icon_rect(pair[1], 24, UiStyle.GOLD)
+		row.add_child(icon)
+		row.move_child(icon, 0)
+
+	# "— House #11 —": the header between two gold rules.
+	var header_row: HBoxContainer = HBoxContainer.new()
+	header_row.add_theme_constant_override("separation", 12)
+	_detail_header.get_parent().add_child(header_row)
+	_detail_header.get_parent().move_child(header_row, _detail_header.get_index())
+	for i in 3:
+		if i == 1:
+			_detail_header.reparent(header_row)
+			continue
+		var rule: ColorRect = ColorRect.new()
+		rule.color = Color(UiStyle.GOLD, 0.6)
+		rule.custom_minimum_size = Vector2(0, 1)
+		rule.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		header_row.add_child(rule)
+
+	# The caption strip belongs to the photo's mat.
+	var mat: VBoxContainer = VBoxContainer.new()
+	mat.add_theme_constant_override("separation", 6)
+	var polaroid: PanelContainer = _detail_polaroid.get_parent()
+	polaroid.add_child(mat)
+	_detail_polaroid.reparent(mat)
+	_detail_caption.reparent(mat)
+
+	var hint: HBoxContainer = HBoxContainer.new()
+	hint.add_theme_constant_override("separation", 10)
+	hint.anchor_top = 1.0
+	hint.anchor_bottom = 1.0
+	hint.offset_left = 250.0
+	hint.offset_top = -64.0
+	hint.offset_bottom = -28.0
+	var key: Label = UiStyle.label(tr("Esc"), UiStyle.FONT_CAPS, 15, UiStyle.CREAM, HORIZONTAL_ALIGNMENT_CENTER)
+	var key_style: StyleBoxFlat = StyleBoxFlat.new()
+	key_style.bg_color = Color(UiStyle.SLATE_DARK, 0.9)
+	key_style.border_color = Color(UiStyle.GOLD, 0.6)
+	key_style.set_border_width_all(1)
+	key_style.set_corner_radius_all(3)
+	key_style.content_margin_left = 10
+	key_style.content_margin_right = 10
+	key_style.content_margin_top = 2
+	key_style.content_margin_bottom = 4
+	key.add_theme_stylebox_override("normal", key_style)
+	hint.add_child(key)
+	hint.add_child(UiStyle.label(tr("End the morning"), UiStyle.FONT_BODY, 18, UiStyle.MUTED))
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(hint)
+	move_child(hint, _end_button.get_index())
+
+
 # --- Session panel (time left, keep going) -----------------------------------
 
 func _build_session_panel() -> void:
 	var box: VBoxContainer = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 8)
-	var header: Label = Label.new()
-	header.text = tr("THIS MORNING")
-	header.add_theme_color_override("font_color", Color(0.78, 0.7, 0.52, 0.9))
-	header.add_theme_font_size_override("font_size", 12)
+	var header: HBoxContainer = HBoxContainer.new()
+	header.add_theme_constant_override("separation", 12)
+	header.add_child(UiStyle.icon_rect("time", 24, UiStyle.GOLD))
+	var header_text: VBoxContainer = VBoxContainer.new()
+	header_text.add_theme_constant_override("separation", -6)
+	header_text.add_child(UiStyle.label(tr("This Morning"), UiStyle.FONT_CAPS, 15, UiStyle.MUTED))
+	_time_label = UiStyle.label("", UiStyle.FONT_BOLD, 30, UiStyle.CREAM)
+	header_text.add_child(_time_label)
+	header.add_child(header_text)
 	box.add_child(header)
-	_time_label = Label.new()
-	_time_label.add_theme_color_override("font_color", CREAM_TEXT)
-	_time_label.add_theme_font_size_override("font_size", 22)
-	box.add_child(_time_label)
 	_extend_button = Button.new()
-	_extend_button.custom_minimum_size = Vector2(0, 40)
-	_extend_button.add_theme_font_size_override("font_size", 13)
-	var button_style: StyleBoxFlat = StyleBoxFlat.new()
-	button_style.bg_color = Color(0.13, 0.16, 0.22, 1)
-	button_style.border_color = Color(0.62, 0.5, 0.27, 0.7)
-	button_style.set_border_width_all(1)
-	button_style.set_corner_radius_all(4)
-	for style in ["normal", "hover", "pressed", "disabled"]:
-		_extend_button.add_theme_stylebox_override(style, button_style)
-	_extend_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	_extend_button.add_theme_color_override("font_color", Color(0.93, 0.86, 0.7, 1))
-	_extend_button.add_theme_color_override("font_disabled_color", Color(0.6, 0.56, 0.48, 1))
+	_extend_button.custom_minimum_size = Vector2(0, 44)
+	UiStyle.slate_button(_extend_button, 16)
 	_extend_button.pressed.connect(_on_extend_pressed)
 	box.add_child(_extend_button)
-	_notice_label = Label.new()
-	_notice_label.add_theme_color_override("font_color", Color(0.82, 0.76, 0.62, 1))
-	_notice_label.add_theme_font_size_override("font_size", 12)
+	_notice_label = UiStyle.label("", UiStyle.FONT_ITALIC, 17, UiStyle.MUTED)
 	_notice_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(_notice_label)
 	var progress_header: Control = $MainRow/LeftInfoCard/LeftMargin/LeftVBox/ProgressHeader
@@ -200,10 +295,10 @@ func _refresh_session_panel() -> void:
 		_time_label.text = tr("%dh %02dm left") % [minutes / 60, minutes % 60] if minutes % 60 != 0 else tr("%dh left") % (minutes / 60)
 	else:
 		_time_label.text = tr("%dm left") % minutes
-	_extend_button.text = tr("KEEP GOING  +1 hr  ·  −%d energy") % FieldService.extension_energy_cost()
+	_extend_button.text = (tr("Keep going  ·  +1 hr  ·  −%d energy") % FieldService.extension_energy_cost()).to_upper()
 	_extend_button.disabled = not FieldService.can_extend()
 	if not FieldService.can_extend() and FieldService.active:
-		_extend_button.text = tr("TOO TIRED TO KEEP GOING")
+		_extend_button.text = tr("Too tired to keep going").to_upper()
 	if FieldService.stops_left() <= 0:
 		_notice_label.text = tr("The group is heading back to the cars.")
 	elif TimeManager.current_phase != TimeManager.Phase.SATURDAY:
@@ -241,8 +336,7 @@ func _make_slot(house: House) -> Control:
 	root.set_meta(&"house_id", house.id)
 	root.set_meta(&"number", number)
 
-	# Selection outline. Empty-fill StyleBox so the painted background shows
-	# through; the border flips to gold while this slot is selected. Pure
+	# Tile frame: a soft dark edge, gold when this tile is selected. Pure
 	# decoration — must not intercept mouse events or the root's hover/click
 	# handlers below never fire.
 	var hit: Panel = Panel.new()
@@ -253,53 +347,54 @@ func _make_slot(house: House) -> Control:
 	hit.add_theme_stylebox_override("panel", _make_slot_style(false))
 	root.add_child(hit)
 
-	# Medallion at top-center.
+	# Numbered medallion at top-center.
 	var medallion: Panel = Panel.new()
 	medallion.name = "Medallion"
-	medallion.custom_minimum_size = Vector2(38, 38)
+	medallion.custom_minimum_size = Vector2(46, 46)
 	medallion.anchor_left = 0.5
 	medallion.anchor_right = 0.5
-	medallion.offset_left = -19.0
-	medallion.offset_right = 19.0
-	medallion.offset_top = 6.0
-	medallion.offset_bottom = 44.0
+	medallion.offset_left = -23.0
+	medallion.offset_right = 23.0
+	medallion.offset_top = 4.0
+	medallion.offset_bottom = 50.0
 	medallion.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	medallion.add_theme_stylebox_override("panel", _make_medallion_style())
 	root.add_child(medallion)
 
-	var medallion_label: Label = Label.new()
-	medallion_label.text = str(number)
+	var medallion_label: Label = UiStyle.label(str(number), UiStyle.FONT_BOLD, 26, UiStyle.CREAM, HORIZONTAL_ALIGNMENT_CENTER)
 	medallion_label.anchor_right = 1.0
 	medallion_label.anchor_bottom = 1.0
-	medallion_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	medallion_label.offset_top = -2.0
 	medallion_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	medallion_label.add_theme_color_override("font_color", CREAM_TEXT)
-	medallion_label.add_theme_font_size_override("font_size", 18)
-	medallion_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	medallion.add_child(medallion_label)
 
-	# Outcome badge below medallion. Anchored to bottom-center of the slot.
+	# Status pill, centered along the bottom of the tile: icon and label.
+	var badge_row: CenterContainer = CenterContainer.new()
+	badge_row.name = "BadgeRow"
+	badge_row.anchor_right = 1.0
+	badge_row.anchor_top = 1.0
+	badge_row.anchor_bottom = 1.0
+	badge_row.offset_top = -46.0
+	badge_row.offset_bottom = -8.0
+	badge_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(badge_row)
 	var badge: PanelContainer = PanelContainer.new()
 	badge.name = "Badge"
-	badge.anchor_left = 0.05
-	badge.anchor_right = 0.95
-	badge.anchor_top = 1.0
-	badge.anchor_bottom = 1.0
-	badge.offset_top = -34.0
-	badge.offset_bottom = -8.0
+	badge.custom_minimum_size = Vector2(150, 0)
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	badge.add_theme_stylebox_override("panel", _make_badge_style(BADGE_CREAM))
-	root.add_child(badge)
-
-	var badge_label: Label = Label.new()
+	badge_row.add_child(badge)
+	var badge_content: HBoxContainer = HBoxContainer.new()
+	badge_content.name = "Row"
+	badge_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	badge_content.add_theme_constant_override("separation", 8)
+	badge_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.add_child(badge_content)
+	var badge_icon: TextureRect = UiStyle.icon_rect("not_visited", 20, UiStyle.INK)
+	badge_icon.name = "Icon"
+	badge_content.add_child(badge_icon)
+	var badge_label: Label = UiStyle.label(tr("Not Visited"), UiStyle.FONT_CAPS, 17, UiStyle.INK, HORIZONTAL_ALIGNMENT_CENTER)
 	badge_label.name = "Label"
-	badge_label.text = tr("NOT VISITED")
-	badge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	badge_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	badge_label.add_theme_color_override("font_color", NAVY_DEEP)
-	badge_label.add_theme_font_size_override("font_size", 12)
-	badge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	badge.add_child(badge_label)
+	badge_content.add_child(badge_label)
 
 	# M4.6+ — lifetime indicator pip at top-right of the slot. Visible only
 	# when the house has a prior positive outcome (TRACT_LEFT / RV / STUDY).
@@ -311,13 +406,13 @@ func _make_slot(house: House) -> Control:
 	pip.anchor_right = 1.0
 	pip.anchor_top = 0.0
 	pip.anchor_bottom = 0.0
-	pip.offset_left = -22.0
-	pip.offset_right = -6.0
-	pip.offset_top = 6.0
-	pip.offset_bottom = 22.0
+	pip.offset_left = -24.0
+	pip.offset_right = -8.0
+	pip.offset_top = 8.0
+	pip.offset_bottom = 24.0
 	pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pip.visible = false  # _refresh_slot toggles based on lifetime_best_outcome
-	pip.add_theme_stylebox_override("panel", _make_pip_style(BADGE_GREEN))
+	pip.add_theme_stylebox_override("panel", _make_pip_style(PIP_TRACT))
 	root.add_child(pip)
 
 	# Top-level click + hover wiring lives on `root` so the medallion and
@@ -354,14 +449,23 @@ func _refresh_slot(house: House) -> void:
 	var slot: Control = _house_slots.get(house.id)
 	if slot == null:
 		return
-	var badge: PanelContainer = slot.get_node("Badge")
-	var badge_label: Label = badge.get_node("Label")
-	var info: Dictionary = _badge_info_for_state(house.state)
+	var look: Dictionary = STATUS_LOOK.get(house.state, STATUS_LOOK[House.State.NOT_VISITED])
+	var text: String = tr(look["text"])
+	if house.state == House.State.BIBLE_STUDY_STARTED:
+		text = tr("Study")
 	if TerritoryManager.is_appointment(house) and house.householder != null and not house.householder.character_name.is_empty():
-		info["text"] = "%s · %s" % [info["text"], _short_name(house.householder.character_name)]
-	badge.add_theme_stylebox_override("panel", _make_badge_style(info.get("color")))
-	badge_label.text = tr(info.get("text"))
-	badge_label.add_theme_color_override("font_color", info.get("text_color"))
+		text = "%s · %s" % [text, _short_name(house.householder.character_name)]
+	var pill_color: Color = look["pill"]
+	var ink: Color = UiStyle.INK if pill_color.get_luminance() > 0.5 else UiStyle.CREAM
+	var badge: PanelContainer = slot.get_node("BadgeRow/Badge")
+	badge.add_theme_stylebox_override("panel", UiStyle.pill(pill_color, Vector2(12, 3)))
+	var badge_label: Label = badge.get_node("Row/Label")
+	badge_label.text = text
+	badge_label.add_theme_color_override("font_color", ink)
+	var badge_icon: TextureRect = badge.get_node("Row/Icon")
+	badge_icon.visible = house.state != House.State.NOT_VISITED
+	badge_icon.texture = UiStyle.icon(look["icon"])
+	badge_icon.self_modulate = ink
 	var hit: Panel = slot.get_node("Hit")
 	hit.add_theme_stylebox_override("panel", _make_slot_style(house.id == _selected_house_id))
 	# M4.6+ — lifetime pip (top-right, persists across resets).
@@ -397,11 +501,11 @@ func _pip_color_for_lifetime(lifetime: int) -> Variant:
 	# Returns Color or null. null = don't show the pip.
 	match lifetime:
 		House.State.TRACT_LEFT:
-			return BADGE_GREEN
+			return PIP_TRACT
 		House.State.RETURN_VISIT_SCHEDULED:
-			return BADGE_AMBER
+			return PIP_RETURN
 		House.State.BIBLE_STUDY_STARTED:
-			return BADGE_GREEN_BRIGHT
+			return PIP_STUDY
 		_:
 			return null
 
@@ -409,8 +513,8 @@ func _pip_color_for_lifetime(lifetime: int) -> Variant:
 func _make_pip_style(color: Color) -> StyleBoxFlat:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = color
-	sb.border_color = NAVY_DEEP
-	sb.set_border_width_all(1)
+	sb.border_color = UiStyle.SLATE_DARK
+	sb.set_border_width_all(2)
 	# 16x16 pip → corner radius 8 = full circle.
 	sb.corner_radius_top_left = 8
 	sb.corner_radius_top_right = 8
@@ -419,61 +523,30 @@ func _make_pip_style(color: Color) -> StyleBoxFlat:
 	return sb
 
 
-func _badge_info_for_state(state: int) -> Dictionary:
-	match state:
-		House.State.TRACT_LEFT:
-			return {"color": BADGE_GREEN, "text": "TRACT LEFT", "text_color": CREAM_TEXT}
-		House.State.BIBLE_STUDY_STARTED:
-			return {"color": BADGE_GREEN_BRIGHT, "text": "STUDY · 1 HR", "text_color": NAVY_DEEP}
-		House.State.RETURN_VISIT_SCHEDULED:
-			return {"color": BADGE_AMBER, "text": "RETURN VISIT · 30 MIN", "text_color": NAVY_DEEP}
-		House.State.REFUSED:
-			return {"color": BADGE_RED, "text": "REFUSED", "text_color": CREAM_TEXT}
-		House.State.NOT_HOME:
-			return {"color": BADGE_GREY, "text": "NOT HOME", "text_color": CREAM_TEXT}
-		_:
-			return {"color": BADGE_CREAM, "text": "NOT VISITED", "text_color": NAVY_DEEP}
-
-
 func _make_slot_style(selected: bool) -> StyleBoxFlat:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = Color(0, 0, 0, 0)
+	sb.set_corner_radius_all(12)
 	if selected:
-		sb.border_color = GOLD
-		sb.set_border_width_all(3)
+		sb.bg_color = Color(UiStyle.GOLD_LIGHT, 0.08)
+		sb.border_color = UiStyle.GOLD_LIGHT
+		sb.set_border_width_all(4)
+		sb.set_expand_margin_all(2)
 	else:
-		sb.border_color = Color(0, 0, 0, 0)
-		sb.set_border_width_all(0)
-	sb.corner_radius_top_left = 4
-	sb.corner_radius_top_right = 4
-	sb.corner_radius_bottom_left = 4
-	sb.corner_radius_bottom_right = 4
+		sb.border_color = Color(0.1, 0.08, 0.05, 0.4)
+		sb.set_border_width_all(2)
 	return sb
 
 
 func _make_medallion_style() -> StyleBoxFlat:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = NAVY_DEEP
-	sb.border_color = GOLD
+	sb.bg_color = UiStyle.SLATE_DARK
+	sb.border_color = UiStyle.GOLD
 	sb.set_border_width_all(2)
-	sb.corner_radius_top_left = 19
-	sb.corner_radius_top_right = 19
-	sb.corner_radius_bottom_left = 19
-	sb.corner_radius_bottom_right = 19
-	return sb
-
-
-func _make_badge_style(color: Color) -> StyleBoxFlat:
-	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = color
-	sb.corner_radius_top_left = 3
-	sb.corner_radius_top_right = 3
-	sb.corner_radius_bottom_left = 3
-	sb.corner_radius_bottom_right = 3
-	sb.content_margin_left = 6.0
-	sb.content_margin_right = 6.0
-	sb.content_margin_top = 3.0
-	sb.content_margin_bottom = 3.0
+	sb.set_corner_radius_all(23)
+	sb.shadow_color = Color(0, 0, 0, 0.45)
+	sb.shadow_size = 4
+	sb.shadow_offset = Vector2(0, 2)
 	return sb
 
 
@@ -562,8 +635,9 @@ func _resolve_not_home(house: House) -> void:
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.anchor_right = 1.0
 	label.anchor_bottom = 1.0
-	label.add_theme_color_override("font_color", CREAM_TEXT)
-	label.add_theme_font_size_override("font_size", 13)
+	UiStyle.style_label(label, UiStyle.FONT_ITALIC, 20, UiStyle.CREAM)
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	label.add_theme_constant_override("outline_size", 6)
 	label.modulate.a = 0.0
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(label)
@@ -581,7 +655,7 @@ func _resolve_not_home(house: House) -> void:
 # --- Detail panel ------------------------------------------------------------
 
 func _show_default_detail() -> void:
-	_detail_header.text = tr("✦ HOUSE #—— ✦")
+	_detail_header.text = tr("House")
 	_detail_polaroid.texture = _default_polaroid_texture
 	_detail_caption.text = tr("Hover a house to inspect.")
 	_detail_body.text = tr("Move over a slot in the territory grid to see what's known about that household.")
@@ -589,7 +663,7 @@ func _show_default_detail() -> void:
 
 func _populate_detail(house: House) -> void:
 	var number: int = house.grid_position.y * TerritoryManager.GRID_COLS + house.grid_position.x + 1
-	_detail_header.text = tr("✦ HOUSE #%d ✦") % number
+	_detail_header.text = tr("House #%d") % number
 	_detail_polaroid.texture = _portrait_for_house_number(number)
 	_detail_caption.text = tr(_caption_for_state(house.state))
 	var body: String = tr(_body_for_state(house.state))
@@ -660,39 +734,17 @@ func _refresh_progress() -> void:
 # --- Legend ------------------------------------------------------------------
 
 func _build_legend() -> void:
-	var entries: Array = [
-		{"color": BADGE_GREEN, "label": "Tract Left",   "note": "Literature accepted."},
-		{"color": BADGE_AMBER, "label": "Return Visit", "note": "Conversation will continue."},
-		{"color": BADGE_GREEN, "label": "Study Started","note": "Weekly study in progress."},
-		{"color": BADGE_RED,   "label": "Refused",      "note": "Door closed politely or otherwise."},
-		{"color": BADGE_GREY,  "label": "Not Home",     "note": "No one came to the door."},
-		{"color": BADGE_CREAM, "label": "Not Visited",  "note": "No prior contact."},
-	]
-	for entry in entries:
+	for state in LEGEND_ORDER:
+		var look: Dictionary = STATUS_LOOK[state]
 		var row: HBoxContainer = HBoxContainer.new()
-		row.add_theme_constant_override("separation", 8)
-		var swatch: Panel = Panel.new()
-		swatch.custom_minimum_size = Vector2(12, 12)
-		var sb: StyleBoxFlat = StyleBoxFlat.new()
-		sb.bg_color = entry.get("color")
-		sb.corner_radius_top_left = 2
-		sb.corner_radius_top_right = 2
-		sb.corner_radius_bottom_left = 2
-		sb.corner_radius_bottom_right = 2
-		swatch.add_theme_stylebox_override("panel", sb)
-		swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		row.add_child(swatch)
-		var label: Label = Label.new()
-		label.text = tr(entry.get("label"))
-		label.add_theme_color_override("font_color", CREAM_TEXT)
-		label.add_theme_font_size_override("font_size", 12)
-		label.custom_minimum_size = Vector2(96, 0)
-		row.add_child(label)
-		var note: Label = Label.new()
-		note.text = tr(entry.get("note"))
-		note.add_theme_color_override("font_color", Color(0.78, 0.7, 0.52, 0.9))
-		note.add_theme_font_size_override("font_size", 11)
+		row.add_theme_constant_override("separation", 12)
+		row.add_child(UiStyle.icon_rect(look["icon"], 22, look["tint"]))
+		var name: Label = UiStyle.label(tr(look["text"]), UiStyle.FONT_BODY, 18, UiStyle.CREAM)
+		name.custom_minimum_size = Vector2(112, 0)
+		row.add_child(name)
+		var note: Label = UiStyle.label(tr(look["note"]), UiStyle.FONT_ITALIC, 15, UiStyle.MUTED)
 		note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		row.add_child(note)
 		_legend_rows.add_child(row)
 

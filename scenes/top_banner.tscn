@@ -1,11 +1,35 @@
-[gd_scene format=3 uid="uid://b2ww3p240d1ge"]
+[gd_scene load_steps=14 format=3 uid="uid://b2ww3p240d1ge"]
 
 [ext_resource type="Script" path="res://scripts/ui/top_banner.gd" id="1_banner"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
-bg_color = Color(0.09, 0.11, 0.16, 1)
-border_width_bottom = 2
-border_color = Color(0.62, 0.5, 0.27, 0.6)
+[ext_resource type="Texture2D" path="res://ui/themes/banner.png" id="2_banner_tex"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_display.tres" id="3_display"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_italic.tres" id="4_italic"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_caps.tres" id="5_caps"]
+
+[ext_resource type="FontVariation" path="res://ui/themes/font_bold.tres" id="6_bold"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/conviction.svg" id="10_conviction"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/elders.svg" id="11_elders"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/congregation.svg" id="12_congregation"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/family.svg" id="13_family"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/energy.svg" id="14_energy"]
+
+[ext_resource type="Texture2D" path="res://ui/icons/hours.svg" id="15_hours"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_banner"]
+texture = ExtResource("2_banner_tex")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 10.0
 
 [node name="TopBanner" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 88)
@@ -13,15 +37,15 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 88.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+theme_override_styles/panel = SubResource("StyleBoxTexture_banner")
 script = ExtResource("1_banner")
 
 [node name="BannerMargin" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 12
 
 [node name="BannerRow" type="HBoxContainer" parent="BannerMargin"]
 layout_mode = 2
@@ -30,19 +54,35 @@ theme_override_constants/separation = 24
 [node name="BrandColumn" type="VBoxContainer" parent="BannerMargin/BannerRow"]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = 2
+alignment = 1
+theme_override_constants/separation = -4
 
 [node name="BrandTitle" type="Label" parent="BannerMargin/BannerRow/BrandColumn"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.93, 0.86, 0.7, 1)
-theme_override_font_sizes/font_size = 24
-text = "GO OUT AND PREACH"
+theme_override_colors/font_color = Color(0.93, 0.83, 0.6, 1)
+theme_override_fonts/font = ExtResource("3_display")
+theme_override_font_sizes/font_size = 36
+text = "Go Out and Preach"
 
-[node name="BrandTagline" type="Label" parent="BannerMargin/BannerRow/BrandColumn"]
+[node name="TaglineRow" type="HBoxContainer" parent="BannerMargin/BannerRow/BrandColumn"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.7, 0.52, 0.85)
-theme_override_font_sizes/font_size = 12
-text = "Remember the good news. — MARK 13:10"
+theme_override_constants/separation = 22
+
+[node name="BrandTagline" type="Label" parent="BannerMargin/BannerRow/BrandColumn/TaglineRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("4_italic")
+theme_override_font_sizes/font_size = 18
+text = "Remember the good news."
+
+[node name="BrandRef" type="Label" parent="BannerMargin/BannerRow/BrandColumn/TaglineRow"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.745, 0.604, 0.345, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
+text = "— Mark 13:10"
+uppercase = true
 
 [node name="BrandSpacer" type="Control" parent="BannerMargin/BannerRow"]
 layout_mode = 2
@@ -52,107 +92,215 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
-theme_override_constants/separation = 28
+theme_override_constants/separation = 22
 
-[node name="ConvictionStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="ConvictionStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("10_conviction")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "CONVICTION"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/ConvictionStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "50"
-horizontal_alignment = 1
 
-[node name="EldersStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="Divider1" type="VSeparator" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_colors/separator = Color(0.745, 0.604, 0.345, 0.35)
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+[node name="EldersStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("11_elders")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "ELDERS"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EldersStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "0"
-horizontal_alignment = 1
 
-[node name="CongregationStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="Divider2" type="VSeparator" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_colors/separator = Color(0.745, 0.604, 0.345, 0.35)
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+[node name="CongregationStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("12_congregation")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "CONGREGATION"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/CongregationStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "0"
-horizontal_alignment = 1
 
-[node name="FamilyStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="Divider3" type="VSeparator" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_colors/separator = Color(0.745, 0.604, 0.345, 0.35)
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+[node name="FamilyStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("13_family")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "FAMILY"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/FamilyStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "0"
-horizontal_alignment = 1
 
-[node name="EnergyStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="Divider4" type="VSeparator" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_colors/separator = Color(0.745, 0.604, 0.345, 0.35)
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+[node name="EnergyStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("14_energy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "ENERGY"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/EnergyStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "10 / 10"
-horizontal_alignment = 1
 
-[node name="HoursStat" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
+[node name="Divider5" type="VSeparator" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_colors/separator = Color(0.745, 0.604, 0.345, 0.35)
 
-[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+[node name="HoursStat" type="HBoxContainer" parent="BannerMargin/BannerRow/StatRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.6, 0.46, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+self_modulate = Color(0.745, 0.604, 0.345, 1)
+texture = ExtResource("15_hours")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="VBoxContainer" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+layout_mode = 2
+theme_override_constants/separation = -6
+
+[node name="Label" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat/Text"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.796, 0.741, 0.612, 1)
+theme_override_fonts/font = ExtResource("5_caps")
+theme_override_font_sizes/font_size = 14
 text = "HOURS THIS MONTH"
-horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat"]
+[node name="Value" type="Label" parent="BannerMargin/BannerRow/StatRow/HoursStat/Text"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.91, 0.78, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.937, 0.89, 0.776, 1)
+theme_override_fonts/font = ExtResource("6_bold")
+theme_override_font_sizes/font_size = 26
 text = "0.0"
-horizontal_alignment = 1

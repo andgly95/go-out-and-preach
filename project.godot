@@ -90,6 +90,10 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray("res://addons/dialogic/plugin.cfg")
 
+[gui]
+
+theme/custom="res://ui/themes/main_theme.tres"
+
 [input]
 
 dialogic_default_action={
